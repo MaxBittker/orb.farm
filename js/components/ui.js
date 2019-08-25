@@ -264,35 +264,6 @@ class Index extends React.Component {
         console.error("Error:", error);
       });
   }
-  incScore() {
-    let { currentSubmission } = this.state;
-    let { id } = currentSubmission;
-    // creations/:id/vote
-    firebase
-      .auth()
-      .currentUser.getIdToken()
-      .then(token => {
-        fetch(functions._url(`api/creations/${id}/vote`), {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: "Bearer " + token
-          }
-        })
-          .then(res => res.json())
-          .then(data => {
-            if (currentSubmission != null) {
-              console.log(data);
-              this.setState({
-                currentSubmission: { ...currentSubmission, data }
-              });
-            }
-          })
-          .catch(e => {
-            console.log(e);
-          });
-      });
-  }
 
   render() {
     let { size, paused, selectedElement, currentSubmission } = this.state;
@@ -352,15 +323,6 @@ class Index extends React.Component {
           style={{ fontSize: 35 }}
         >
           ↜
-        </button>
-        <button
-          className={-1 == selectedElement ? "selected" : ""}
-          key={name}
-          onClick={() => {
-            this.setState({ selectedElement: -1 });
-          }}
-        >
-          Wind
         </button>
         {Object.keys(Species).map(n =>
           ElementButton(n, selectedElement, id =>

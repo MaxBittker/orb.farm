@@ -4,7 +4,6 @@ import { startWebGL } from "./render";
 import { fps } from "./fps";
 import {} from "./paint";
 import {} from "./app";
-import { startFluid } from "./fluid";
 
 if (window.safari) {
   history.pushState(null, null, location.href);
@@ -50,14 +49,13 @@ if ("serviceWorker" in navigator) {
 
 let n = 300;
 const universe = Universe.new(n, n);
-
+let ratio = 2;
 let width = n;
 let height = n;
 const canvas = document.getElementById("sand-canvas");
-const canvas2 = document.getElementById("fluid-canvas");
 
-canvas.height = n * Math.ceil(window.devicePixelRatio);
-canvas.width = n * Math.ceil(window.devicePixelRatio);
+canvas.height = n * ratio * Math.ceil(window.devicePixelRatio);
+canvas.width = n * ratio * Math.ceil(window.devicePixelRatio);
 
 document.getElementById("background").addEventListener("touchmove", e => {
   if (!window.paused) {
@@ -69,42 +67,39 @@ document.getElementById("background").addEventListener("touchmove", e => {
 
 const ui = document.getElementById("ui");
 
-let resize = () => {
-  let screen_width = window.innerWidth;
-  let uiheight = 50;
-  let screen_height = window.innerHeight - uiheight;
+// let resize = () => {
+//   let screen_width = window.innerWidth;
+//   let uiheight = 50;
+//   let screen_height = window.innerHeight - uiheight;
 
-  let canvasStyle = "";
-  let uiStyle = "";
-  if (screen_width > screen_height) {
-    if (screen_width - window.innerHeight < 400) {
-      // landscape compressed
+//   let canvasStyle = "";
+//   let uiStyle = "";
+//   if (screen_width > screen_height) {
+//     if (screen_width - window.innerHeight < 400) {
+//       // landscape compressed
 
-      canvasStyle = `height: ${window.innerHeight}px; margin:3px`;
-      uiStyle = `width: ${screen_width -
-        window.innerHeight -
-        12}px; margin: 2px;`;
-    } else {
-      // landscape wide
-      canvasStyle = `height: ${window.innerHeight}px`;
-      uiStyle = `width: ${(screen_width - window.innerHeight) / 2 -
-        7}px; margin: 2px;`;
-    }
-  } else {
-    //portrait (mobile)
-    canvasStyle = `width: ${screen_width}px; bottom:3px;`;
-    uiStyle = "";
-  }
-  ui.style = uiStyle;
-  canvas.style = canvasStyle;
-  canvas2.style = canvasStyle;
-};
+//       canvasStyle = `height: ${window.innerHeight}px; margin:3px`;
+//       uiStyle = `width: ${screen_width -
+//         window.innerHeight -
+//         12}px; margin: 2px;`;
+//     } else {
+//       // landscape wide
+//       canvasStyle = `height: ${window.innerHeight}px`;
+//       uiStyle = `width: ${(screen_width - window.innerHeight) / 2 -
+//         7}px; margin: 2px;`;
+//     }
+//   } else {
+//     //portrait (mobile)
+//     canvasStyle = `width: ${screen_width}px; bottom:3px;`;
+//     uiStyle = "";
+//   }
+//   ui.style = uiStyle;
+//   canvas.style = canvasStyle;
+// };
 
-resize();
-window.addEventListener("deviceorientation", resize, true);
-window.addEventListener("resize", resize);
-
-let fluid = startFluid({ universe });
+// resize();
+// window.addEventListener("deviceorientation", resize, true);
+// window.addEventListener("resize", resize);
 
 let drawSand = startWebGL({ canvas, universe });
 
@@ -112,7 +107,6 @@ const renderLoop = () => {
   if (!window.paused) {
     fps.render(); // new
     universe.tick();
-    fluid.update();
   }
   drawSand();
 
@@ -122,13 +116,8 @@ const renderLoop = () => {
 renderLoop();
 
 function reset() {
-  fluid.reset();
-  fluid.update();
-  fluid.reset();
-  fluid.update();
-
   universe.reset();
 }
 window.u = universe;
 window.universe = universe;
-export { canvas, width, height, universe, reset };
+export { canvas, width, height, ratio, universe, reset };

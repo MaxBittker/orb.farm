@@ -13,15 +13,43 @@ body {
 body,
 #background {
   position: absolute;
+  /* display: flex; */
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
   /* background-color: rgba(00, 00, 00, 0.2); */
-  background-color: #f3f3f4;
+  background-color: cornsilk;
+}
+#table {
+  display: flex;
+  width: 100%;
+}
+#jar {
+  /* flex-grow: 1; */
+  line-height: 0;
+  display: inline-block;
+
+  margin: auto;
+  margin-top: 150px;
+}
+#cap {
+  background-color: steelblue;
+  border-radius: 10px 10px 0px 0px;
+  margin-left: 60px;
+  margin-right: 60px;
+  height: 25px;
+}
+#bottom {
+  margin: 0;
+  margin-left: 30px;
+  margin-right: 30px;
+  background-color: #866414;
+  border-radius: 0px 0px 5px 5px;
+  height: 10px;
 }
 canvas {
-  position: absolute;
+  position: relative;
   bottom: 0;
   /* top: 0; */
   right: 0px;
@@ -31,7 +59,10 @@ canvas {
   /* width: calc(100% - 0px); */
   /* max-width: ca100%; */
   margin: auto;
-  box-shadow: 0px 0px 3px 3px rgba(0, 0, 0, 0.1);
+  margin-bottom: 0px;
+  border: 1px black solid;
+  /* box-shadow: 0px 0px 3px 3px rgba(0, 0, 0, 0.1); */
+  border-radius: 30px 30px 30px 30px;
 }
 
 #sand-canvas {
@@ -46,9 +77,6 @@ img {
   image-rendering: -moz-crisp-edges;
   image-rendering: -o-crisp-edges;
   image-rendering: pixelated;
-}
-
-#fluid-canvas {
 }
 
 button {

@@ -1,4 +1,4 @@
-import { height, universe, width } from "./index.js";
+import { height, universe, width, ratio } from "./index.js";
 import { sizeMap } from "./components/ui";
 const canvas = document.getElementById("sand-canvas");
 
@@ -132,9 +132,13 @@ const paint = event => {
   const boundingRect = canvas.getBoundingClientRect();
 
   const scaleX =
-    canvas.width / Math.ceil(window.devicePixelRatio) / boundingRect.width;
+    canvas.width /
+    (ratio * Math.ceil(window.devicePixelRatio)) /
+    boundingRect.width;
   const scaleY =
-    canvas.height / Math.ceil(window.devicePixelRatio) / boundingRect.height;
+    canvas.height /
+    (ratio * Math.ceil(window.devicePixelRatio)) /
+    boundingRect.height;
 
   const canvasLeft = (event.clientX - boundingRect.left) * scaleX;
   const canvasTop = (event.clientY - boundingRect.top) * scaleY;
