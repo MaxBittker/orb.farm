@@ -318,18 +318,14 @@ impl Universe {
         let threshold = match cell.species {
             Species::Empty => 500,
             Species::Wall => 500,
-            Species::Cloner => 500,
 
             Species::Stone => 70,
             Species::Wood => 70,
 
             Species::Plant => 60,
-            Species::Lava => 60,
-            Species::Ice => 60,
 
             Species::Fungus => 54,
 
-            Species::Oil => 50,
 
             // Intentionally left out and covered by the default case
             // Species::Water => 40,
@@ -339,11 +335,8 @@ impl Universe {
 
             Species::Sand => 30,
             Species::Mite => 30,
-            Species::Rocket => 30,
 
             Species::Dust => 10,
-            Species::Fire => 5,
-            Species::Gas => 5,
             /*
              Some hacked species values exist outside of the enum values.
              Making sure the default case is emitted allows "BELP" to have a defined wind threshold.
@@ -374,12 +367,9 @@ impl Universe {
                 && api.get(dx, -2).species == Species::Empty
                 && (cell.species == Species::Sand
                     || cell.species == Species::Water
-                    || cell.species == Species::Lava
-                    || cell.species == Species::Acid
                     || cell.species == Species::Mite
                     || cell.species == Species::Dust
-                    || cell.species == Species::Oil
-                    || cell.species == Species::Rocket)
+                    )
             {
                 dy = -2;
             }

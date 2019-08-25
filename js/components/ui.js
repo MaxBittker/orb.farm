@@ -6,7 +6,6 @@ import { Species } from "../../crate/pkg/sandtable";
 
 import { height, universe, width, reset } from "../index.js";
 import { snapshot, pallette } from "../render.js";
-import { functions, storage } from "../api.js";
 
 import Menu from "./menu";
 
@@ -318,15 +317,7 @@ class Index extends React.Component {
             </svg>
           )}
         </button>
-        <button onClick={() => this.upload()}>Upload</button>
-        <Link
-          to={{
-            pathname: "/browse/",
-            hash
-          }}
-        >
-          <button>Browse</button>
-        </Link>
+        {/* <button onClick={() => this.upload()}>Upload</button> */}
 
         <button onClick={() => this.reset()}>Reset</button>
         <Link
