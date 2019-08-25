@@ -1,0 +1,268 @@
+* {
+  margin: 0;
+  /* font-family: monospace; */
+  font-family: "Inconsolata", monospace;
+}
+
+html,
+body {
+  overscroll-behavior-x: none;
+  overscroll-behavior-y: none;
+}
+
+body,
+#background {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  /* background-color: rgba(00, 00, 00, 0.2); */
+  background-color: #f3f3f4;
+}
+canvas {
+  position: absolute;
+  bottom: 0;
+  /* top: 0; */
+  right: 0px;
+  left: 0px;
+  z-index: 1;
+  max-width: calc(100% - 3px);
+  /* width: calc(100% - 0px); */
+  /* max-width: ca100%; */
+  margin: auto;
+  box-shadow: 0px 0px 3px 3px rgba(0, 0, 0, 0.1);
+}
+
+#sand-canvas {
+  z-index: 2;
+}
+canvas,
+img {
+  image-rendering: crisp-edges;
+  -ms-interpolation-mode: nearest-neighbor;
+  image-rendering: -webkit-optimize-contrast;
+  image-rendering: -webkit-crisp-edges;
+  image-rendering: -moz-crisp-edges;
+  image-rendering: -o-crisp-edges;
+  image-rendering: pixelated;
+}
+
+#fluid-canvas {
+}
+
+button {
+  z-index: 3;
+  position: relative;
+  height: 30px;
+  min-width: 30px;
+  font-size: 19px;
+  padding: 1px 5px;
+  background-color: whitesmoke;
+  color: black;
+  border: 2px solid whitesmoke;
+  border-color: gainsboro;
+  flex-grow: 1;
+  max-width: 150px;
+  fill: black;
+  line-height: 0px;
+  cursor: pointer;
+}
+.active button {
+  background-color: gainsboro;
+}
+button:disabled {
+  background-color: gainsboro;
+  color: gray;
+}
+
+button:focus {
+  outline: none;
+}
+
+button.selected {
+  background-color: black;
+  color: whitesmoke;
+  border-color: grey;
+  fill: whitesmoke;
+  /* font-weight: bold; */
+  text-shadow: 1.6px 1.5px 0 grey, -1px -1px 0 grey, 1px -1px 0 grey,
+    -1px 1px 0 grey, 1px 1px 0 grey;
+}
+
+.submission-title {
+  z-index: 3;
+  position: relative;
+  overflow-wrap: break-word;
+  overflow: hidden;
+}
+#ui {
+  display: flex;
+  flex-wrap: wrap;
+  float: right;
+}
+
+#fps {
+  pointer-events: none;
+
+  z-index: 3;
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  padding: 2px;
+  background-color: rgba(255, 255, 255, 0.4);
+  text-align: right;
+  display: inline-block;
+  white-space: pre;
+  /* font-family: monospace; */
+  user-select: none;
+}
+
+#controls {
+  display: flex;
+}
+
+.dg {
+  display: none;
+  /* z-index: 5 !important; */
+}
+
+.menu {
+  position: absolute;
+  left: 10px;
+  right: 10px;
+  top: 10px;
+  /* bottom: 10px; */
+  z-index: 5;
+  background-color: #f3f3f4;
+  border: 1px solid gray;
+  box-shadow: 0px 0px 3px 3px rgba(0, 0, 0, 0.2);
+  padding: 5px;
+  max-width: 900px;
+  margin: auto;
+}
+.submission img,
+.submissionImg {
+  max-width: 80vh;
+  background-color: #f0e4e3;
+  width: calc(100% - 10px);
+  margin: 5px;
+  box-shadow: 0px 0px 3px 3px rgba(0, 0, 0, 0.2);
+  /* margin: auto; */
+}
+
+.menu-scrim {
+  position: absolute;
+  left: 0px;
+  right: 0px;
+  top: 0px;
+  bottom: 0px;
+  z-index: 4;
+  background-color: #55555555;
+}
+.x {
+  position: absolute;
+  right: 4px;
+  top: 5px;
+  line-height: 0px;
+}
+input {
+  position: relative;
+  height: 25px;
+  min-width: 30px;
+  font-size: 19px;
+  padding: 1px 5px;
+  background-color: whitesmoke;
+  color: black;
+  border: 1.6px solid whitesmoke;
+  border-color: gainsboro;
+  flex-grow: 1;
+  fill: black;
+}
+img {
+}
+
+@media only screen and (min-width: 700px) {
+  .submissions {
+    display: grid;
+    grid-template-columns: repeat(2, 50%);
+  }
+}
+
+.submission {
+  margin: 5px;
+  position: relative;
+  background-color: gainsboro;
+  display: flex;
+}
+.submission img {
+  width: 100%;
+}
+.img-link {
+  width: 50%;
+  /* height: 50%; */
+  /* display: inline-block; */
+}
+
+.submission div {
+  margin: 8px 8px 8px 16px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+.submission div h3 {
+  width: 100%;
+}
+.submission div h2 {
+  display: inline-block;
+  max-width: 50vw;
+}
+
+.report {
+  position: absolute;
+  right: 5px;
+  bottom: 5px;
+  color: grey;
+  /* filter: graysca
+  /* line-height: 29px; */
+}
+.report:active {
+  color: red;
+  filter: none;
+  transform: scale(1.5);
+}
+.heart {
+  display: block;
+  background-color: transparent;
+  border-color: transparent;
+  flex-grow: 0;
+  line-break: auto;
+  text-align: left;
+  padding: 0;
+  margin: 0;
+  font-size: 22px;
+  font-weight: bolder;
+}
+.heart:active {
+  color: red;
+  filter: none;
+  transform: scale(1.5);
+}
+
+.submission .adminButtons {
+  display: flex;
+  flex-direction: row;
+  margin: 0;
+}
+.delete {
+  background-color: lightpink;
+}
+
+.pardon {
+  background-color: aliceblue;
+}
+
+.adminButtons button:active {
+  transform: scale(1.2);
+  z-index: 5;
+}
