@@ -21,16 +21,13 @@ const ElementButton = (name, selectedElement, setElement) => {
   let background = "inherit";
   if (elementID == 14) {
     background = `linear-gradient(45deg, 
-    rgba(202, 121, 125, 0.25), 
-    rgba(169, 120, 200, 0.25), 
-    rgba(117, 118, 195, 0.25), 
-    rgba(117, 196, 193, 0.25), 
-    rgba(122, 203, 168, 0.25), 
-    rgba(185, 195, 117, 0.25), 
-    rgba(204, 186, 122, 0.25))`;
-    if (selected) {
-      background = background.replace(/0.25/g, "1.0");
-    }
+    rgba(202, 121, 125, 1.0), 
+    rgba(169, 120, 200, 1.0), 
+    rgba(117, 118, 195, 1.0), 
+    rgba(117, 196, 193, 1.0), 
+    rgba(122, 203, 168, 1.0), 
+    rgba(185, 195, 117, 1.0), 
+    rgba(204, 186, 122, 1.0))`;
   }
   return (
     <button
@@ -41,7 +38,8 @@ const ElementButton = (name, selectedElement, setElement) => {
       }}
       style={{
         background,
-        backgroundColor: selected ? color.replace("0.25", "1.5") : color
+        backgroundColor: color,
+        filter: selected || `saturate(0.5) `
       }}
     >
       {"  "}
