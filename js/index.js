@@ -52,17 +52,15 @@ const universe = Universe.new(n, n);
 universe.paint(150, 150, 600, Species.Glass);
 universe.paint(150, 150, 299, Species.Air);
 for (var x = -50; x < 49; x += 1) {
-  universe.paint(150 + x, 150 +49, 200, Species.Air);
-  universe.paint(150 + x, 150 -50, 200, Species.Air);
-  universe.paint(150 - 50, 150 +x, 200, Species.Air);
-  universe.paint(150 + 49, 150 +x, 200, Species.Air);
-
+  universe.paint(150 + x, 150 + 49, 200, Species.Air);
+  universe.paint(150 + x, 150 - 50, 200, Species.Air);
+  universe.paint(150 - 50, 150 + x, 200, Species.Air);
+  universe.paint(150 + 49, 150 + x, 200, Species.Air);
 }
 
-
-universe.paint(50, 150, 200, Species.Water);
-universe.paint(150, 150, 200, Species.Water);
-universe.paint(250, 150, 200, Species.Water);
+for (var x = 30; x < n - 30; x += 10) {
+  universe.paint(x, 150, 200, Species.Water);
+}
 
 for (var x = 0; x < n; x += 10) {
   universe.paint(x, 250, 20, Species.Sand);
@@ -109,7 +107,7 @@ let resize = () => {
     }
   } else {
     //portrait (mobile)
-    canvasStyle = `width: ${screen_width}px; `;
+    // canvasStyle = `width: ${screen_width}px; `;
     uiStyle = "";
   }
   ui.style = uiStyle;
@@ -133,11 +131,11 @@ const renderLoop = () => {
   window.animationId = requestAnimationFrame(renderLoop);
 };
 
-renderLoop();
-
 function reset() {
   universe.reset();
 }
 window.u = universe;
 window.universe = universe;
+renderLoop();
+
 export { canvas, width, height, ratio, universe, reset };

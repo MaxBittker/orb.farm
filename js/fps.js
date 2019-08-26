@@ -1,4 +1,4 @@
-const fps = new class {
+const fps = new (class {
   constructor() {
     this.fps = document.getElementById("fps");
     this.frames = [];
@@ -31,8 +31,11 @@ const fps = new class {
     let mean = sum / this.frames.length;
 
     // Render the statistics.
-    this.fps.textContent = `FPS:${Math.round(mean)}`;
+    this.fps.textContent = `FPS:${Math.round(mean)}
+    O2: ${window.u.O2()}
+    CO2: ${window.u.CO2()}
+    `;
   }
-}();
+})();
 
 export { fps };

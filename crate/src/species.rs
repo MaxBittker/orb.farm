@@ -6,7 +6,7 @@ use SandApi;
 use EMPTY_CELL;
 use WATER;
 
-// use std::cmp;
+use std::cmp;
 // use std::mem;
 use wasm_bindgen::prelude::*;
 // use web_sys::console;
@@ -27,7 +27,8 @@ pub enum Species {
     Shrimp = 7,
 
     Bacteria = 8,
-    // Anaerobic = 9,
+    Nitrogen = 9,
+
     Waste = 10,
     Seed = 11,
     Stone = 12,
@@ -47,7 +48,8 @@ impl Species {
             Species::Bacteria => update_bacteria(cell, api),
             Species::Zoop => update_zoop(cell, api),
             Species::Waste => update_waste(cell, api),
-            Species::Algae => update_algae(cell,api),
+            Species::Nitrogen => update_waste(cell, api),
+            Species::Algae => update_algae(cell, api),
 
             // Species::Dust => update_dust(cell, api),
             Species::Shrimp => update_shrimp(cell, api),
@@ -71,18 +73,27 @@ pub fn update_waste(cell: Cell, mut api: SandApi) {
     }
 }
 pub fn update_bacteria(cell: Cell, mut api: SandApi) {
-let (dx,dy) = rand_vec_8();
+    let (dx, dy) = rand_vec_8();
 
     let down = api.get(0, 1);
     let nbr = api.get(dx, 1);
-    let sample = api.get(dx,dy);
-    if sample.species == Species::Waste{
-        api.set(dx, dy, Cell{
-            energy: cell.energy.saturating_add(50),
-            ..cell
-        });
+    let sample = api.get(dx, dy);
+    if cell.age > 250 {
+        //TODO cause death
+        api.set(0, 0, Cell::new(Species::Nitrogen));
+        return;
+    }
+    
+    if sample.species == Species::Waste {
+        api.set(
+            dx,
+            dy,
+            Cell {
+                energy: cell.energy.saturating_add(50),
+                ..cell
+            },
+        );
         api.set(0, 0, WATER);
-
     }
     if down.species == Species::Air {
         api.set(0, 0, EMPTY_CELL);
@@ -97,19 +108,70 @@ let (dx,dy) = rand_vec_8();
 }
 
 pub fn update_sand(cell: Cell, mut api: SandApi) {
-    let dx = rand_dir();
+    let (dx, dy) = rand_vec_8();
 
     let down = api.get(0, 1);
-    let nbr = api.get(dx, 1);
+    let dnbr = api.get(dx, 1);
     if down.species == Species::Air {
         api.set(0, 0, EMPTY_CELL);
         api.set(0, 1, cell);
-    } else if nbr.species == Species::Water {
-        api.set(0, 0, nbr);
+        return;
+    } else if dnbr.species == Species::Water {
+        api.set(0, 0, dnbr);
         api.set(dx, 1, cell);
-    } else if nbr.species == Species::Air {
+        return;
+    } else if dnbr.species == Species::Air {
         api.set(0, 0, EMPTY_CELL);
         api.set(dx, 1, cell);
+        return;
+    }
+    let energy = cell.energy;
+
+    let nbr = api.get(dx, dy);
+
+    if nbr.species == Species::Nitrogen {
+        api.set(dx, dy, WATER);
+        api.set(
+            0,
+            0,
+            Cell {
+                energy: energy.saturating_add(50),
+                ..cell
+            },
+        );
+    }
+    if nbr.species == Species::Sand {
+        //diffuse nutrients
+
+        let shared_energy = (energy / 2) + (nbr.energy / 2);
+
+        //higher is faster
+        let diffusion_factor = 0.5;
+        let diffusion_factor_c = 1.0 - diffusion_factor;
+
+        let new_energy = (((energy as f32) * diffusion_factor_c)
+            + ((shared_energy as f32) * diffusion_factor)) as u8;
+        let new_nbr_energy = (((nbr.energy as f32) * diffusion_factor_c)
+            + ((shared_energy as f32) * diffusion_factor)) as u8;
+
+        let conservation = (nbr.energy + energy) - (new_nbr_energy + new_energy);
+
+        api.set(
+            dx,
+            dy,
+            Cell {
+                energy: new_nbr_energy + conservation,
+                ..nbr
+            },
+        );
+        api.set(
+            0,
+            0,
+            Cell {
+                energy: new_energy,
+                ..cell
+            },
+        );
     }
 
     // let dx = rand_dir_2();
@@ -158,15 +220,15 @@ pub fn update_algae(cell: Cell, mut api: SandApi) {
         return;
     }
     let (dx, dy) = rand_vec();
-    if rand_int(10)<9{
-        return
+    if rand_int(10) < 9 {
+        return;
     }
     if cell.age > 250 {
         api.set(0, 0, Cell::new(Species::Waste));
         return;
     }
     let nbr = api.get(dx, dy);
-    if nbr.species == Species::Water && api.get(-dx,-dy).species !=Species::Glass {
+    if nbr.species == Species::Water && api.get(-dx, -dy).species != Species::Glass {
         api.set(0, 0, nbr);
         api.set(
             dx,
@@ -288,35 +350,76 @@ pub fn update_stone(cell: Cell, mut api: SandApi) {
 }
 
 pub fn update_plant(cell: Cell, mut api: SandApi) {
-    // let rb = cell.rb;
+    let (dx, dy) = rand_vec_8();
+    let energy = cell.energy;
 
-    let dx = rand_dir();
-    let dy = -1;
-
-    let nbr_species = api.get(dx, dy).species;
     let light = api.get_light().sun;
-    if rand_int(light as i32) > 200
-        && (nbr_species == Species::Water
-            && api.get(0, dy).species == Species::Water
-            && api.get(-dx, dy).species == Species::Water
-            && api.get(dx * 2, dy).species == Species::Water
+    if energy > 100 && rand_int(light as i32)> 200
+        && (api.get(dx, -1).species == Species::Water
+            && api.get(0, -1).species == Species::Water
+            && api.get(-dx, -1).species == Species::Water
+            && api.get(dx * 2, -1).species == Species::Water
             && api.use_co2())
     {
-        let i = rand_int(100);
-        let drift = (i % 15) - 7;
-        let newra = (cell.energy as i32 + drift) as u8;
+        // let i = rand_int(100);
         api.set(
             dx,
-            dy,
+            -1,
             Cell {
-                energy: newra,
+                energy: 50,
                 age: 0,
+                ..cell
+            },
+        );
+        api.set(
+            0,
+            0,
+            Cell {
+                energy: energy.saturating_sub(50),
                 ..cell
             },
         );
         // api.set(-dx, dy, EMPTY_CELL);
     }
 
+    let nbr = api.get(dx, dy);
+
+
+    if nbr.species == Species::Plant || nbr.species == Species::Sand {
+        //diffuse nutrients
+
+        let shared_energy = (energy / 2) + (nbr.energy / 2);
+        let cappilary_action = dy*-2;
+     
+        let new_energy = cmp::min(
+            (((energy / 2) + (shared_energy / 2)) as i32).saturating_sub(cappilary_action),
+            255,
+        ) as u8;
+
+        let new_nbr_energy = cmp::min(
+            (((nbr.energy / 2) + (shared_energy / 2)) as i32).saturating_add(cappilary_action),
+            255,
+        ) as u8;
+
+        let conservation = (nbr.energy + energy) - (new_nbr_energy + new_energy);
+
+        api.set(
+            dx,
+            dy,
+            Cell {
+                energy: new_nbr_energy + conservation,
+                ..nbr
+            },
+        );
+        api.set(
+            0,
+            0,
+            Cell {
+                energy: new_energy,
+                ..cell
+            },
+        );
+    }
 }
 
 pub fn update_seed(cell: Cell, mut api: SandApi) {

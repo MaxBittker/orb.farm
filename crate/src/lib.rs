@@ -158,13 +158,14 @@ impl Universe {
                     Species::Water => 0,
                     Species::Shrimp => 25,
 
-                    Species::Plant => 10,
+                    Species::Plant => 20,
                     Species::Seed => 35,
 
-                    Species::Algae => 10,
+                    Species::Algae => 20,
                     // Species::Anaerobic => 10,
                     Species::Bacteria => 10,
                     Species::Waste => 10,
+                    Species::Nitrogen => 10,
                     Species::Zoop => 10,
 
                     Species::Air => 0,

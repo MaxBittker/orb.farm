@@ -319,7 +319,7 @@ class Index extends React.Component {
           ↜
         </button>
         {Object.keys(Species)
-          .filter(name => name !== "Plant")
+          // .filter(name => name !== "Plant")
           .map(n =>
             ElementButton(n, selectedElement, id =>
               this.setState({ selectedElement: id })
