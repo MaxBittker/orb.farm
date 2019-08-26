@@ -155,7 +155,7 @@ impl Universe {
                 let idx = self.get_index(x, y);
                 let cell = self.get_cell(x, y);
                 let block: u8 = match cell.species {
-                    Species::Water => 0,
+                    Species::Water => 2,
                     Species::Shrimp => 25,
 
                     Species::Plant => 20,

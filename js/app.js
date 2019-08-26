@@ -6,8 +6,6 @@ import Info from "./components/info";
 import { Index } from "./components/ui";
 import Menu from "./components/menu";
 
-// let sizeMap = [2, 5, 10, 18];
-
 function BrowseRouter({ match, location }) {
   return (
     <Menu>
@@ -54,5 +52,3 @@ function AppRouter() {
 }
 
 ReactDOM.render(<AppRouter />, document.getElementById("ui"));
-
-// export { sizeMap };

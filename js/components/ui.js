@@ -49,7 +49,7 @@ const ElementButton = (name, selectedElement, setElement) => {
   );
 };
 
-let sizeMap = [2, 5, 10, 18];
+let sizeMap = [2, 5, 10];
 
 class Index extends React.Component {
   constructor(props) {
@@ -59,7 +59,7 @@ class Index extends React.Component {
       submissionMenuOpen: false,
       paused: false,
       submitting: false,
-      size: 2,
+      size: 1,
       dataURL: {},
       currentSubmission: null,
       selectedElement: Species.Water
@@ -304,7 +304,7 @@ class Index extends React.Component {
               style={{ padding: "0px" }}
             >
               <svg height="23" width="23" id="d" viewBox="0 0 100 100">
-                <circle cx="50" cy="50" r={2 + v * 2} />
+                <circle cx="50" cy="50" r={2 + v * 3} />
               </svg>
             </button>
           ))}
