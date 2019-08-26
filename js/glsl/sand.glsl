@@ -70,20 +70,20 @@ void main() {
     }
   } else if (type == 4) { // Algae
     hue = 0.4;
-    lightness += 0.1;
-    saturation = 0.5 + (data.b * 1.5);
+    lightness += 0.0;
+    saturation = 0.4 + (data.b * 1.5);
   } else if (type == 5) { // Plant
     hue = 0.4;
     lightness -= 0.1;
     saturation = 0.4;
   } else if (type == 6) { // Zoop
-   hue = 0.3;
-    lightness += 0.4;
+   hue = 0.9;
+    lightness += 0.7;
   } else if (type == 7) { // Shrimp
     hue = 0.0;
     lightness += 0.4;
   } else if (type == 8) { // Bacteria
-   hue = 0.8;
+   hue = 0.;
     saturation = 0.9;
     lightness = 0.8;
   } else if (type == 9) { // ???
@@ -92,6 +92,7 @@ void main() {
     lightness = 0.7 + data.g * 0.5;
   } else if (type == 10) { // Waste
     hue = 0.9;
+    lightness -=0.3;
     saturation = 0.4;
   } else if (type == 11) { // Seed
     hue = 0.4;
