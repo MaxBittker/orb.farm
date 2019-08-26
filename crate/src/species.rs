@@ -43,8 +43,8 @@ impl Species {
             Species::Stone => update_stone(cell, api),
 
             // Species::Anaerobic => {}
-            Species::Bacteria => {}
-            Species::Zoop => {}
+            Species::Bacteria => update_bacteria(cell,api),
+            Species::Zoop => update_zoop(cell,api),
             Species::Waste => update_waste(cell, api),
             Species::Algae => {}
 
@@ -69,7 +69,7 @@ pub fn update_waste(cell: Cell, mut api: SandApi) {
         api.set(dx, 1, cell);
     }
 }
-pub fn update_sand(cell: Cell, mut api: SandApi) {
+pub fn update_bacteria(cell: Cell, mut api: SandApi) {
     let dx = rand_dir_2();
 
     let nbr = api.get(0, 1);
@@ -81,6 +81,35 @@ pub fn update_sand(cell: Cell, mut api: SandApi) {
         api.set(0, 0, dnbr);
         api.set(dx, 1, cell);
     }
+}
+
+pub fn update_sand(cell: Cell, mut api: SandApi) {
+        let dx = rand_dir();
+
+    let down = api.get(0, 1);
+    let nbr = api.get(dx, 1);
+    if down.species == Species::Air {
+        api.set(0, 0, EMPTY_CELL);
+        api.set(0, 1, cell);
+    } else if nbr.species == Species::Water {
+        api.set(0, 0, nbr);
+        api.set(dx, 1, cell);
+    } else if nbr.species == Species::Air {
+        api.set(0, 0, EMPTY_CELL);
+        api.set(dx, 1, cell);
+    }
+    
+    // let dx = rand_dir_2();
+
+    // let nbr = api.get(0, 1);
+    // let dnbr = api.get(dx, 1);
+    // if nbr.species == Species::Air || nbr.species == Species::Water {
+    //     api.set(0, 0, nbr);
+    //     api.set(0, 1, cell);
+    // } else if dnbr.species == Species::Air || dnbr.species == Species::Water {
+    //     api.set(0, 0, dnbr);
+    //     api.set(dx, 1, cell);
+    // }
 }
 pub fn update_water(cell: Cell, mut api: SandApi) {
     let dx = rand_dir();
@@ -106,22 +135,47 @@ pub fn update_water(cell: Cell, mut api: SandApi) {
         api.set(-dx, 1, cell);
     }
 }
-pub fn update_dust(cell: Cell, mut api: SandApi) {
-    let dx = rand_dir();
 
+pub fn update_zoop(cell: Cell, mut api: SandApi) {
     let down = api.get(0, 1);
-    let nbr = api.get(dx, 1);
     if down.species == Species::Air {
         api.set(0, 0, EMPTY_CELL);
         api.set(0, 1, cell);
-    } else if nbr.species == Species::Water {
+
+        return;
+    }
+    let (dx, dy) = rand_vec();
+    if cell.age > 250 {
+        api.set(0, 0, Cell::new(Species::Waste));
+        return;
+    }
+    let nbr = api.get(dx, dy);
+    if nbr.species == Species::Water {
         api.set(0, 0, nbr);
-        api.set(dx, 1, cell);
-    } else if nbr.species == Species::Air {
-        api.set(0, 0, EMPTY_CELL);
-        api.set(dx, 1, cell);
+        api.set(
+            dx,
+            dy,
+            Cell {
+                energy: cell.energy,
+                age: cell.age + api.universe.generation,
+                ..cell
+            },
+        );
+        if api.use_oxygen() {
+            api.set(
+                0,
+                0,
+                Cell {
+                    energy: cell.energy / 2,
+                    age: 0,
+                    ..cell
+                },
+            );
+        }
     }
 }
+
+
 pub fn update_shrimp(cell: Cell, mut api: SandApi) {
     let down = api.get(0, 1);
     if down.species == Species::Air {
@@ -143,7 +197,7 @@ pub fn update_shrimp(cell: Cell, mut api: SandApi) {
             dy,
             Cell {
                 energy: cell.energy,
-                age: cell.age + 1,
+                age: cell.age + api.universe.generation,
                 ..cell
             },
         );

@@ -77,10 +77,8 @@ void main() {
     lightness -= 0.1;
     saturation = 0.4;
   } else if (type == 6) { // Zoop
-    hue = (data.g * 0.1);
-    saturation = 0.7;
-
-    lightness = 0.7 + (data.g * 0.3) + ((noise + 0.8) * 0.5);
+   hue = 0.3;
+    lightness += 0.4;
   } else if (type == 7) { // Shrimp
     hue = 0.0;
     lightness += 0.4;
