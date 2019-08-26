@@ -26,8 +26,8 @@ pub struct Light {
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub struct Cell {
     species: Species,
-    ra: u8,
-    rb: u8,
+    energy: u8,
+    age: u8,
     clock: u8,
 }
 
@@ -35,8 +35,8 @@ impl Cell {
     pub fn new(species: Species) -> Cell {
         Cell {
             species: species,
-            ra: 100 + (js_sys::Math::random() * 50.) as u8,
-            rb: 0,
+            energy: 100 + (js_sys::Math::random() * 50.) as u8,
+            age: 0,
             clock: 0,
         }
     }
@@ -47,8 +47,8 @@ impl Cell {
 
 static EMPTY_CELL: Cell = Cell {
     species: Species::Air,
-    ra: 0,
-    rb: 0,
+    energy: 0,
+    age: 0,
     clock: 0,
 };
 
@@ -73,16 +73,16 @@ pub struct SandApi<'a> {
 
 impl<'a> SandApi<'a> {
     pub fn get(&mut self, dx: i32, dy: i32) -> Cell {
-        if dx > 1 || dx < -1 || dy > 2 || dy < -2 {
-            panic!("oob set");
+        if dx > 2 || dx < -2 || dy > 2 || dy < -2 {
+            panic!("oob get");
         }
         let nx = self.x + dx;
         let ny = self.y + dy;
         if nx < 0 || nx > self.universe.width - 1 || ny < 0 || ny > self.universe.height - 1 {
             return Cell {
                 species: Species::Glass,
-                ra: 0,
-                rb: 0,
+                energy: 0,
+                age: 0,
                 clock: self.universe.generation,
             };
         }
@@ -109,7 +109,24 @@ impl<'a> SandApi<'a> {
 
         self.universe.lights[idx]
     }
+    pub fn use_co2(&mut self) -> bool {
+        if self.universe.CO2 == 0 {
+            return false;
+        }
+        self.universe.CO2 = self.universe.CO2.saturating_sub(1);
+        self.universe.O2 = self.universe.O2.saturating_add(1);
 
+        return true;
+    }
+    pub fn use_oxygen(&mut self) -> bool {
+        if self.universe.O2 == 0 {
+            return false;
+        }
+        self.universe.O2 = self.universe.O2.saturating_sub(1);
+        self.universe.CO2 = self.universe.CO2.saturating_add(1);
+
+        return true;
+    }
 }
 
 #[wasm_bindgen]
@@ -136,13 +153,11 @@ impl Universe {
                     Species::Plant => 10,
                     Species::Seed => 35,
 
-
-                    Species::Algea => 10,
-                    Species::Anaerobic => 10,
+                    Species::Algae => 10,
+                    // Species::Anaerobic => 10,
                     Species::Bacteria => 10,
                     Species::Waste => 10,
-                    Species::Zoey => 10,
-
+                    Species::Zoop => 10,
 
                     Species::Air => 0,
                     Species::Glass => 0,
@@ -162,7 +177,6 @@ impl Universe {
         // let dx = self.winds[(self.width * self.height / 2) as usize].dx;
         // let js: JsValue = (dx).into();
         // console::log_2(&"dx: ".into(), &js);
-
 
         self.generation = self.generation.wrapping_add(1) % 2;
         for x in 0..self.width {
@@ -197,13 +211,19 @@ impl Universe {
         self.height
     }
 
+    pub fn O2(&self) -> u8 {
+        self.O2
+    }
+
+    pub fn CO2(&self) -> u8 {
+        self.CO2
+    }
     pub fn cells(&self) -> *const Cell {
         self.cells.as_ptr()
     }
     pub fn lights(&self) -> *const Light {
         self.lights.as_ptr()
     }
-
 
     pub fn paint(&mut self, x: i32, y: i32, size: i32, species: Species) {
         let radius = size / 2;
@@ -223,10 +243,10 @@ impl Universe {
                 if self.get_cell(px, py).species == Species::Air || species == Species::Air {
                     self.cells[i] = Cell {
                         species: species,
-                        ra: 80
+                        energy: 80
                             + (js_sys::Math::random() * 30.) as u8
                             + ((self.generation % 127) as i8 - 60).abs() as u8,
-                        rb: 0,
+                        age: 0,
                         clock: self.generation,
                     }
                 }
@@ -269,8 +289,8 @@ impl Universe {
             cells,
             lights,
             time: 0,
-            O2: 0,
-            CO2: 0,
+            O2: 100,
+            CO2: 100,
             undo_stack: VecDeque::with_capacity(50),
             generation: 0,
         }
@@ -288,11 +308,10 @@ impl Universe {
         return self.cells[i];
     }
 
-    fn get_light(&self, x: i32, y: i32) -> Light {
-        let i = self.get_index(x, y);
-        return self.lights[i];
-    }
-
+    // fn get_light(&self, x: i32, y: i32) -> Light {
+    //     let i = self.get_index(x, y);
+    //     return self.lights[i];
+    // }
 
     fn update_cell(cell: Cell, api: SandApi) {
         if cell.clock == api.universe.generation {

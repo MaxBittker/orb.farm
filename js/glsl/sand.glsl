@@ -40,7 +40,7 @@ void main() {
   float a = 1.0;
   float brightness = 0.0;
 
-  if (type == 0) {
+  if (type == 0) { //Air
 
     hue = 0.0;
     saturation = 0.1;
@@ -52,54 +52,55 @@ void main() {
       a = 1.0;
     }
 
-  } else if (type == 1) {
+  } else if (type == 1) { //Glass
     hue = 0.1;
     saturation = 0.1;
-    lightness = 0.4;
-  } else if (type == 2) {
+    lightness = 0.5;
+  } else if (type == 2) { // Sand
     hue = 0.1;
     saturation = 0.5;
     lightness += 0.3;
-  } else if (type == 3) { // water
-    hue = 0.6;
-    lightness = 0.7 + data.g * 0.25 + noise * 0.1;
+  } else if (type == 3) { // Water
+    hue = 0.58;
+    saturation = 0.6;
+    lightness = 0.5 + data.g * 0.25 + noise * 0.1;
     a = 0.4;
     if (isSnapshot) {
       a = 1.0;
     }
-  } else if (type == 4) { // gas
-    hue = 0.0;
-    lightness += 0.4;
-    saturation = 0.2 + (data.b * 1.5);
-  } else if (type == 5) { // clone
+  } else if (type == 4) { // Algae
     hue = 0.4;
+    lightness += 0.1;
+    saturation = 0.5 + (data.b * 1.5);
+  } else if (type == 5) { // Plant
+    hue = 0.4;
+    lightness -= 0.1;
     saturation = 0.4;
-  } else if (type == 6) { // fire
+  } else if (type == 6) { // Zoop
     hue = (data.g * 0.1);
     saturation = 0.7;
 
     lightness = 0.7 + (data.g * 0.3) + ((noise + 0.8) * 0.5);
-  } else if (type == 7) { // wood
+  } else if (type == 7) { // Shrimp
     hue = 0.0;
     lightness += 0.4;
-  } else if (type == 8) { // lava
-    hue = (data.g * 0.1);
-    lightness = 0.7 + data.g * 0.25 + noise * 0.1;
-  } else if (type == 9) { // ice
+  } else if (type == 8) { // Bacteria
+   hue = 0.8;
+    saturation = 0.9;
+    lightness = 0.8;
+  } else if (type == 9) { // ???
     hue = 0.6;
     saturation = 0.4;
     lightness = 0.7 + data.g * 0.5;
-  } else if (type == 10) { // sink
+  } else if (type == 10) { // Waste
     hue = 0.9;
     saturation = 0.4;
-    lightness = 1.0;
-  } else if (type == 11) { // plant
+  } else if (type == 11) { // Seed
     hue = 0.4;
     saturation = 0.4;
-  } else if (type == 12) { // acid
-    hue = 0.18;
-    saturation = 0.9;
-    lightness = 0.8 + data.g * 0.2 + noise * 0.05;
+  } else if (type == 12) { // Stone
+   hue = -0.4 + (data.g * 0.5);
+    saturation = 0.1;
   } else if (type == 13) { // stone
     hue = -0.4 + (data.g * 0.5);
     saturation = 0.1;
@@ -109,9 +110,7 @@ void main() {
     saturation = 0.4;
     lightness = 0.8;
   } else if (type == 15) { // mite
-    hue = 0.8;
-    saturation = 0.9;
-    lightness = 0.8;
+   
   } else if (type == 16) { // oil
     hue = (data.g * 5.0) + t * .008;
 

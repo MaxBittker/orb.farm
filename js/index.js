@@ -50,12 +50,15 @@ if (mobileAndTabletcheck()) {
 let n = 300;
 const universe = Universe.new(n, n);
 universe.paint(150, 150, 600, Species.Glass);
-universe.paint(150, 150, 299, Species.Empty);
+universe.paint(150, 150, 299, Species.Air);
+for (var x = -50; x < 49; x += 1) {
+  universe.paint(150 + x, 150 +49, 200, Species.Air);
+  universe.paint(150 + x, 150 -50, 200, Species.Air);
+  universe.paint(150 - 50, 150 +x, 200, Species.Air);
+  universe.paint(150 + 49, 150 +x, 200, Species.Air);
 
-universe.paint(150 + 49, 150 + 49, 200, Species.Empty);
-universe.paint(150 - 49, 150 - 49, 200, Species.Empty);
-universe.paint(150 + 49, 150 - 49, 200, Species.Empty);
-universe.paint(150 - 49, 150 + 49, 200, Species.Empty);
+}
+
 
 universe.paint(50, 150, 200, Species.Water);
 universe.paint(150, 150, 200, Species.Water);
