@@ -49,7 +49,7 @@ const ElementButton = (name, selectedElement, setElement) => {
   );
 };
 
-let sizeMap = [2, 5, 10, 18, 30, 45];
+let sizeMap = [2, 5, 10, 18];
 
 class Index extends React.Component {
   constructor(props) {
@@ -65,10 +65,6 @@ class Index extends React.Component {
       selectedElement: Species.Water
     };
     window.UI = this;
-    //if we start in the background, pause;
-    if (this.props.location.pathname !== "/") {
-      window.setTimeout(() => this.pause(), 50);
-    }
 
     this.load();
   }
@@ -308,7 +304,7 @@ class Index extends React.Component {
               style={{ padding: "0px" }}
             >
               <svg height="23" width="23" id="d" viewBox="0 0 100 100">
-                <circle cx="50" cy="50" r={2 + v} />
+                <circle cx="50" cy="50" r={2 + v * 2} />
               </svg>
             </button>
           ))}
@@ -322,11 +318,13 @@ class Index extends React.Component {
         >
           ↜
         </button>
-        {Object.keys(Species).map(n =>
-          ElementButton(n, selectedElement, id =>
-            this.setState({ selectedElement: id })
-          )
-        )}
+        {Object.keys(Species)
+          .filter(name => name !== "Plant")
+          .map(n =>
+            ElementButton(n, selectedElement, id =>
+              this.setState({ selectedElement: id })
+            )
+          )}
 
         {this.state.currentSubmission && (
           <div className="submission-title">

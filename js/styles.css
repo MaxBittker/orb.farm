@@ -22,11 +22,15 @@ body,
   /* background-color: rgba(00, 00, 00, 0.2); */
   background-color: cornsilk;
   /* background: rgb(154, 45, 12); */
-  background-image: url("http://www.bestfunforall.com/wallpaperbetter/imgs/Sky%20Clouds%20Sunlight%20HD%20wallpaper%20%202.jpg");
   /* filter: saturate(0.5); */
   /* background-size: 100px 100px; */
 
   /* background-image: url("http://api.thumbr.it/whitenoise-361x370.png?background=c7c1b9ff&noise=626262&density=45&opacity=15"); */
+}
+#background {
+  background-image: url("https://source.unsplash.com/collection/2527152/1600x900/");
+  filter: blur(5px);
+  z-index: -1;
 }
 #scene {
   display: flex;
@@ -37,37 +41,43 @@ body,
   background-color: #866414;
   left: -20px;
   width: 200vw;
-  height: 1000px;
-  background-image: url("http://i.imgur.com/ilyEqPt.png");
-  background-size: 32px 32px;
+  height: 300px;
+  background-image: url("https://northernlogsupply.com/wp-content/uploads/2017/02/weathered-barn-red.jpg");
+  /* background-size: 32px 32px; */
+  filter: contrast(0.2);
 }
 
 #jar {
   /* flex-grow: 1; */
   line-height: 0;
   display: inline-block;
-
+  padding: 30px;
   margin: auto;
-  margin-top: 150px;
+  margin-top: 10px;
 }
 #cap {
   background-color: steelblue;
   border-radius: 10px 10px 0px 0px;
-  margin-left: 25%;
-  margin-right: 25%;
-  height: 25px;
+  margin-left: 200px;
+  margin-right: 200px;
+  height: 35px;
   background-image: url("https://allfreedesigns.com/wp-content/uploads/2013/05/cork-texture-1.jpg");
 }
 #bottom {
   margin: 0;
-  margin-left: 30px;
-  margin-right: 30px;
+  margin-left: 190px;
+  margin-right: 190px;
   background-color: #866414;
   background-image: url("https://allfreedesigns.com/wp-content/uploads/2013/05/cork-texture-1.jpg");
   border-radius: 0px 0px 5px 5px;
   height: 10px;
 }
-canvas {
+#canvas-container {
+  display: block;
+  position: relative;
+}
+canvas,
+#glass {
   position: relative;
   bottom: 0;
   /* top: 0; */
@@ -79,14 +89,28 @@ canvas {
   /* max-width: ca100%; */
   margin: auto;
   margin-bottom: 0px;
-  border: 1px black solid;
+  /* border: 1px black solid; */
   /* box-shadow: 0px 0px 3px 3px rgba(0, 0, 0, 0.1); */
-  border-radius: 30px 30px 30px 30px;
+  border-radius: 200px 200px 200px 200px;
 }
-
+#glass {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 1;
+  /* background-color: red; */
+  height: 100%;
+  width: 100%;
+  filter: blur(20px);
+}
 #sand-canvas {
   z-index: 2;
 }
+/* #light-canvas {
+  z-index: 2;
+} */
 canvas,
 img {
   image-rendering: crisp-edges;

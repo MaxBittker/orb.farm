@@ -5,6 +5,7 @@ uniform vec2 resolution;
 uniform bool isSnapshot;
 uniform sampler2D backBuffer;
 uniform sampler2D data;
+uniform sampler2D light;
 
 varying vec2 uv;
 
@@ -21,28 +22,36 @@ void main() {
   //   float r = abs(sin(t / 25.));
   //   if (length(uv) < r && length(uv) > r - 0.1) {
   // color = hsv2rgb(vec3(sin(t * 0.01), 0.5, 0.5));
+  float noise = snoise3(vec3(floor(uv * resolution / dpi), t * 0.05));
 
   vec2 textCoord = (uv * vec2(0.5, -0.5)) + vec2(0.5);
+  vec2 sampleCoord =
+      (uv * vec2(0.5, -0.5)) + vec2(0.5) + vec2(noise, 0.0) / resolution;
   // vec3 bb = texture2D(backBuffer, (uv * 0.5) + vec2(0.5)).rgb;
 
   vec4 data = texture2D(data, textCoord);
+  float lightValue = texture2D(light, textCoord).r;
+  float sampleLightValue = texture2D(light, sampleCoord).r;
+  lightValue = 0.5 * lightValue + 0.5 * sampleLightValue;
   int type = int((data.r * 255.) + 0.1);
   float hue = 0.0;
   float saturation = 0.6;
   float lightness = 0.3 + data.g * 0.5;
-  float noise = snoise3(vec3(floor(uv * resolution / dpi), t * 0.05));
   float a = 1.0;
+  float brightness = 0.0;
 
   if (type == 0) {
+
     hue = 0.0;
     saturation = 0.1;
     lightness = 0.1;
-    a = 0.2;
+    a = 0.0;
     if (isSnapshot) {
       saturation = 0.05;
       lightness = 1.01;
       a = 1.0;
     }
+
   } else if (type == 1) {
     hue = 0.1;
     saturation = 0.1;
@@ -54,22 +63,25 @@ void main() {
   } else if (type == 3) { // water
     hue = 0.6;
     lightness = 0.7 + data.g * 0.25 + noise * 0.1;
+    a = 0.4;
+    if (isSnapshot) {
+      a = 1.0;
+    }
   } else if (type == 4) { // gas
     hue = 0.0;
     lightness += 0.4;
     saturation = 0.2 + (data.b * 1.5);
   } else if (type == 5) { // clone
-    hue = 0.9;
-    saturation = 0.3;
+    hue = 0.4;
+    saturation = 0.4;
   } else if (type == 6) { // fire
     hue = (data.g * 0.1);
     saturation = 0.7;
 
     lightness = 0.7 + (data.g * 0.3) + ((noise + 0.8) * 0.5);
   } else if (type == 7) { // wood
-    hue = (data.g * 0.1);
-    saturation = 0.3;
-    lightness = 0.3 + data.g * 0.3;
+    hue = 0.0;
+    lightness += 0.4;
   } else if (type == 8) { // lava
     hue = (data.g * 0.1);
     lightness = 0.7 + data.g * 0.25 + noise * 0.1;
@@ -124,6 +136,9 @@ void main() {
   if (isSnapshot == false) {
     lightness *= (0.975 + snoise2(floor(uv * resolution / dpi)) * 0.025);
   }
+  lightness += lightValue / 2.;
+  saturation = min(saturation, 1.0);
+  lightness = min(lightness, 1.0);
   color = hsv2rgb(vec3(hue, saturation, lightness));
   gl_FragColor = vec4(color, a);
 }

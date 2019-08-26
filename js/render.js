@@ -16,22 +16,46 @@ let startWebGL = ({ canvas, universe, isSnapshot = false }) => {
   const width = universe.width();
   const height = universe.height();
   let cell_pointer = universe.cells();
+  let light_pointer = universe.lights();
   let cells = new Uint8Array(memory.buffer, cell_pointer, width * height * 4);
+  let lights = new Uint8Array(memory.buffer, light_pointer, width * height * 4);
   const dataTexture = regl.texture({ width, height, data: cells });
+  const lightTexture = regl.texture({ width, height, data: lights });
 
   let drawSand = regl({
+    blend: {
+      enable: true,
+      func: {
+        srcRGB: "src alpha",
+        srcAlpha: 1,
+        dstRGB: "one minus src alpha",
+        dstAlpha: 1
+      },
+      equation: {
+        rgb: "add",
+        alpha: "add"
+      },
+      color: [0, 0, 0, 0]
+    },
     frag: fsh,
     uniforms: {
       t: ({ tick }) => tick,
       data: () => {
-        // if (cell_pointer != universe.cells()) {
-        //   console.log(cell_pointer);
-        // }
         cell_pointer = universe.cells();
         cells = new Uint8Array(memory.buffer, cell_pointer, width * height * 4);
-        // }
 
         return dataTexture({ width, height, data: cells });
+      },
+      light: () => {
+        light_pointer = universe.lights();
+
+        lights = new Uint8Array(
+          memory.buffer,
+          light_pointer,
+          width * height * 4
+        );
+
+        return lightTexture({ width, height, data: lights });
       },
       resolution: ({ viewportWidth, viewportHeight }) => [
         viewportWidth,

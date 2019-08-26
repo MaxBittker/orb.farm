@@ -1,10 +1,10 @@
-import { Universe } from "../crate/pkg";
+import { Universe, Species } from "../crate/pkg";
 
 import { startWebGL } from "./render";
 import { fps } from "./fps";
 import {} from "./paint";
 import {} from "./app";
-
+// import { startLight } from "./light";
 if (window.safari) {
   history.pushState(null, null, location.href);
   window.onpopstate = function(event) {
@@ -49,6 +49,23 @@ if (mobileAndTabletcheck()) {
 
 let n = 300;
 const universe = Universe.new(n, n);
+universe.paint(150, 150, 600, Species.Glass);
+universe.paint(150, 150, 299, Species.Empty);
+
+universe.paint(150 + 49, 150 + 49, 200, Species.Empty);
+universe.paint(150 - 49, 150 - 49, 200, Species.Empty);
+universe.paint(150 + 49, 150 - 49, 200, Species.Empty);
+universe.paint(150 - 49, 150 + 49, 200, Species.Empty);
+
+universe.paint(50, 150, 200, Species.Water);
+universe.paint(150, 150, 200, Species.Water);
+universe.paint(250, 150, 200, Species.Water);
+
+for (var x = 0; x < n; x += 10) {
+  universe.paint(x, 250, 20, Species.Sand);
+}
+
+universe.paint(150, 50, 25, Species.Seed);
 let ratio = 2;
 let width = n;
 let height = n;
@@ -67,46 +84,46 @@ document.getElementById("background").addEventListener("touchmove", e => {
 
 const ui = document.getElementById("ui");
 
-// let resize = () => {
-//   let screen_width = window.innerWidth;
-//   let uiheight = 50;
-//   let screen_height = window.innerHeight - uiheight;
+let resize = () => {
+  let screen_width = window.innerWidth;
+  let uiheight = 50;
+  let screen_height = window.innerHeight - uiheight;
 
-//   let canvasStyle = "";
-//   let uiStyle = "";
-//   if (screen_width > screen_height) {
-//     if (screen_width - window.innerHeight < 400) {
-//       // landscape compressed
+  let canvasStyle = "";
+  let uiStyle = "";
+  if (screen_width > screen_height) {
+    if (screen_width - window.innerHeight < 400) {
+      // landscape compressed
+      // canvasStyle = `height: ${window.innerHeight}px; margin:3px`;
+      // uiStyle = `width: ${screen_width -
+      // window.innerHeight -
+      // 12}px; margin: 2px;`;
+    } else {
+      // landscape wide
+      canvasStyle = `height: ${window.innerHeight}px`;
+      uiStyle = `width: ${(screen_width - window.innerHeight) / 2 -
+        7}px; margin: 2px;`;
+    }
+  } else {
+    //portrait (mobile)
+    canvasStyle = `width: ${screen_width}px; `;
+    uiStyle = "";
+  }
+  ui.style = uiStyle;
+  canvas.style = canvasStyle;
+};
 
-//       canvasStyle = `height: ${window.innerHeight}px; margin:3px`;
-//       uiStyle = `width: ${screen_width -
-//         window.innerHeight -
-//         12}px; margin: 2px;`;
-//     } else {
-//       // landscape wide
-//       canvasStyle = `height: ${window.innerHeight}px`;
-//       uiStyle = `width: ${(screen_width - window.innerHeight) / 2 -
-//         7}px; margin: 2px;`;
-//     }
-//   } else {
-//     //portrait (mobile)
-//     canvasStyle = `width: ${screen_width}px; bottom:3px;`;
-//     uiStyle = "";
-//   }
-//   ui.style = uiStyle;
-//   canvas.style = canvasStyle;
-// };
-
-// resize();
-// window.addEventListener("deviceorientation", resize, true);
-// window.addEventListener("resize", resize);
+resize();
+window.addEventListener("deviceorientation", resize, true);
+window.addEventListener("resize", resize);
 
 let drawSand = startWebGL({ canvas, universe });
-
+// let light = startLight({ universe });
 const renderLoop = () => {
   if (!window.paused) {
     fps.render(); // new
     universe.tick();
+    // light.update();
   }
   drawSand();
 

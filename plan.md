@@ -1,6 +1,9 @@
+Sunlight
+
 Nutrients:
-Moisture
 Sugar
+Oxygen
+C02
 Nitrogen
 
 Substrates:
@@ -11,15 +14,13 @@ Water
 Plants:
 kelp
 grass
-flower
-vine
+algae
 
-Fungus:
-mycilium
-puff-cap
+fungus & bactera
+decomposer
 
 Animals:
-worm
-ant
+crab
 snail
 shrimps
+mites

@@ -14,11 +14,11 @@ use wasm_bindgen::prelude::*;
 #[wasm_bindgen]
 #[repr(C)]
 #[derive(Clone, Copy, Debug, PartialEq)]
-pub struct Wind {
-    dx: u8,
-    dy: u8,
-    pressure: u8,
-    density: u8,
+pub struct Light {
+    sun: u8,
+    g: u8,
+    b: u8,
+    a: u8,
 }
 
 #[wasm_bindgen]
@@ -46,7 +46,7 @@ impl Cell {
 }
 
 static EMPTY_CELL: Cell = Cell {
-    species: Species::Empty,
+    species: Species::Air,
     ra: 0,
     rb: 0,
     clock: 0,
@@ -58,7 +58,11 @@ pub struct Universe {
     height: i32,
     cells: Vec<Cell>,
     undo_stack: VecDeque<Vec<Cell>>,
+    lights: Vec<Light>,
     generation: u8,
+    time: u8,
+    O2: u8,
+    CO2: u8,
 }
 
 pub struct SandApi<'a> {
@@ -76,7 +80,7 @@ impl<'a> SandApi<'a> {
         let ny = self.y + dy;
         if nx < 0 || nx > self.universe.width - 1 || ny < 0 || ny > self.universe.height - 1 {
             return Cell {
-                species: Species::Wall,
+                species: Species::Glass,
                 ra: 0,
                 rb: 0,
                 clock: self.universe.generation,
@@ -97,7 +101,13 @@ impl<'a> SandApi<'a> {
         let i = self.universe.get_index(nx, ny);
         // v.clock += 1;
         self.universe.cells[i] = v;
-        self.universe.cells[i].clock = self.universe.generation.wrapping_add(1);
+        self.universe.cells[i].clock = self.universe.generation;
+    }
+
+    pub fn get_light(&mut self) -> Light {
+        let idx = self.universe.get_index(self.x, self.y);
+
+        self.universe.lights[idx]
     }
 
 }
@@ -112,28 +122,49 @@ impl Universe {
             }
         }
     }
+    pub fn calculate_light(&mut self) {
+        for x in 0..self.width {
+            let mut sunlight: u8 = 255;
+
+            for y in 0..self.height {
+                let idx = self.get_index(x, y);
+                let cell = self.get_cell(x, y);
+                let block: u8 = match cell.species {
+                    Species::Water => 0,
+                    Species::Shrimp => 25,
+
+                    Species::Plant => 10,
+                    Species::Seed => 35,
+
+
+                    Species::Algea => 10,
+                    Species::Anaerobic => 10,
+                    Species::Bacteria => 10,
+                    Species::Waste => 10,
+                    Species::Zoey => 10,
+
+
+                    Species::Air => 0,
+                    Species::Glass => 0,
+
+                    Species::Stone => 100,
+                    Species::Sand => 100,
+                };
+                sunlight = sunlight.saturating_sub(block);
+
+                self.lights[idx].sun = sunlight;
+            }
+        }
+    }
+
     pub fn tick(&mut self) {
         // let mut next = self.cells.clone();
         // let dx = self.winds[(self.width * self.height / 2) as usize].dx;
         // let js: JsValue = (dx).into();
         // console::log_2(&"dx: ".into(), &js);
 
-        for x in 0..self.width {
-            for y in 0..self.height {
-                let cell = self.get_cell(x, y);
-                // let wind = self.get_wind(x, y);
-                // Universe::blow_wind(
-                //     cell,
-                //     wind,
-                //     SandApi {
-                //         universe: self,
-                //         x,
-                //         y,
-                //     },
-                // )
-            }
-        }
-        self.generation = self.generation.wrapping_add(1);
+
+        self.generation = self.generation.wrapping_add(1) % 2;
         for x in 0..self.width {
             let scanx = if self.generation % 2 == 0 {
                 self.width - (1 + x)
@@ -142,7 +173,7 @@ impl Universe {
             };
 
             for y in 0..self.height {
-                let idx = self.get_index(scanx, self.height - (1 + y));
+                // let idx = self.get_index(scanx, self.height - (1 + y));
                 let cell = self.get_cell(scanx, y);
 
                 Universe::update_cell(
@@ -155,8 +186,7 @@ impl Universe {
                 );
             }
         }
-
-        self.generation = self.generation.wrapping_add(1);
+        self.calculate_light();
     }
 
     pub fn width(&self) -> i32 {
@@ -169,6 +199,9 @@ impl Universe {
 
     pub fn cells(&self) -> *const Cell {
         self.cells.as_ptr()
+    }
+    pub fn lights(&self) -> *const Light {
+        self.lights.as_ptr()
     }
 
 
@@ -187,7 +220,7 @@ impl Universe {
                 if px < 0 || px > self.width - 1 || py < 0 || py > self.height - 1 {
                     continue;
                 }
-                if self.get_cell(px, py).species == Species::Empty || species == Species::Empty {
+                if self.get_cell(px, py).species == Species::Air || species == Species::Air {
                     self.cells[i] = Cell {
                         species: species,
                         ra: 80
@@ -219,20 +252,14 @@ impl Universe {
     }
 
     pub fn new(width: i32, height: i32) -> Universe {
-        let cells = (0..width * height)
-            .map(|i| {
-                if js_sys::Math::random() > 0.9995 && i < width * height / 4 {
-                    Cell::new(Species::Seed)
-                } else if i < width * height / 2 {
-                    Cell::new(Species::Water)
+        let cells = (0..width * height).map(|_| EMPTY_CELL).collect();
 
-                } else if js_sys::Math::random() < 0.9 || i < width * height / 3 {
-                    EMPTY_CELL
-                } else {
-
-                    Cell::new(Species::Sand)
-
-                }
+        let lights: Vec<Light> = (0..width * height)
+            .map(|_i| Light {
+                sun: 0,
+                g: 0,
+                b: 0,
+                a: 0,
             })
             .collect();
 
@@ -240,6 +267,10 @@ impl Universe {
             width,
             height,
             cells,
+            lights,
+            time: 0,
+            O2: 0,
+            CO2: 0,
             undo_stack: VecDeque::with_capacity(50),
             generation: 0,
         }
@@ -257,9 +288,14 @@ impl Universe {
         return self.cells[i];
     }
 
+    fn get_light(&self, x: i32, y: i32) -> Light {
+        let i = self.get_index(x, y);
+        return self.lights[i];
+    }
+
 
     fn update_cell(cell: Cell, api: SandApi) {
-        if cell.clock - api.universe.generation == 1 {
+        if cell.clock == api.universe.generation {
             return;
         }
 
