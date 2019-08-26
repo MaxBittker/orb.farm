@@ -83,7 +83,7 @@ pub fn update_bacteria(cell: Cell, mut api: SandApi) {
         api.set(0, 0, Cell::new(Species::Nitrogen));
         return;
     }
-    
+
     if sample.species == Species::Waste {
         api.set(
             dx,
@@ -354,7 +354,8 @@ pub fn update_plant(cell: Cell, mut api: SandApi) {
     let energy = cell.energy;
 
     let light = api.get_light().sun;
-    if energy > 100 && rand_int(light as i32)> 200
+    if energy > 100
+        && rand_int(light as i32) > 200
         && (api.get(dx, -1).species == Species::Water
             && api.get(0, -1).species == Species::Water
             && api.get(-dx, -1).species == Species::Water
@@ -384,13 +385,12 @@ pub fn update_plant(cell: Cell, mut api: SandApi) {
 
     let nbr = api.get(dx, dy);
 
-
     if nbr.species == Species::Plant || nbr.species == Species::Sand {
         //diffuse nutrients
 
         let shared_energy = (energy / 2) + (nbr.energy / 2);
-        let cappilary_action = dy*-2;
-     
+        let cappilary_action = dy * -2;
+
         let new_energy = cmp::min(
             (((energy / 2) + (shared_energy / 2)) as i32).saturating_sub(cappilary_action),
             255,
@@ -490,7 +490,7 @@ pub fn update_seed(cell: Cell, mut api: SandApi) {
                         },
                     )
                 } else {
-                    api.set(0, 0, EMPTY_CELL);
+                    api.set(0, 0, WATER);
                 }
             }
         } else {

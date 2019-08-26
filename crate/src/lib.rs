@@ -5,6 +5,7 @@ extern crate web_sys;
 
 mod species;
 mod utils;
+use utils::*;
 
 use species::Species;
 use std::collections::VecDeque;
@@ -58,7 +59,6 @@ static WATER: Cell = Cell {
     age: 0,
     clock: 0,
 };
-
 
 #[wasm_bindgen]
 pub struct Universe {
@@ -118,7 +118,7 @@ impl<'a> SandApi<'a> {
         self.universe.lights[idx]
     }
     pub fn use_co2(&mut self) -> bool {
-        if self.universe.CO2 == 0 {
+        if (1 + rand_int(200) as u8) > self.universe.CO2 {
             return false;
         }
         self.universe.CO2 = self.universe.CO2.saturating_sub(1);
@@ -127,7 +127,7 @@ impl<'a> SandApi<'a> {
         return true;
     }
     pub fn use_oxygen(&mut self) -> bool {
-        if self.universe.O2 == 0 {
+        if (1 + rand_int(200) as u8) > self.universe.O2 {
             return false;
         }
         self.universe.O2 = self.universe.O2.saturating_sub(1);
@@ -249,7 +249,10 @@ impl Universe {
                 if px < 0 || px > self.width - 1 || py < 0 || py > self.height - 1 {
                     continue;
                 }
-                if self.get_cell(px, py).species == Species::Air || species == Species::Air {
+                if self.get_cell(px, py).species == Species::Water
+                    || self.get_cell(px, py).species == Species::Air
+                    || species == Species::Air
+                {
                     self.cells[i] = Cell {
                         species: species,
                         energy: 80

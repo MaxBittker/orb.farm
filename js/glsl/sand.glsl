@@ -19,10 +19,11 @@ varying vec2 uv;
 
 void main() {
   vec3 color;
+  vec2 grid = floor(uv * resolution / dpi);
   //   float r = abs(sin(t / 25.));
   //   if (length(uv) < r && length(uv) > r - 0.1) {
   // color = hsv2rgb(vec3(sin(t * 0.01), 0.5, 0.5));
-  float noise = snoise3(vec3(floor(uv * resolution / dpi), t * 0.05));
+  float noise = snoise3(vec3(grid, t * 0.05));
 
   vec2 textCoord = (uv * vec2(0.5, -0.5)) + vec2(0.5);
   vec2 sampleCoord =

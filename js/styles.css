@@ -53,14 +53,14 @@ body,
   display: inline-block;
   padding: 30px;
   margin: auto;
-  margin-top: 10px;
+  /* margin-top: 10px; */
 }
 #cap {
   background-color: steelblue;
   border-radius: 10px 10px 0px 0px;
   margin-left: 200px;
   margin-right: 200px;
-  height: 35px;
+  /* height: 35px; */
   background-image: url("https://allfreedesigns.com/wp-content/uploads/2013/05/cork-texture-1.jpg");
 }
 #bottom {

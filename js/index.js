@@ -48,14 +48,15 @@ if (mobileAndTabletcheck()) {
 // }
 
 let n = 300;
+let h = n / 2;
 const universe = Universe.new(n, n);
-universe.paint(150, 150, 600, Species.Glass);
-universe.paint(150, 150, 299, Species.Air);
+universe.paint(h, h, 600, Species.Glass);
+universe.paint(h, h, 299, Species.Air);
 for (var x = -50; x < 49; x += 1) {
-  universe.paint(150 + x, 150 + 49, 200, Species.Air);
-  universe.paint(150 + x, 150 - 50, 200, Species.Air);
-  universe.paint(150 - 50, 150 + x, 200, Species.Air);
-  universe.paint(150 + 49, 150 + x, 200, Species.Air);
+  universe.paint(h + x, h + 49, 200, Species.Air);
+  universe.paint(h + x, h - 50, 200, Species.Air);
+  universe.paint(h - 50, h + x, 200, Species.Air);
+  universe.paint(h + 49, h + x, 200, Species.Air);
 }
 
 for (var x = 30; x < n - 30; x += 10) {
@@ -95,7 +96,7 @@ let resize = () => {
   if (screen_width > screen_height) {
     if (screen_width - window.innerHeight < 400) {
       // landscape compressed
-      // canvasStyle = `height: ${window.innerHeight}px; margin:3px`;
+      canvasStyle = `height: ${window.innerHeight}px; margin:3px`;
       // uiStyle = `width: ${screen_width -
       // window.innerHeight -
       // 12}px; margin: 2px;`;
@@ -107,7 +108,7 @@ let resize = () => {
     }
   } else {
     //portrait (mobile)
-    // canvasStyle = `width: ${screen_width}px; `;
+    canvasStyle = `width: ${screen_width}px; `;
     uiStyle = "";
   }
   ui.style = uiStyle;
