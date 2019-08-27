@@ -4,6 +4,7 @@ use Cell;
 // use Light;
 use SandApi;
 use EMPTY_CELL;
+use WASTE;
 use WATER;
 
 use std::cmp;
@@ -48,7 +49,7 @@ impl Species {
 
             // Species::Anaerobic => {}
             Species::Bacteria => update_bacteria(cell, api),
-            Species::Zoop => update_zoop(cell, api),
+            Species::Zoop => update_rocket(cell, api),
             Species::Waste => update_waste(cell, api),
             Species::Nitrogen => update_nitrogen(cell, api),
             Species::Algae => update_algae(cell, api),
@@ -282,6 +283,84 @@ pub fn update_algae(cell: Cell, mut api: SandApi) {
         );
     }
 }
+const zoop_padding: u8 = 10;
+
+pub fn update_rocket(cell: Cell, mut api: SandApi) {
+    // rocket has complicated behavior that is staged piecewise in ra.
+    // it would be awesome to diagram the ranges of values and their meaning
+    let age = cell.age;
+    let energy = cell.energy;
+
+    if age < zoop_padding {
+        let dx = rand_dir();
+        let dy = rand_int(2);
+        let down = api.get(dx, dy);
+        if (down.species == Species::Water) && rand_int(5) == 0 {
+            api.set(0, 0, down);
+            api.set(
+                dx,
+                dy,
+                Cell {
+                    age: age + rand_int(2) as u8,
+                    ..cell
+                },
+            );
+        } else {
+            api.set(
+                0,
+                0,
+                Cell {
+                    age: age + rand_int(2) as u8,
+                    ..cell
+                },
+            );
+        }
+    } else if age == zoop_padding {
+        let (mut dx, mut dy) = rand_vec_5(); // pointed up
+        let nbr = api.get(dx, dy);
+        if nbr.species != Species::Water {
+            dx *= -1;
+            dy *= -1;
+        }
+        api.set(
+            0,
+            0,
+            Cell {
+                age: zoop_padding + join_dy_dx(dx, dy, 0),
+                ..cell
+            },
+        );
+    } else if age < 250 {
+        let (dx, dy, rem) = split_dy_dx(cell.age - zoop_padding);
+        if rem > 5 {
+            api.set(0, 0, Cell { age: 0, ..cell });
+            return;
+        }
+        let nbr = api.get(dx, dy * 2);
+
+        if nbr.species == Species::Water {
+            api.set(0, 0, nbr);
+            // api.set(0, dy, Cell::new(clone_species));
+
+            let (ndx, ndy) = match rand_int(100) % 20 {
+                0 => adjacency_left((dx, dy)),
+                1 => adjacency_right((dx, dy)),
+                _ => (dx, dy),
+            };
+            api.set(
+                dx,
+                dy,
+                Cell {
+                    age: zoop_padding + join_dy_dx(ndx, ndy, rem + 1),
+                    ..cell
+                },
+            );
+        } else {
+            //fizzle
+            // api.set(0, 0, WASTE);
+        }
+    }
+}
 
 pub fn update_zoop(cell: Cell, mut api: SandApi) {
     let down = api.get(0, 1);
@@ -292,10 +371,10 @@ pub fn update_zoop(cell: Cell, mut api: SandApi) {
         return;
     }
     let (dx, dy) = rand_vec();
-    if cell.age > 250 {
-        api.set(0, 0, Cell::new(Species::Waste));
-        return;
-    }
+    // if cell.age > 250 {
+    //     api.set(0, 0, Cell::new(Species::Waste));
+    //     return;
+    // }
     let nbr = api.get(dx, dy);
     if nbr.species == Species::Water {
         api.set(0, 0, nbr);

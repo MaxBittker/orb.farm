@@ -30,7 +30,7 @@ body,
 #background {
   background-image: url("https://source.unsplash.com/collection/2152825/");
 
-  filter: blur(5px);
+  filter: blur(1px);
   z-index: -1;
 }
 #scene {
@@ -44,7 +44,6 @@ body,
   width: 200vw;
   height: 300px;
   background-image: url("https://northernlogsupply.com/wp-content/uploads/2017/02/weathered-barn-red.jpg");
-  /* background-size: 32px 32px; */
   filter: contrast(0.2);
 }
 
@@ -104,7 +103,7 @@ canvas,
   /* background-color: red; */
   height: 100%;
   width: 100%;
-  filter: blur(2px);
+  /* filter: blur(1px); */
 }
 #sand-canvas {
   z-index: 2;

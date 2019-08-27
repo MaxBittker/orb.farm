@@ -59,6 +59,13 @@ static WATER: Cell = Cell {
     clock: 0,
 };
 
+static WASTE: Cell = Cell {
+    species: Species::Waste,
+    energy: 0,
+    age: 0,
+    clock: 0,
+};
+
 #[wasm_bindgen]
 pub struct Universe {
     width: i32,
