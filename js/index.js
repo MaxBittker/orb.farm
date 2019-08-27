@@ -50,7 +50,7 @@ if (mobileAndTabletcheck()) {
 let n = 100;
 let h = n / 2;
 const universe = Universe.new(n, n);
-universe.paint(h, h, n + 1, Species.Glass);
+universe.paint(h, h, n + 2, Species.Glass);
 universe.paint(h, h, n - 2, Species.Air);
 // for (var x = -50; x <= 49; x += 1) {
 //   universe.paint(h + x, h + 49, 204, Species.Glass);

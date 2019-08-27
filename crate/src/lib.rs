@@ -117,7 +117,7 @@ impl<'a> SandApi<'a> {
         self.universe.lights[idx]
     }
     pub fn use_co2(&mut self) -> bool {
-        if (1 + rand_int(200)  as u32) > self.universe.CO2 {
+        if (1 + rand_int(200) as u32) > self.universe.CO2 {
             return false;
         }
         self.universe.CO2 = self.universe.CO2.saturating_sub(1);
@@ -126,7 +126,7 @@ impl<'a> SandApi<'a> {
         return true;
     }
     pub fn use_oxygen(&mut self) -> bool {
-        if (1 + rand_int(200)as u32 ) > self.universe.O2 {
+        if (1 + rand_int(200) as u32) > self.universe.O2 {
             return false;
         }
         self.universe.O2 = self.universe.O2.saturating_sub(1);
@@ -171,6 +171,7 @@ impl Universe {
                     Species::Glass => 0,
 
                     Species::Stone => 100,
+                    Species::Wood => 100,
                     Species::Sand => 100,
                 };
                 sunlight = sunlight.saturating_sub(block);

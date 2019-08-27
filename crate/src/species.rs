@@ -32,6 +32,7 @@ pub enum Species {
     Waste = 10,
     Seed = 11,
     Stone = 12,
+    Wood = 13,
 }
 
 impl Species {
@@ -43,6 +44,7 @@ impl Species {
             Species::Water => update_water(cell, api),
             Species::Sand => update_sand(cell, api),
             Species::Stone => update_stone(cell, api),
+            Species::Wood => {}
 
             // Species::Anaerobic => {}
             Species::Bacteria => update_bacteria(cell, api),
@@ -77,7 +79,7 @@ pub fn update_nitrogen(cell: Cell, mut api: SandApi) {
 
     let nbr = api.get(0, 1);
 
-   if nbr.species == Species::Sand || nbr.species== Species::Plant {
+    if nbr.species == Species::Sand || nbr.species == Species::Plant {
         api.set(0, 0, WATER);
         api.set(
             0,
@@ -87,7 +89,7 @@ pub fn update_nitrogen(cell: Cell, mut api: SandApi) {
                 ..nbr
             },
         );
-        return
+        return;
     }
     let dnbr = api.get(dx, 1);
     if nbr.species == Species::Air || nbr.species == Species::Water {
@@ -97,10 +99,7 @@ pub fn update_nitrogen(cell: Cell, mut api: SandApi) {
         api.set(0, 0, dnbr);
         api.set(dx, 1, cell);
     }
-
-
 }
-
 
 pub fn update_bacteria(cell: Cell, mut api: SandApi) {
     let (dx, dy) = rand_vec_8();
@@ -159,20 +158,16 @@ pub fn update_sand(cell: Cell, mut api: SandApi) {
 
     let nbr = api.get(dx, dy);
 
- 
-    if nbr.species == Species::Sand {
+    if rand_int(8) == 1 && nbr.species == Species::Sand {
         //diffuse nutrients
 
         let shared_energy = (energy / 2) + (nbr.energy / 2);
 
         //higher is faster
         let diffusion_factor = 0.5;
-        let diffusion_factor_c = 1.0 - diffusion_factor;
 
-        let new_energy = (((energy as f32) * diffusion_factor_c)
-            + ((shared_energy as f32) * diffusion_factor)) as u8;
-        let new_nbr_energy = (((nbr.energy as f32) * diffusion_factor_c)
-            + ((shared_energy as f32) * diffusion_factor)) as u8;
+        let new_energy = (energy / 2).saturating_add(shared_energy / 2) as u8;
+        let new_nbr_energy = (nbr.energy / 2).saturating_add(shared_energy / 2) as u8;
 
         let conservation = (nbr.energy + energy) - (new_nbr_energy + new_energy);
 
@@ -180,7 +175,7 @@ pub fn update_sand(cell: Cell, mut api: SandApi) {
             dx,
             dy,
             Cell {
-                energy: new_nbr_energy + conservation,
+                energy: new_nbr_energy.saturating_add(conservation),
                 ..nbr
             },
         );
@@ -243,7 +238,8 @@ pub fn update_algae(cell: Cell, mut api: SandApi) {
     if rand_int(10) < 9 {
         return;
     }
-    if cell.age > 30  { //old age
+    if cell.age > 30 {
+        //old age
         api.set(0, 0, Cell::new(Species::Waste));
         return;
     }
@@ -266,7 +262,7 @@ pub fn update_algae(cell: Cell, mut api: SandApi) {
         if split_energy == 0 {
             api.set(0, 0, nbr);
         }
-        let mut photosynth: u8 = (api.get_light().sun / 5) ;
+        let mut photosynth: u8 = (api.get_light().sun / 5);
         if photosynth > 0 && !api.use_co2() {
             photosynth = 0; //need co2
         }

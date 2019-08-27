@@ -102,37 +102,39 @@ void main() {
   } else if (type == 12) { // Stone
     hue = -0.4 + (data.g * 0.5);
     saturation = 0.1;
-  } else if (type == 13) { // stone
-    hue = -0.4 + (data.g * 0.5);
-    saturation = 0.1;
-    // lightness = 0.2 + data.g * 0.5;
-  } else if (type == 14) { // dust
-    hue = (data.g * 2.0) + t * .0008;
-    saturation = 0.4;
-    lightness = 0.8;
-  } else if (type == 15) { // mite
-
-  } else if (type == 16) { // oil
-    hue = (data.g * 5.0) + t * .008;
-
-    saturation = 0.2;
-    lightness = 0.3;
-  } else if (type == 17) { // Rocket
-    hue = 0.0;
-    saturation = 0.4 + data.b;
-    lightness = 0.9;
-  } else if (type == 18) { // fungus
-    hue = (data.g * 0.15) - 0.1;
-    saturation = (data.g * 0.8) - 0.05;
-
-    // (data.g * 0.00);
-    lightness = 1.5 - (data.g * 0.2);
-  } else if (type == 19) { // seed/flower
-
-    hue = fract(fract(data.b * 2.) * 0.5) - 0.3;
-    saturation = 0.7 * (data.g + 0.4) + data.b * 0.2;
-    lightness = 0.9 * (data.g + 0.9);
+  } else if (type == 13) { // Wood
+    hue = (data.g * 0.1);
+    saturation = 0.3;
+    lightness = 0.3 + data.g * 0.3;
   }
+
+  // else if (type == 14) { // dust
+  //   hue = (data.g * 2.0) + t * .0008;
+  //   saturation = 0.4;
+  //   lightness = 0.8;
+  // } else if (type == 15) { // mite
+
+  // } else if (type == 16) { // oil
+  //   hue = (data.g * 5.0) + t * .008;
+
+  //   saturation = 0.2;
+  //   lightness = 0.3;
+  // } else if (type == 17) { // Rocket
+  //   hue = 0.0;
+  //   saturation = 0.4 + data.b;
+  //   lightness = 0.9;
+  // } else if (type == 18) { // fungus
+  //   hue = (data.g * 0.15) - 0.1;
+  //   saturation = (data.g * 0.8) - 0.05;
+
+  //   // (data.g * 0.00);
+  //   lightness = 1.5 - (data.g * 0.2);
+  // } else if (type == 19) { // seed/flower
+
+  //   hue = fract(fract(data.b * 2.) * 0.5) - 0.3;
+  //   saturation = 0.7 * (data.g + 0.4) + data.b * 0.2;
+  //   lightness = 0.9 * (data.g + 0.9);
+  // }
   if (isSnapshot == false) {
     lightness *= (0.975 + snoise2(floor(uv * resolution / dpi)) * 0.025);
   }
