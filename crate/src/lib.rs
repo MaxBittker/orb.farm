@@ -11,7 +11,6 @@ use species::Species;
 use std::collections::VecDeque;
 use wasm_bindgen::prelude::*;
 // use web_sys::console;
-
 #[wasm_bindgen]
 #[repr(C)]
 #[derive(Clone, Copy, Debug, PartialEq)]
@@ -69,8 +68,8 @@ pub struct Universe {
     lights: Vec<Light>,
     generation: u8,
     time: u8,
-    O2: u8,
-    CO2: u8,
+    O2: u32,
+    CO2: u32,
 }
 
 pub struct SandApi<'a> {
@@ -118,7 +117,7 @@ impl<'a> SandApi<'a> {
         self.universe.lights[idx]
     }
     pub fn use_co2(&mut self) -> bool {
-        if (1 + rand_int(200) as u8) > self.universe.CO2 {
+        if (1 + rand_int(200)  as u32) > self.universe.CO2 {
             return false;
         }
         self.universe.CO2 = self.universe.CO2.saturating_sub(1);
@@ -127,7 +126,7 @@ impl<'a> SandApi<'a> {
         return true;
     }
     pub fn use_oxygen(&mut self) -> bool {
-        if (1 + rand_int(200) as u8) > self.universe.O2 {
+        if (1 + rand_int(200)as u32 ) > self.universe.O2 {
             return false;
         }
         self.universe.O2 = self.universe.O2.saturating_sub(1);
@@ -155,13 +154,13 @@ impl Universe {
                 let idx = self.get_index(x, y);
                 let cell = self.get_cell(x, y);
                 let block: u8 = match cell.species {
-                    Species::Water => 2,
+                    Species::Water => 1,
                     Species::Shrimp => 25,
 
-                    Species::Plant => 20,
+                    Species::Plant => 50,
                     Species::Seed => 35,
 
-                    Species::Algae => 20,
+                    Species::Algae => 30,
                     // Species::Anaerobic => 10,
                     Species::Bacteria => 10,
                     Species::Waste => 10,
@@ -220,11 +219,11 @@ impl Universe {
         self.height
     }
 
-    pub fn O2(&self) -> u8 {
+    pub fn O2(&self) -> u32 {
         self.O2
     }
 
-    pub fn CO2(&self) -> u8 {
+    pub fn CO2(&self) -> u32 {
         self.CO2
     }
     pub fn cells(&self) -> *const Cell {

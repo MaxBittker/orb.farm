@@ -48,7 +48,7 @@ impl Species {
             Species::Bacteria => update_bacteria(cell, api),
             Species::Zoop => update_zoop(cell, api),
             Species::Waste => update_waste(cell, api),
-            Species::Nitrogen => update_waste(cell, api),
+            Species::Nitrogen => update_nitrogen(cell, api),
             Species::Algae => update_algae(cell, api),
 
             // Species::Dust => update_dust(cell, api),
@@ -72,6 +72,36 @@ pub fn update_waste(cell: Cell, mut api: SandApi) {
         api.set(dx, 1, cell);
     }
 }
+pub fn update_nitrogen(cell: Cell, mut api: SandApi) {
+    let dx = rand_dir_2();
+
+    let nbr = api.get(0, 1);
+
+   if nbr.species == Species::Sand || nbr.species== Species::Plant {
+        api.set(0, 0, WATER);
+        api.set(
+            0,
+            1,
+            Cell {
+                energy: nbr.energy.saturating_add(50),
+                ..nbr
+            },
+        );
+        return
+    }
+    let dnbr = api.get(dx, 1);
+    if nbr.species == Species::Air || nbr.species == Species::Water {
+        api.set(0, 0, nbr);
+        api.set(0, 1, cell);
+    } else if dnbr.species == Species::Air || dnbr.species == Species::Water {
+        api.set(0, 0, dnbr);
+        api.set(dx, 1, cell);
+    }
+
+
+}
+
+
 pub fn update_bacteria(cell: Cell, mut api: SandApi) {
     let (dx, dy) = rand_vec_8();
 
@@ -129,17 +159,7 @@ pub fn update_sand(cell: Cell, mut api: SandApi) {
 
     let nbr = api.get(dx, dy);
 
-    if nbr.species == Species::Nitrogen {
-        api.set(dx, dy, WATER);
-        api.set(
-            0,
-            0,
-            Cell {
-                energy: energy.saturating_add(50),
-                ..cell
-            },
-        );
-    }
+ 
     if nbr.species == Species::Sand {
         //diffuse nutrients
 
@@ -223,33 +243,47 @@ pub fn update_algae(cell: Cell, mut api: SandApi) {
     if rand_int(10) < 9 {
         return;
     }
-    if cell.age > 250 {
+    if cell.age > 30  { //old age
         api.set(0, 0, Cell::new(Species::Waste));
         return;
     }
     let nbr = api.get(dx, dy);
     if nbr.species == Species::Water && api.get(-dx, -dy).species != Species::Glass {
-        api.set(0, 0, nbr);
-        api.set(
-            dx,
-            dy,
-            Cell {
-                energy: cell.energy,
-                age: cell.age + api.universe.generation,
-                ..cell
-            },
-        );
-        if cell.age > 100 && api.use_co2() {
+        let mut split_energy = 0;
+
+        if cell.age > 10 && cell.energy > 80 {
+            split_energy = cell.energy / 2;
             api.set(
                 0,
                 0,
                 Cell {
-                    energy: cell.energy / 2,
+                    energy: split_energy.saturating_sub(20), //cost of reproduction
                     age: 0,
                     ..cell
                 },
             );
         }
+        if split_energy == 0 {
+            api.set(0, 0, nbr);
+        }
+        let mut photosynth: u8 = (api.get_light().sun / 5) ;
+        if photosynth > 0 && !api.use_co2() {
+            photosynth = 0; //need co2
+        }
+
+        api.set(
+            dx,
+            dy,
+            Cell {
+                energy: cell
+                    .energy
+                    .saturating_add(photosynth)
+                    .saturating_sub(8) //cost of life
+                    .saturating_sub(split_energy),
+                age: cell.age.saturating_add(api.universe.generation),
+                ..cell
+            },
+        );
     }
 }
 

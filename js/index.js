@@ -47,17 +47,25 @@ if (mobileAndTabletcheck()) {
 //   });
 // }
 
-let n = 300;
+let n = 100;
 let h = n / 2;
 const universe = Universe.new(n, n);
-universe.paint(h, h, 600, Species.Glass);
-universe.paint(h, h, 299, Species.Air);
-for (var x = -50; x < 49; x += 1) {
-  universe.paint(h + x, h + 49, 200, Species.Air);
-  universe.paint(h + x, h - 50, 200, Species.Air);
-  universe.paint(h - 50, h + x, 200, Species.Air);
-  universe.paint(h + 49, h + x, 200, Species.Air);
-}
+universe.paint(h, h, n + 1, Species.Glass);
+universe.paint(h, h, n - 2, Species.Air);
+// for (var x = -50; x <= 49; x += 1) {
+//   universe.paint(h + x, h + 49, 204, Species.Glass);
+//   universe.paint(h + x, h + 49, 200, Species.Air);
+
+//   universe.paint(h + x, h - 50, 204, Species.Glass);
+//   universe.paint(h + x, h - 50, 200, Species.Air);
+
+//   universe.paint(h - 50, h + x, 204, Species.Glass);
+//   universe.paint(h - 50, h + x, 200, Species.Air);
+
+//   universe.paint(h + 49, h + x, 204, Species.Glass);
+//   universe.paint(h + 49, h + x, 200, Species.Air);
+// }
+// universe.paint(h, h, 299, Species.Air);
 
 for (var x = 30; x < n - 30; x += 10) {
   universe.paint(x, 150, 200, Species.Water);

@@ -28,7 +28,8 @@ body,
   /* background-image: url("http://api.thumbr.it/whitenoise-361x370.png?background=c7c1b9ff&noise=626262&density=45&opacity=15"); */
 }
 #background {
-  background-image: url("https://source.unsplash.com/collection/2527152/1600x900/");
+  background-image: url("https://source.unsplash.com/collection/2152825/");
+
   filter: blur(5px);
   z-index: -1;
 }
@@ -103,7 +104,7 @@ canvas,
   /* background-color: red; */
   height: 100%;
   width: 100%;
-  filter: blur(20px);
+  filter: blur(2px);
 }
 #sand-canvas {
   z-index: 2;
