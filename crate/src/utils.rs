@@ -35,21 +35,27 @@ pub fn rand_vec() -> (i32, i32) {
     }
 }
 
-pub fn rand_vec_5() -> (i32, i32) {
-    let i = rand_int(2000);
-    match i % 5 {
-        // 0 => (1, 1),
+pub fn rand_vec_up_3() -> (i32, i32) {
+    let i = rand_int(20000);
+    match i % 3 {
+        0 => (-1, -1),
+        1 => (-1, -1),
+        _ => (0, -1),
+    }
+}
+pub fn rand_vec_up_5() -> (i32, i32) {
+    let i = rand_int(20000);
+    match i % 6 {
         0 => (1, 0),
         1 => (1, -1),
         3 => (0, -1),
         4 => (-1, -1),
         _ => (-1, 0),
-        // _ => (-1, 1),
-        // _ => (0, 1),
     }
 }
+
 pub fn rand_vec_8() -> (i32, i32) {
-    let i = rand_int(2000);
+    let i = rand_int(20000);
     match i % 8 {
         0 => (1, 1),
         1 => (1, 0),

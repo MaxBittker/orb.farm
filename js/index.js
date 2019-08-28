@@ -6,7 +6,7 @@ import {} from "./paint";
 import {} from "./app";
 import {} from "./setup";
 
-let n = 500;
+let n = 200;
 let h = n / 2;
 const universe = Universe.new(n, n);
 universe.paint(h, h, n + 2, Species.Glass);

@@ -173,6 +173,7 @@ impl Universe {
                     Species::Waste => 10,
                     Species::Nitrogen => 10,
                     Species::Zoop => 10,
+                    Species::Egg => 5,
 
                     Species::Air => 0,
                     Species::Glass => 0,
@@ -308,8 +309,8 @@ impl Universe {
             cells,
             lights,
             time: 0,
-            O2: 100,
-            CO2: 100,
+            O2: 1000,
+            CO2: 1000,
             undo_stack: VecDeque::with_capacity(50),
             generation: 0,
         }

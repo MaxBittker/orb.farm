@@ -29,7 +29,8 @@ body,
 }
 #background {
   background-image: url("https://source.unsplash.com/collection/2152825/");
-
+  background-image: url("https://i.imgur.com/GJtS1mA.png");
+  
   filter: blur(1px);
   z-index: -1;
 }

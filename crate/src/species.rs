@@ -25,6 +25,7 @@ pub enum Species {
     Plant = 5,
 
     Zoop = 6,
+    Egg = 14,
     Shrimp = 7,
 
     Bacteria = 8,
@@ -49,7 +50,8 @@ impl Species {
 
             // Species::Anaerobic => {}
             Species::Bacteria => update_bacteria(cell, api),
-            Species::Zoop => update_rocket(cell, api),
+            Species::Zoop => update_zoop(cell, api),
+            Species::Egg => update_egg(cell, api),
             Species::Waste => update_waste(cell, api),
             Species::Nitrogen => update_nitrogen(cell, api),
             Species::Algae => update_algae(cell, api),
@@ -235,11 +237,11 @@ pub fn update_algae(cell: Cell, mut api: SandApi) {
 
         return;
     }
-    let (dx, dy) = rand_vec();
+    let (dx, dy) = rand_vec_8();
     if rand_int(10) < 9 {
         return;
     }
-    if cell.age > 30 {
+    if cell.age > 200 {
         //old age
         api.set(0, 0, Cell::new(Species::Waste));
         return;
@@ -263,7 +265,7 @@ pub fn update_algae(cell: Cell, mut api: SandApi) {
         if split_energy == 0 {
             api.set(0, 0, nbr);
         }
-        let mut photosynth: u8 = (api.get_light().sun / 5);
+        let mut photosynth: u8 = api.get_light().sun / 5;
         if photosynth > 0 && !api.use_co2() {
             photosynth = 0; //need co2
         }
@@ -283,15 +285,58 @@ pub fn update_algae(cell: Cell, mut api: SandApi) {
         );
     }
 }
-const zoop_padding: u8 = 10;
+const zoop_padding: u8 = 5;
+const glide_length: u8 = 10;
 
-pub fn update_rocket(cell: Cell, mut api: SandApi) {
-    // rocket has complicated behavior that is staged piecewise in ra.
-    // it would be awesome to diagram the ranges of values and their meaning
+pub fn update_zoop(cell: Cell, mut api: SandApi) {
     let age = cell.age;
     let energy = cell.energy;
+    let (sx, sy) = rand_vec_8();
+    let sample = api.get(sx, sy);
+
+    if sample.species == Species::Algae {
+        api.set(
+            0,
+            0,
+            Cell {
+                energy: energy.saturating_add(sample.energy),
+                ..cell
+            },
+        );
+        api.set(sx, sy, WATER);
+
+        if energy > 200 {
+            let new_energy = energy / 3;
+            api.set(
+                sx,
+                sy,
+                Cell {
+                    species: Species::Egg,
+                    energy: new_energy,
+                    age: 0,
+                    ..cell
+                },
+            );
+
+            api.set(
+                0,
+                0,
+                Cell {
+                    energy: new_energy,
+                    ..cell
+                },
+            );
+        }
+        return;
+    }
+
+    if energy == 0 {
+        api.set(0, 0, WASTE);
+        return;
+    }
 
     if age < zoop_padding {
+        //sinking
         let dx = rand_dir();
         let dy = rand_int(2);
         let down = api.get(dx, dy);
@@ -316,7 +361,12 @@ pub fn update_rocket(cell: Cell, mut api: SandApi) {
             );
         }
     } else if age == zoop_padding {
-        let (mut dx, mut dy) = rand_vec_5(); // pointed up
+        // kick
+        let (mut dx, mut dy) = if api.get_light().sun < 230 {
+            rand_vec_up_3() // seek light
+        } else {
+            rand_vec_8() //wander
+        }; // pointed up
         let nbr = api.get(dx, dy);
         if nbr.species != Species::Water {
             dx *= -1;
@@ -327,22 +377,25 @@ pub fn update_rocket(cell: Cell, mut api: SandApi) {
             0,
             Cell {
                 age: zoop_padding + join_dy_dx(dx, dy, 0),
+                energy: energy.saturating_sub(1),
+
                 ..cell
             },
         );
-    } else if age < 250 {
+    } else if age < 255 {
+        //gliding
         let (dx, dy, rem) = split_dy_dx(cell.age - zoop_padding);
-        if rem > 5 {
+        if rem > glide_length {
             api.set(0, 0, Cell { age: 0, ..cell });
             return;
         }
-        let nbr = api.get(dx, dy * 2);
-
-        if nbr.species == Species::Water {
+        let nbr = api.get(dx, dy );
+        //   api.use_oxygen()
+        if nbr.species == Species::Water && (rand_int(5) == 2 || api.use_oxygen()) {
             api.set(0, 0, nbr);
             // api.set(0, dy, Cell::new(clone_species));
 
-            let (ndx, ndy) = match rand_int(100) % 20 {
+            let (ndx, ndy) = match rand_int(100) % 50 {
                 0 => adjacency_left((dx, dy)),
                 1 => adjacency_right((dx, dy)),
                 _ => (dx, dy),
@@ -352,54 +405,101 @@ pub fn update_rocket(cell: Cell, mut api: SandApi) {
                 dy,
                 Cell {
                     age: zoop_padding + join_dy_dx(ndx, ndy, rem + 1),
+                    // energy: energy.saturating_sub(cell.clock),
                     ..cell
                 },
             );
         } else {
-            //fizzle
-            // api.set(0, 0, WASTE);
-        }
-    }
-}
-
-pub fn update_zoop(cell: Cell, mut api: SandApi) {
-    let down = api.get(0, 1);
-    if down.species == Species::Air {
-        api.set(0, 0, EMPTY_CELL);
-        api.set(0, 1, cell);
-
-        return;
-    }
-    let (dx, dy) = rand_vec();
-    // if cell.age > 250 {
-    //     api.set(0, 0, Cell::new(Species::Waste));
-    //     return;
-    // }
-    let nbr = api.get(dx, dy);
-    if nbr.species == Species::Water {
-        api.set(0, 0, nbr);
-        api.set(
-            dx,
-            dy,
-            Cell {
-                energy: cell.energy,
-                age: cell.age + api.universe.generation,
-                ..cell
-            },
-        );
-        if cell.age > 100 && api.use_oxygen() {
             api.set(
                 0,
                 0,
                 Cell {
-                    energy: cell.energy / 2,
-                    age: 0,
+                    age: zoop_padding + join_dy_dx(dx, dy, glide_length),
+                    // energy: energy.saturating_sub(cell.clock),
                     ..cell
                 },
             );
         }
     }
 }
+
+pub fn update_egg(cell: Cell, mut api: SandApi) {
+    let dx = rand_dir();
+    if cell.age > 250 {
+        api.set(
+            0,
+            0,
+            Cell {
+                species: Species::Zoop,
+                age: 0,
+                ..cell
+            },
+        );
+
+        return;
+    }
+
+    let dnbr = api.get(dx, 1);
+    if dnbr.species == Species::Air || dnbr.species == Species::Water {
+        api.set(0, 0, dnbr);
+        api.set(
+            dx,
+            1,
+            Cell {
+                age: cell.age.saturating_add(1),
+                ..cell
+            },
+        );
+    } else {
+        api.set(
+            0,
+            0,
+            Cell {
+                age: cell.age.saturating_add(1),
+                ..cell
+            },
+        );
+    }
+}
+
+// pub fn update_zoop(cell: Cell, mut api: SandApi) {
+//     let down = api.get(0, 1);
+//     if down.species == Species::Air {
+//         api.set(0, 0, EMPTY_CELL);
+//         api.set(0, 1, cell);
+
+//         return;
+//     }
+//     let (dx, dy) = rand_vec();
+//     // if cell.age > 250 {
+//     //     api.set(0, 0, Cell::new(Species::Waste));
+//     //     return;
+//     // }
+//     let nbr = api.get(dx, dy);
+//     if nbr.species == Species::Water {
+//         api.set(0, 0, nbr);
+//         api.set(
+//             dx,
+//             dy,
+//             Cell {
+//                 energy: cell.energy,
+//                 age: cell.age + api.universe.generation,
+//                 ..cell
+//             },
+//         );
+//         if cell.age > 100 && api.use_oxygen() {
+//             api.set(
+//                 0,
+//                 0,
+//                 Cell {
+//                     energy: cell.energy / 2,
+//                     age: 0,
+//                     ..cell
+//                 },
+//             );
+//         }
+//     }
+// }
 
 pub fn update_shrimp(cell: Cell, mut api: SandApi) {
     let down = api.get(0, 1);
