@@ -19,16 +19,7 @@ const ElementButton = (name, selectedElement, setElement) => {
   let selected = elementID == selectedElement;
 
   let background = "inherit";
-  if (elementID == 14) {
-    background = `linear-gradient(45deg, 
-    rgba(202, 121, 125, 1.0), 
-    rgba(169, 120, 200, 1.0), 
-    rgba(117, 118, 195, 1.0), 
-    rgba(117, 196, 193, 1.0), 
-    rgba(122, 203, 168, 1.0), 
-    rgba(185, 195, 117, 1.0), 
-    rgba(204, 186, 122, 1.0))`;
-  }
+
   return (
     <button
       className={selected ? "selected" : ""}

@@ -27,14 +27,17 @@ universe.paint(h, h, n - 2, Species.Air);
 // universe.paint(h, h, 299, Species.Air);
 
 for (var x = 30; x < n - 30; x += 10) {
-  universe.paint(x, 150, 200, Species.Water);
+  universe.paint(x, h, h, Species.Water);
 }
 
 for (var x = 0; x < n; x += 10) {
-  universe.paint(x, 250, 20, Species.Sand);
+  universe.paint(x, n * 0.75, 10, Species.Sand);
 }
+universe.paint(h, h, 2, Species.Zoop);
 
-universe.paint(150, 50, 25, Species.Seed);
+universe.paint(h, h, 10, Species.Algae);
+
+// universe.paint(150, 50, 25, Species.Seed);
 let ratio = 2;
 let width = n;
 let height = n;

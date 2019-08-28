@@ -305,8 +305,8 @@ pub fn update_zoop(cell: Cell, mut api: SandApi) {
         );
         api.set(sx, sy, WATER);
 
-        if energy > 200 {
-            let new_energy = energy / 3;
+        if energy > 100 && api.use_oxygen() {
+            let new_energy = energy / 2;
             api.set(
                 sx,
                 sy,
@@ -335,7 +335,7 @@ pub fn update_zoop(cell: Cell, mut api: SandApi) {
         return;
     }
 
-    if age < zoop_padding {
+    if age < zoop_padding || energy < 20 {
         //sinking
         let dx = rand_dir();
         let dy = rand_int(2);
@@ -356,13 +356,15 @@ pub fn update_zoop(cell: Cell, mut api: SandApi) {
                 0,
                 Cell {
                     age: age + rand_int(2) as u8,
+                    energy: energy.saturating_sub(cell.clock),
+
                     ..cell
                 },
             );
         }
     } else if age == zoop_padding {
         // kick
-        let (mut dx, mut dy) = if api.get_light().sun < 230 {
+        let (mut dx, mut dy) = if api.get_light().sun < 200 {
             rand_vec_up_3() // seek light
         } else {
             rand_vec_8() //wander
@@ -382,16 +384,16 @@ pub fn update_zoop(cell: Cell, mut api: SandApi) {
                 ..cell
             },
         );
-    } else if age < 255 {
+    } else {
         //gliding
         let (dx, dy, rem) = split_dy_dx(cell.age - zoop_padding);
         if rem > glide_length {
             api.set(0, 0, Cell { age: 0, ..cell });
             return;
         }
-        let nbr = api.get(dx, dy );
+        let nbr = api.get(dx, dy);
         //   api.use_oxygen()
-        if nbr.species == Species::Water && (rand_int(5) == 2 || api.use_oxygen()) {
+        if nbr.species == Species::Water && (api.use_oxygen()) {
             api.set(0, 0, nbr);
             // api.set(0, dy, Cell::new(clone_species));
 
@@ -414,8 +416,8 @@ pub fn update_zoop(cell: Cell, mut api: SandApi) {
                 0,
                 0,
                 Cell {
-                    age: zoop_padding + join_dy_dx(dx, dy, glide_length),
-                    // energy: energy.saturating_sub(cell.clock),
+                    age: zoop_padding + join_dy_dx(dx, dy, glide_length + 1),
+                    energy: energy.saturating_sub(cell.clock),
                     ..cell
                 },
             );
@@ -426,6 +428,7 @@ pub fn update_zoop(cell: Cell, mut api: SandApi) {
 pub fn update_egg(cell: Cell, mut api: SandApi) {
     let dx = rand_dir();
     if cell.age > 250 {
+        ///hatch
         api.set(
             0,
             0,
@@ -438,24 +441,19 @@ pub fn update_egg(cell: Cell, mut api: SandApi) {
 
         return;
     }
-
-    let dnbr = api.get(dx, 1);
+    let dy = rand_int(2);
+    let dnbr = api.get(dx * dy, dy);
     if dnbr.species == Species::Air || dnbr.species == Species::Water {
         api.set(0, 0, dnbr);
-        api.set(
-            dx,
-            1,
-            Cell {
-                age: cell.age.saturating_add(1),
-                ..cell
-            },
-        );
+        api.set(dx * dy, dy, cell);
     } else {
         api.set(
             0,
             0,
             Cell {
-                age: cell.age.saturating_add(1),
+                age: cell
+                    .age
+                    .saturating_add(cell.clock * (rand_int(5) / 4) as u8),
                 ..cell
             },
         );

@@ -106,13 +106,12 @@ void main() {
     hue = (data.g * 0.1);
     saturation = 0.3;
     lightness = 0.3 + data.g * 0.3;
+  } else if (type == 14) { // Egg
+    // hue = (data.g * 2.0) + t * .0008;
+    saturation = 0.1;
+    lightness = 1.0;
   }
-
-  // else if (type == 14) { // dust
-  //   hue = (data.g * 2.0) + t * .0008;
-  //   saturation = 0.4;
-  //   lightness = 0.8;
-  // } else if (type == 15) { // mite
+  //  else if (type == 15) { // mite
 
   // } else if (type == 16) { // oil
   //   hue = (data.g * 5.0) + t * .008;
