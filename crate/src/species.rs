@@ -117,6 +117,11 @@ pub fn update_bacteria(cell: Cell, mut api: SandApi) {
     }
 
     if sample.species == Species::Waste {
+        api.use_oxygen();
+        api.use_oxygen();
+        api.use_oxygen();
+        api.use_oxygen();
+
         api.set(
             dx,
             dy,
@@ -237,7 +242,7 @@ pub fn update_algae(cell: Cell, mut api: SandApi) {
 
         return;
     }
-    let (dx, dy) = rand_vec_8();
+    let (mut dx, mut dy) = rand_vec_8();
     if rand_int(10) < 9 {
         return;
     }
@@ -247,10 +252,13 @@ pub fn update_algae(cell: Cell, mut api: SandApi) {
         return;
     }
     let nbr = api.get(dx, dy);
-    if nbr.species == Species::Water && api.get(-dx, -dy).species != Species::Glass {
-        let mut split_energy = 0;
+    let mut split_energy = 0;
 
-        if cell.age > 10 && cell.energy > 80 {
+    if nbr.species != Species::Water && nbr.species != Species::Algae {
+        dx = 0;
+        dy = 0;
+    } else {
+        if cell.age > 10 && cell.energy > 80 && api.get(-dx, -dy).species == Species::Water {
             split_energy = cell.energy / 2;
             api.set(
                 0,
@@ -262,38 +270,46 @@ pub fn update_algae(cell: Cell, mut api: SandApi) {
                 },
             );
         }
-        if split_energy == 0 {
-            api.set(0, 0, nbr);
-        }
-        let mut photosynth: u8 = api.get_light().sun / 5;
-        if photosynth > 0 && !api.use_co2() {
-            photosynth = 0; //need co2
-        }
-
-        api.set(
-            dx,
-            dy,
-            Cell {
-                energy: cell
-                    .energy
-                    .saturating_add(photosynth)
-                    .saturating_sub(8) //cost of life
-                    .saturating_sub(split_energy),
-                age: cell.age.saturating_add(api.universe.generation),
-                ..cell
-            },
-        );
     }
+
+    if split_energy == 0 {
+        api.set(0, 0, nbr);
+    }
+    let mut photosynth: u8 = api.get_light().sun / 5;
+    if photosynth > 0 && !api.use_co2() {
+        photosynth = 0; //need co2
+    }
+
+    api.set(
+        dx,
+        dy,
+        Cell {
+            energy: cell
+                .energy
+                .saturating_add(photosynth)
+                .saturating_sub(8) //cost of life
+                .saturating_sub(split_energy),
+            age: cell.age.saturating_add(api.universe.generation),
+            ..cell
+        },
+    );
 }
 const zoop_padding: u8 = 5;
 const glide_length: u8 = 10;
 
 pub fn update_zoop(cell: Cell, mut api: SandApi) {
+    let down = api.get(0, 1);
+
+    if down.species == Species::Air {
+        api.set(0, 0, down);
+        api.set(0, 1, cell);
+        return;
+    }
     let age = cell.age;
     let energy = cell.energy;
     let (sx, sy) = rand_vec_8();
     let sample = api.get(sx, sy);
-
+    api.use_oxygen();
     if sample.species == Species::Algae {
         api.set(
             0,
@@ -305,14 +321,14 @@ pub fn update_zoop(cell: Cell, mut api: SandApi) {
         );
         api.set(sx, sy, WATER);
 
-        if energy > 100 && api.use_oxygen() {
-            let new_energy = energy / 2;
+        if energy > 200 && api.use_oxygen() {
+            let new_energy = energy / 4;
             api.set(
                 sx,
                 sy,
                 Cell {
                     species: Species::Egg,
-                    energy: new_energy,
+                    energy: new_energy * 3,
                     age: 0,
                     ..cell
                 },
@@ -374,16 +390,27 @@ pub fn update_zoop(cell: Cell, mut api: SandApi) {
             dx *= -1;
             dy *= -1;
         }
-        api.set(
-            0,
-            0,
-            Cell {
-                age: zoop_padding + join_dy_dx(dx, dy, 0),
-                energy: energy.saturating_sub(1),
+        if api.use_oxygen() {
+            api.set(
+                0,
+                0,
+                Cell {
+                    age: zoop_padding + join_dy_dx(dx, dy, 0),
+                    energy: energy.saturating_sub(1),
 
-                ..cell
-            },
-        );
+                    ..cell
+                },
+            );
+        } else {
+            api.set(
+                0,
+                0,
+                Cell {
+                    energy: energy.saturating_sub(1),
+                    ..cell
+                },
+            );
+        }
     } else {
         //gliding
         let (dx, dy, rem) = split_dy_dx(cell.age - zoop_padding);

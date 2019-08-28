@@ -8,9 +8,14 @@ import {} from "./setup";
 
 let n = 200;
 let h = n / 2;
+let d = n - 6;
+
 const universe = Universe.new(n, n);
-universe.paint(h, h, n + 2, Species.Glass);
-universe.paint(h, h, n - 2, Species.Air);
+universe.paint(h, h, d + 2, Species.Glass);
+
+universe.paint(h - 10, d + 2, 10, Species.Wood);
+universe.paint(h + 10, d + 2, 10, Species.Wood);
+universe.paint(h, h, d - 2, Species.Air);
 // for (var x = -50; x <= 49; x += 1) {
 //   universe.paint(h + x, h + 49, 204, Species.Glass);
 //   universe.paint(h + x, h + 49, 200, Species.Air);
@@ -25,13 +30,12 @@ universe.paint(h, h, n - 2, Species.Air);
 //   universe.paint(h + 49, h + x, 200, Species.Air);
 // }
 // universe.paint(h, h, 299, Species.Air);
-
-for (var x = 30; x < n - 30; x += 10) {
+for (var x = 30; x < d - 30; x += 10) {
   universe.paint(x, h, h, Species.Water);
 }
 
-for (var x = 0; x < n; x += 10) {
-  universe.paint(x, n * 0.75, 10, Species.Sand);
+for (var x = 0; x < d; x += 10) {
+  universe.paint(x, d * 0.75, 10, Species.Sand);
 }
 universe.paint(h, h, 2, Species.Zoop);
 

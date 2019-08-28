@@ -35,9 +35,12 @@ void main() {
   float sampleLightValue = texture2D(light, sampleCoord).r;
   lightValue = 0.5 * lightValue + 0.5 * sampleLightValue;
   int type = int((data.r * 255.) + 0.1);
+  float energy = data.g;
+  float age = data.b;
+
   float hue = 0.0;
   float saturation = 0.6;
-  float lightness = 0.3 + data.g * 0.5;
+  float lightness = 0.3 + energy * 0.5;
   float a = 1.0;
   float brightness = 0.0;
 
@@ -59,21 +62,21 @@ void main() {
     lightness = 0.5;
   } else if (type == 2) { // Sand
     hue = 0.1;
-    saturation = 0.5 + data.g * 0.5;
-    lightness = 0.8 - data.g * 0.5;
+    saturation = 0.5 + energy * 0.5;
+    lightness = 0.8 - energy * 0.5;
 
   } else if (type == 3) { // Water
     hue = 0.58;
     saturation = 0.6;
-    lightness = 0.5 + data.g * 0.25 + noise * 0.1;
+    lightness = 0.5 + energy * 0.25 + noise * 0.1;
     a = 0.4;
     if (isSnapshot) {
       a = 1.0;
     }
   } else if (type == 4) { // Algae
-    hue = 0.4;
+    hue = 0.4- age;
     lightness += 0.0;
-    saturation = 0.4 + (data.b * 1.5);
+    saturation = 0.4 + (age * 1.5);
   } else if (type == 5) { // Plant
     hue = 0.4;
     lightness -= 0.1;
@@ -107,8 +110,8 @@ void main() {
     saturation = 0.3;
     lightness = 0.3 + data.g * 0.3;
   } else if (type == 14) { // Egg
-    // hue = (data.g * 2.0) + t * .0008;
-    saturation = 0.1;
+    hue = 0.9;
+    saturation = age;
     lightness = 1.0;
   }
   //  else if (type == 15) { // mite

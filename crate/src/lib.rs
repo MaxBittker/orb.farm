@@ -94,7 +94,7 @@ impl<'a> SandApi<'a> {
         let ny = self.y + dy;
         if nx < 0 || nx > self.universe.width - 1 || ny < 0 || ny > self.universe.height - 1 {
             return Cell {
-                species: Species::Glass,
+                species: Species::Air,
                 energy: 0,
                 age: 0,
                 clock: self.universe.generation,
@@ -309,8 +309,8 @@ impl Universe {
             cells,
             lights,
             time: 0,
-            O2: 1000,
-            CO2: 1000,
+            O2: (width * height) as u32 / 2,
+            CO2: (width * height) as u32 / 2,
             undo_stack: VecDeque::with_capacity(50),
             generation: 0,
         }
