@@ -88,7 +88,7 @@ pub fn update_nitrogen(cell: Cell, mut api: SandApi) {
             0,
             1,
             Cell {
-                energy: nbr.energy.saturating_add(50),
+                energy: nbr.energy.saturating_add(100),
                 ..nbr
             },
         );
@@ -258,13 +258,13 @@ pub fn update_algae(cell: Cell, mut api: SandApi) {
         dx = 0;
         dy = 0;
     } else {
-        if cell.age > 10 && cell.energy > 80 && api.get(-dx, -dy).species == Species::Water {
+        if cell.age > 10 && cell.energy > 220 && api.get(-dx, -dy).species == Species::Water {
             split_energy = cell.energy / 2;
             api.set(
                 0,
                 0,
                 Cell {
-                    energy: split_energy.saturating_sub(20), //cost of reproduction
+                    energy: split_energy.saturating_sub(100), //cost of reproduction
                     age: 0,
                     ..cell
                 },
@@ -275,7 +275,7 @@ pub fn update_algae(cell: Cell, mut api: SandApi) {
     if split_energy == 0 {
         api.set(0, 0, nbr);
     }
-    let mut photosynth: u8 = api.get_light().sun / 5;
+    let mut photosynth: u8 = api.get_light().sun / 10;
     if photosynth > 0 && !api.use_co2() {
         photosynth = 0; //need co2
     }
@@ -294,8 +294,8 @@ pub fn update_algae(cell: Cell, mut api: SandApi) {
         },
     );
 }
-const zoop_padding: u8 = 5;
-const glide_length: u8 = 10;
+const zoop_padding: u8 = 14;
+const glide_length: u8 = 8 ;
 
 pub fn update_zoop(cell: Cell, mut api: SandApi) {
     let down = api.get(0, 1);
@@ -310,12 +310,12 @@ pub fn update_zoop(cell: Cell, mut api: SandApi) {
     let (sx, sy) = rand_vec_8();
     let sample = api.get(sx, sy);
     api.use_oxygen();
-    if sample.species == Species::Algae {
+    if sample.species == Species::Algae || sample.species==Species::Egg {
         api.set(
             0,
             0,
             Cell {
-                energy: energy.saturating_add(sample.energy),
+                energy: energy.saturating_add(sample.energy/2),
                 ..cell
             },
         );
@@ -589,7 +589,7 @@ pub fn update_plant(cell: Cell, mut api: SandApi) {
 
     let light = api.get_light().sun;
     if energy > 100
-        && rand_int(light as i32) > 200
+        && rand_int(light as i32) > 100
         && (api.get(dx, -1).species == Species::Water
             && api.get(0, -1).species == Species::Water
             && api.get(-dx, -1).species == Species::Water

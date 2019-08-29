@@ -62,8 +62,8 @@ void main() {
     lightness = 0.5;
   } else if (type == 2) { // Sand
     hue = 0.1;
-    saturation = 0.5 + energy * 0.5;
-    lightness = 0.8 - energy * 0.5;
+    saturation = 0.2 + energy ;
+    lightness = 1.5 - energy ;
 
   } else if (type == 3) { // Water
     hue = 0.58;
@@ -74,9 +74,9 @@ void main() {
       a = 1.0;
     }
   } else if (type == 4) { // Algae
-    hue = 0.4- age;
+    hue = 0.4- age*0.5;
     lightness += 0.0;
-    saturation = 0.4 + (age * 1.5);
+    saturation = 0.4 + (age * .2);
   } else if (type == 5) { // Plant
     hue = 0.4;
     lightness -= 0.1;
