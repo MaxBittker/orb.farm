@@ -105,43 +105,83 @@ pub fn update_nitrogen(cell: Cell, mut api: SandApi) {
 }
 
 pub fn update_bacteria(cell: Cell, mut api: SandApi) {
+    if rand_int(7) < 6 {
+        return;
+    }
+    let energy = cell.energy;
     let (dx, dy) = rand_vec_8();
 
     let down = api.get(0, 1);
     let nbr = api.get(dx, 1);
-    let sample = api.get(dx, dy);
     if cell.age > 250 {
         //TODO cause death
         api.set(0, 0, Cell::new(Species::Nitrogen));
         return;
     }
 
-    if sample.species == Species::Waste {
+    let sample = api.get(dx, dy);
+
+    if sample.species == Species::Waste || (energy < 20 && sample.species == Species::Bacteria) {
+        let mut new_energy = energy / 2;
+        if energy < 250 {
+            api.set(0, 0, WATER);
+            new_energy = energy;
+        }else{
+        api.set(0, 0, Cell::new(Species::Nitrogen));
+        }
+        api.set(
+            dx,
+            dy,
+            Cell {
+                energy: new_energy.saturating_add(50),
+                ..cell
+            },
+        );
         api.use_oxygen();
         api.use_oxygen();
         api.use_oxygen();
         api.use_oxygen();
 
-        api.set(
-            dx,
-            dy,
-            Cell {
-                energy: cell.energy.saturating_add(50),
-                ..cell
-            },
-        );
-        api.set(0, 0, WATER);
+        return;
     }
+
     if down.species == Species::Air {
         api.set(0, 0, EMPTY_CELL);
         api.set(0, 1, cell);
-    } else if nbr.species == Species::Water {
-        api.set(0, 0, nbr);
-        api.set(dx, 1, cell);
+        return;
     } else if nbr.species == Species::Air {
         api.set(0, 0, EMPTY_CELL);
         api.set(dx, 1, cell);
+        return;
     }
+
+    let (rdx, rdy) = adjacency_right((dx, dy));
+    let (ldx, ldy) = adjacency_left((dx, dy));
+    let r_sample = api.get(rdx, rdy).species;
+    let l_sample = api.get(ldx, ldy).species;
+
+    if sample.species == Species::Water
+        && (r_sample != Species::Water || l_sample != Species::Water)
+    {
+        api.set(0, 0, sample);
+        api.set(dx, dy, cell);
+        return;
+    }
+    if nbr.species == Species::Water {
+        api.set(0, 0, nbr);
+        api.set(dx, 1, cell);
+        return;
+    }
+        api.use_oxygen();
+
+    api.set(
+        0,
+        0,
+        Cell {
+            energy: energy.saturating_sub(api.universe.generation % 2),
+            ..cell
+        },
+    )
 }
 
 pub fn update_sand(cell: Cell, mut api: SandApi) {
@@ -243,7 +283,7 @@ pub fn update_algae(cell: Cell, mut api: SandApi) {
         return;
     }
     let (mut dx, mut dy) = rand_vec_8();
-    if rand_int(10) < 9 {
+    if rand_int(20) < 19 {
         return;
     }
     if cell.age > 200 {
@@ -295,7 +335,7 @@ pub fn update_algae(cell: Cell, mut api: SandApi) {
     );
 }
 const zoop_padding: u8 = 14;
-const glide_length: u8 = 8 ;
+const glide_length: u8 = 8;
 
 pub fn update_zoop(cell: Cell, mut api: SandApi) {
     let down = api.get(0, 1);
@@ -310,12 +350,15 @@ pub fn update_zoop(cell: Cell, mut api: SandApi) {
     let (sx, sy) = rand_vec_8();
     let sample = api.get(sx, sy);
     api.use_oxygen();
-    if sample.species == Species::Algae || sample.species==Species::Egg {
+    if sample.species == Species::Algae
+        || sample.species == Species::Egg
+        || sample.species == Species::Bacteria
+    {
         api.set(
             0,
             0,
             Cell {
-                energy: energy.saturating_add(sample.energy/2),
+                energy: energy.saturating_add(10 + sample.energy / 2),
                 ..cell
             },
         );
