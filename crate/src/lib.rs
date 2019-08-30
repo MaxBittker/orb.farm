@@ -9,6 +9,7 @@ use utils::*;
 
 use species::Species;
 use std::collections::VecDeque;
+use std::f32;
 use wasm_bindgen::prelude::*;
 // use web_sys::console;
 #[wasm_bindgen]
@@ -75,6 +76,7 @@ pub struct Universe {
     lights: Vec<Light>,
     generation: u8,
     time: u8,
+    total_gas: u32,
     O2: u32,
     CO2: u32,
 }
@@ -124,7 +126,7 @@ impl<'a> SandApi<'a> {
         self.universe.lights[idx]
     }
     pub fn use_co2(&mut self) -> bool {
-        if (1 + rand_int(200) as u32) > self.universe.CO2 {
+        if (1 + rand_int(self.universe.total_gas as i32 / 3) as u32) > self.universe.CO2 {
             return false;
         }
         self.universe.CO2 = self.universe.CO2.saturating_sub(1);
@@ -133,7 +135,7 @@ impl<'a> SandApi<'a> {
         return true;
     }
     pub fn use_oxygen(&mut self) -> bool {
-        if (1 + rand_int(200) as u32) > self.universe.O2 {
+        if (1 + rand_int(self.universe.total_gas as i32 / 3) as u32) > self.universe.O2 {
             return false;
         }
         self.universe.O2 = self.universe.O2.saturating_sub(1);
@@ -217,6 +219,7 @@ impl Universe {
                 );
             }
         }
+        self.time = self.time.wrapping_add(1);
         self.calculate_light();
     }
 
@@ -302,15 +305,16 @@ impl Universe {
                 a: 0,
             })
             .collect();
-
+        let total_gas = (width * height) as u32;
         Universe {
             width,
             height,
             cells,
             lights,
             time: 0,
-            O2: (width * height) as u32 / 2,
-            CO2: (width * height) as u32 / 2,
+            total_gas,
+            O2: total_gas / 2,
+            CO2: total_gas / 2,
             undo_stack: VecDeque::with_capacity(50),
             generation: 0,
         }

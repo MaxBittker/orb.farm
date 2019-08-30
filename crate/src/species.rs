@@ -83,12 +83,12 @@ pub fn update_nitrogen(cell: Cell, mut api: SandApi) {
     let nbr = api.get(0, 1);
 
     if nbr.species == Species::Sand || nbr.species == Species::Plant {
-        api.set(0, 0, WATER);
+        api.set(0, 0, Cell::new(Species::Water));
         api.set(
             0,
             1,
             Cell {
-                energy: nbr.energy.saturating_add(100),
+                energy: nbr.energy.saturating_add(200),
                 ..nbr
             },
         );
@@ -101,6 +101,9 @@ pub fn update_nitrogen(cell: Cell, mut api: SandApi) {
     } else if dnbr.species == Species::Air || dnbr.species == Species::Water {
         api.set(0, 0, dnbr);
         api.set(dx, 1, cell);
+    } else if nbr.species == Species::Waste {
+        api.set(0, 0, nbr);
+        api.set(0, 1, cell);
     }
 }
 
@@ -113,11 +116,10 @@ pub fn update_bacteria(cell: Cell, mut api: SandApi) {
 
     let down = api.get(0, 1);
     let nbr = api.get(dx, 1);
-    if cell.age > 250 {
-        //TODO cause death
-        api.set(0, 0, Cell::new(Species::Nitrogen));
-        return;
-    }
+    // if cell.age > 250 {
+    //     api.set(0, 0, Cell::new(Species::Nitrogen));
+    //     return;
+    // }
 
     let sample = api.get(dx, dy);
 
@@ -126,8 +128,8 @@ pub fn update_bacteria(cell: Cell, mut api: SandApi) {
         if energy < 250 {
             api.set(0, 0, WATER);
             new_energy = energy;
-        }else{
-        api.set(0, 0, Cell::new(Species::Nitrogen));
+        } else {
+            api.set(0, 0, Cell::new(Species::Nitrogen));
         }
         api.set(
             dx,
@@ -172,7 +174,7 @@ pub fn update_bacteria(cell: Cell, mut api: SandApi) {
         api.set(dx, 1, cell);
         return;
     }
-        api.use_oxygen();
+    api.use_oxygen();
 
     api.set(
         0,
@@ -350,10 +352,7 @@ pub fn update_zoop(cell: Cell, mut api: SandApi) {
     let (sx, sy) = rand_vec_8();
     let sample = api.get(sx, sy);
     api.use_oxygen();
-    if sample.species == Species::Algae
-        || sample.species == Species::Egg
-        || sample.species == Species::Bacteria
-    {
+    if sample.species == Species::Algae || sample.species == Species::Egg {
         api.set(
             0,
             0,
@@ -364,7 +363,7 @@ pub fn update_zoop(cell: Cell, mut api: SandApi) {
         );
         api.set(sx, sy, WATER);
 
-        if energy > 200 && api.use_oxygen() {
+        if energy > 230 && api.use_oxygen() {
             let new_energy = energy / 4;
             api.set(
                 sx,
@@ -497,14 +496,15 @@ pub fn update_zoop(cell: Cell, mut api: SandApi) {
 
 pub fn update_egg(cell: Cell, mut api: SandApi) {
     let dx = rand_dir();
-    if cell.age > 250 {
-        ///hatch
+    if cell.age > 250 && api.use_oxygen() {
+        // hatch
         api.set(
             0,
             0,
             Cell {
                 species: Species::Zoop,
                 age: 0,
+                energy: 250,
                 ..cell
             },
         );
@@ -631,7 +631,9 @@ pub fn update_plant(cell: Cell, mut api: SandApi) {
     let energy = cell.energy;
 
     let light = api.get_light().sun;
-    if energy > 100
+    // todo slow down and give max age
+
+    if energy > 200
         && rand_int(light as i32) > 100
         && (api.get(dx, -1).species == Species::Water
             && api.get(0, -1).species == Species::Water
@@ -644,19 +646,12 @@ pub fn update_plant(cell: Cell, mut api: SandApi) {
             dx,
             -1,
             Cell {
-                energy: 50,
+                energy: 10,
                 age: 0,
                 ..cell
             },
         );
-        api.set(
-            0,
-            0,
-            Cell {
-                energy: energy.saturating_sub(50),
-                ..cell
-            },
-        );
+        api.set(0, 0, Cell { energy: 10, ..cell });
         // api.set(-dx, dy, EMPTY_CELL);
     }
 
@@ -678,13 +673,12 @@ pub fn update_plant(cell: Cell, mut api: SandApi) {
             255,
         ) as u8;
 
-        let conservation = (nbr.energy + energy) - (new_nbr_energy + new_energy);
 
         api.set(
             dx,
             dy,
             Cell {
-                energy: new_nbr_energy + conservation,
+                energy: new_nbr_energy ,
                 ..nbr
             },
         );

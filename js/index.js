@@ -31,13 +31,17 @@ universe.paint(h, h, d - 2, Species.Air);
 // }
 // universe.paint(h, h, 299, Species.Air);
 for (var x = 30; x < d - 30; x += 10) {
-  universe.paint(x, h, h, Species.Water);
+  universe.paint(x, h * 1.2, h, Species.Water);
 }
 
 for (var x = 0; x < d; x += 10) {
-  universe.paint(x, d * 0.75, 10, Species.Sand);
+  universe.paint(x, d * 0.75, 20, Species.Sand);
 }
+universe.paint(h, h, h * 1.1, Species.Water);
+
 universe.paint(h, h, 2, Species.Zoop);
+universe.paint(h, h * 1.2, 2, Species.Bacteria);
+universe.paint(h * 1.5, h * 1.2, 2, Species.Seed);
 
 universe.paint(h, h, 10, Species.Algae);
 
