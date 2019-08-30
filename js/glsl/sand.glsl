@@ -62,8 +62,8 @@ void main() {
     lightness = 0.5;
   } else if (type == 2) { // Sand
     hue = 0.1;
-    saturation = 0.2 + energy ;
-    lightness = 1.5 - energy ;
+    saturation = 0.2 + energy;
+    lightness = 1.5 - energy;
 
   } else if (type == 3) { // Water
     hue = 0.58;
@@ -74,7 +74,7 @@ void main() {
       a = 1.0;
     }
   } else if (type == 4) { // Algae
-    hue = 0.4- age*0.5;
+    hue = 0.4 - age * 0.5;
     lightness += 0.0;
     saturation = 0.4 + (age * .2);
   } else if (type == 5) { // Plant
@@ -84,13 +84,13 @@ void main() {
   } else if (type == 6) { // Zoop
     hue = 0.9;
     lightness += 0.7;
-  } else if (type == 7) { // Shrimp
+  } else if (type == 7) { // Fish
     hue = 0.0;
     lightness += 0.4;
   } else if (type == 8) { // Bacteria
-    hue = 0.;
-    saturation = 0.9;
-    lightness = 0.8;
+    hue = 0.9;
+    saturation -= 0.2;
+    lightness -= 0.1;
   } else if (type == 9) { // ???
     hue = 0.6;
     saturation = 0.4;
@@ -113,6 +113,10 @@ void main() {
     hue = 0.9;
     saturation = age;
     lightness = 1.0;
+  } else if (type == 15) { // Tail
+    hue += fract(age * 255.*1.2)*0.2;
+    lightness += 0.4;
+    // saturation += fract(age * 255.*6.);
   }
   //  else if (type == 15) { // mite
 

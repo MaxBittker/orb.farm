@@ -310,7 +310,7 @@ class Index extends React.Component {
           ↜
         </button>
         {Object.keys(Species)
-          .filter(name => name !== "Plant")
+          .filter(name => !["Plant", "FishTail"].includes(name))
           .map(n =>
             ElementButton(n, selectedElement, id =>
               this.setState({ selectedElement: id })

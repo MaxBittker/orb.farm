@@ -164,7 +164,8 @@ impl Universe {
                 let cell = self.get_cell(x, y);
                 let block: u8 = match cell.species {
                     Species::Water => 1,
-                    Species::Shrimp => 25,
+                    Species::Fish => 25,
+                    Species::FishTail => 25,
 
                     Species::Plant => 50,
                     Species::Seed => 35,
