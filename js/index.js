@@ -92,7 +92,8 @@ const renderLoop = () => {
     fps.render(); // new
     universe.tick();
   }
-  t += 1;
+  // t += 0.1;
+  t++;
   // if (t > 10) {
   // t = 0;
   universe.set_time(t % 255);

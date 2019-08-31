@@ -220,6 +220,10 @@ class WebGL {
   static getTime() {
     return 0.001 * new Date().getTime();
   }
+  static showLog(gl, shader) {
+    var compilationLog = gl.getShaderInfoLog(shader);
+    console.log("ERROR: " + compilationLog);
+  }
 }
 
 var webGL = new WebGL("sky-canvas");
