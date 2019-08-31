@@ -1,42 +1,17 @@
 let fsh = require("./glsl/sky.glsl");
 
-/* Compatibility */
 /*forked from https://github.com/bysse/shadertoy-webgl-harness*/
-(function() {
-  var vendors = ["ms", "moz", "webkit", "o"];
-  for (var x = 0; x < vendors.length && !window.requestAnimationFrame; ++x) {
-    window.requestAnimationFrame = window[vendors[x] + "RequestAnimationFrame"];
-    window.cancelAnimationFrame =
-      window[vendors[x] + "CancelAnimationFrame"] ||
-      window[vendors[x] + "CancelRequestAnimationFrame"];
-  }
-})();
-
 class WebGL {
-  constructor(canvasId, _, fullscreen, maxLength = 0.0) {
+  constructor(canvasId) {
     this.canvas = document.getElementById(canvasId);
-    this.gl = this.canvas.getContext("experimental-webgl");
+    this.gl = this.canvas.getContext("webgl");
     this.gl.getExtension("EXT_shader_texture_lod");
 
-    this.audio = null;
-    this.maxLength = maxLength;
     this.textures = {};
-    let shaderToyPrefix = `
-        #extension GL_EXT_shader_texture_lod : enable
-        precision mediump float; uniform vec3 iResolution;
-         uniform float iGlobalTime, iTime;
-         uniform vec4      iMouse;
-         uniform sampler2D iChannel0;
-         uniform sampler2D iChannel1;
-         uniform sampler2D iChannel2;
-         uniform sampler2D iChannel3;
-         \n `;
-    let shaderToySuffix =
-      "\nvoid main() { vec4 color = vec4(0.0); mainImage(color, gl_FragCoord.xy); gl_FragColor = color; }";
 
     let vertexShader =
       "attribute vec4 aPosition; void main() { gl_Position = aPosition; } ";
-    let fragmentShader = shaderToyPrefix + fsh + shaderToySuffix;
+    let fragmentShader = fsh;
 
     this.shader = WebGL.linkShader(this.gl, vertexShader, fragmentShader);
     this.shader.vertexAttribute = this.gl.getAttribLocation(
@@ -46,19 +21,11 @@ class WebGL {
     this.gl.enableVertexAttribArray(this.shader.vertexAttribute);
 
     let res = 8;
-    if (fullscreen) {
-      this.height = window.innerHeight / 8;
-      this.width = window.innerWidth / 8;
-    } else {
-      this.width = parseInt(this.canvas.getAttribute("width"));
-      this.height = parseInt(this.canvas.getAttribute("height"));
-    }
+    this.height = window.innerHeight / res;
+    this.width = window.innerWidth / res;
     this.canvas.setAttribute("width", this.width);
     this.canvas.setAttribute("height", this.height);
-    this.canvas.style = `
-  width: 100%;
-  height: 100%;
-  image-rendering: pixelated;`;
+
     this.vertexBuffer = WebGL.createVBO(this.gl, 3, [
       1.0,
       1.0,
@@ -75,27 +42,6 @@ class WebGL {
     ]);
     this.running = false;
     this.time0 = 0.0;
-    this.refresh_audio = false;
-
-    window.addEventListener("keydown", event => {
-      if (event.keyCode == 32) {
-        event.preventDefault();
-        if (this.running) {
-          this.stop();
-        } else {
-          this.start();
-        }
-      }
-      var now = WebGL.getTime();
-      if (event.keyCode == 37) {
-        this.time0 = Math.min(this.time0, now);
-        this.refresh_audio = true;
-      }
-      if (event.keyCode == 39) {
-        this.time0 -= 1.0;
-        this.refresh_audio = true;
-      }
-    });
   }
 
   loadTexture(channelNumber, source) {
@@ -152,42 +98,12 @@ class WebGL {
     texture.image.src = source;
   }
 
-  loadMusic(elementId, runWhenLoaded) {
-    this.audio = document.getElementById(elementId);
-    if (runWhenLoaded) {
-      if (this.audio.autoplay != true) {
-        console.log(
-          `ERROR: autoplay property is not set on ${elementId}, automatic playback might not work properly`
-        );
-      }
-      this.audio.oncanplay = e => this.start();
-      this.audio.onplay = e => this._start();
-      this.audio.onpause = e => this.stop();
-    }
-    this.audio.load();
-  }
-
   start() {
     if (this.running) {
       return;
     }
 
-    if (this.audio == null) {
-      this._start();
-    } else {
-      var promise = this.audio.play();
-      if (promise === undefined) {
-        console.log("ERROR: Failed to start audio");
-      } else {
-        promise
-          .then(_ => {
-            this._start();
-          })
-          .catch(error => {
-            this.audio.controls = true;
-          });
-      }
-    }
+    this._start();
   }
 
   _start() {
@@ -198,19 +114,14 @@ class WebGL {
     this.gl.disable(this.gl.DEPTH_TEST);
     this.gl.viewport(0, 0, this.width, this.height);
     this.gl.useProgram(this.shader);
-
-    this._frame(this.gl);
   }
 
   stop() {
     this.running = false;
-
-    if (this.audio != null) {
-      this.audio.pause();
-    }
   }
 
-  _frame(gl) {
+  frame(gameTime) {
+    let gl = this.gl;
     if (!this.running) {
       return;
     }
@@ -219,16 +130,6 @@ class WebGL {
     let time = WebGL.getTime() - this.time0;
     let dt = time - this.timePreviousFrame;
     this.timePreviousFrame = time;
-
-    if (this.refresh_audio && this.audio) {
-      this.audio.currentTime = time;
-      this.refresh_audio = false;
-    }
-
-    if (this.maxLength > 0.0 && time > this.maxLength) {
-      this.stop();
-      return;
-    }
 
     gl.clear(gl.DEPTH_BUFFER_BIT);
 
@@ -262,18 +163,8 @@ class WebGL {
     );
     gl.uniform1f(gl.getUniformLocation(shader, "iGlobalTime"), time); // legacy support
     gl.uniform1f(gl.getUniformLocation(shader, "iTime"), time);
-    let r = Math.min(this.width, this.height) * 0.5;
-    gl.uniform4f(
-      gl.getUniformLocation(shader, "iMouse"),
-      Math.sin(time) * r,
-      Math.cos(time) * r,
-      0,
-      0
-    );
-    // console.log(time);
+    gl.uniform1f(gl.getUniformLocation(shader, "gameTime"), gameTime);
     gl.drawArrays(gl.TRIANGLE_STRIP, 0, this.vertexBuffer.numItems);
-
-    requestAnimationFrame(() => this._frame(gl));
   }
 
   static createVBO(gl, stride, vertexData) {
@@ -326,33 +217,13 @@ class WebGL {
     return shader;
   }
 
-  static showLog(gl, shader) {
-    var compilationLog = gl.getShaderInfoLog(shader);
-    console.log("ERROR: " + compilationLog);
-  }
-
-  //   static showSource(fragmentSourceId) {
-  //     var shader = WebGL.loadShader(fragmentSourceId);
-  //     var body = document.getElementsByTagName("body")[0];
-  //     console.log(body);
-
-  //     var code = document.createElement("pre");
-  //     code.innerText = shader;
-  //     body.appendChild(code);
-  //   }
-
   static getTime() {
     return 0.001 * new Date().getTime();
   }
 }
 
-function main() {
-  var fullscreen = true;
-  var stopTime = 0; // 0 for looping
+var webGL = new WebGL("sky-canvas");
+webGL.loadTexture(0, "assets/noise.png");
+webGL.start();
 
-  webGL = new WebGL("sky-canvas", "fragment-shader", fullscreen, stopTime);
-  webGL.loadTexture(0, "assets/noise.png");
-  webGL.start();
-}
-
-main();
+export { webGL };

@@ -1,4 +1,12 @@
-// The sun, the sky and the clouds. By StillTravelling
+#extension GL_EXT_shader_texture_lod : enable
+        precision mediump float; uniform vec3 iResolution;
+         uniform float iGlobalTime, iTime, gameTime;
+         uniform vec4      iMouse;
+         uniform sampler2D iChannel0;
+         uniform sampler2D iChannel1;
+         uniform sampler2D iChannel2;
+         uniform sampler2D iChannel3;
+         // The sun, the sky and the clouds. By StillTravelling
 // https://www.shadertoy.com/view/tdSXzD
 // Very much a messy hack sorry!!
 
@@ -55,6 +63,8 @@ const float I = 10.; //sun light power, 10.0 is normal
 const float SI = 5.; //sun intensity for sun
 const float g = 0.45; //light concentration .76 //.45 //.6  .45 is normaL
 const float g2 = g * g;
+const float PI = 3.14159265358979323846;
+const float PI2 = 2.*3.14159265358979323846;
 
 const float ts= (cameraheight / 2.5e5);
 
@@ -68,11 +78,11 @@ const float Hr = 8e3; //Rayleigh scattering top //8e3
 const float Hm = 1.2e3; //Mie scattering top //1.3e3
 
 vec3 bM = vec3(21e-6); //normal mie // vec3(21e-6)
-//vec3 bM = vec3(50e-6); //high mie
+// vec3 bM = vec3(50e-6); //high mie
 
 //Rayleigh scattering (sky color, atmospheric up to 8km)
 vec3 bR = vec3(5.8e-6, 13.5e-6, 33.1e-6); //normal earth
-//vec3 bR = vec3(5.8e-6, 33.1e-6, 13.5e-6); //purple
+// vec3 bR = vec3(5.8e-6, 33.1e-6, 13.5e-6); //purple
 //vec3 bR = vec3( 63.5e-6, 13.1e-6, 50.8e-6 ); //green
 //vec3 bR = vec3( 13.5e-6, 23.1e-6, 115.8e-6 ); //yellow
 //vec3 bR = vec3( 5.5e-6, 15.1e-6, 355.8e-6 ); //yeellow
@@ -342,7 +352,6 @@ vec3 stars(in vec3 p)
 }
 
 //SIMPLE SUN STUFF
-const float PI = 3.14159265358979323846;
 const float density = 0.5;
 const float zenithOffset = 0.48;
 const vec3 skyColor = vec3(0.37, 0.55, 1.0) * (1.0 + 0.0);
@@ -461,22 +470,26 @@ void mainImage( out vec4 fragColor, in vec2 fragCoord ) {
 
     float AR = iResolution.x/iResolution.y;
     float M = 1.0; //canvas.innerWidth/M //canvas.innerHeight/M --res
-    
-    vec2 uvMouse = (iMouse.xy / iResolution.xy);
+    // vec2 circle = vec2(cos(gameTime* PI2), sin(gameTime*PI2));
+    vec2 circle = vec2(1.+ cos(gameTime* PI2), 1.+ sin(gameTime*PI2));
+    vec2 uvMouse = (circle.xy / iResolution.xy);
     uvMouse.x *= AR;
     
-        vec2 uv0 = (fragCoord.xy / iResolution.xy);
+    vec2 uv0 = (fragCoord.xy / iResolution.xy);
     uv0 *= M;
-    //uv0.x *= AR;
+    // uv0.x *= AR;
     
     vec2 uv = uv0 * (2.0*M) - (1.0*M);
     uv.x *=AR;
     
     
-    if (uvMouse.y == 0.) uvMouse.y=(0.7-(0.05*fov)); //initial view 
-    if (uvMouse.x == 0.) uvMouse.x=(1.0-(0.05*fov)); //initial view
-    
-
+    // uvMouse.y=(0.7-(0.05*fov)); //initial view 
+    // uvMouse.x=(1.0-(0.05*fov)); //initial view
+    // circle+=0.5;
+    // uvMouse.xy = circle - vec2((0.05*fov));
+    // uvMouse.xy = vec2(1.0, 0.5);
+    // uvMouse*= 100.;
+    // uvMouse += iResolution.xy *0.5;
     Ds = normalize(vec3(uvMouse.x-((0.5*AR)), uvMouse.y-0.5, (fov/-2.0)));
     
     
@@ -557,3 +570,4 @@ void mainImage( out vec4 fragColor, in vec2 fragCoord ) {
     //float env = pow( smoothstep(.5, iResolution.x / iResolution.y, length(uv*0.8)), 0.0);
     fragColor = vec4(pow(color, vec3(1.0/2.2)), 1.); //gamma correct
 }
+void main() { vec4 color = vec4(0.0); mainImage(color, gl_FragCoord.xy); gl_FragColor = color; }

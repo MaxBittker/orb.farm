@@ -61,9 +61,9 @@ void main() {
     saturation = 0.1;
     lightness = 0.5;
   } else if (type == 2) { // Sand
-    hue = 0.1;
-    saturation = 0.2 + energy;
-    lightness = 1.5 - energy;
+    hue =  0.1;
+    saturation = 0.4 + (age*0.2)  ;
+    lightness = 1.3 - energy;
 
   } else if (type == 3) { // Water
     hue = 0.58;

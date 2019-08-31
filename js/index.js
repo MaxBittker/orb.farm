@@ -5,7 +5,7 @@ import { fps } from "./fps";
 import {} from "./paint";
 import {} from "./app";
 import {} from "./setup";
-import {} from "./shaderToy";
+import { webGL } from "./shaderToy";
 
 let n = 200;
 let h = n / 2;
@@ -17,20 +17,6 @@ universe.paint(h, h, d + 2, Species.Glass);
 universe.paint(h - 10, d + 2, 10, Species.Wood);
 universe.paint(h + 10, d + 2, 10, Species.Wood);
 universe.paint(h, h, d - 2, Species.Air);
-// for (var x = -50; x <= 49; x += 1) {
-//   universe.paint(h + x, h + 49, 204, Species.Glass);
-//   universe.paint(h + x, h + 49, 200, Species.Air);
-
-//   universe.paint(h + x, h - 50, 204, Species.Glass);
-//   universe.paint(h + x, h - 50, 200, Species.Air);
-
-//   universe.paint(h - 50, h + x, 204, Species.Glass);
-//   universe.paint(h - 50, h + x, 200, Species.Air);
-
-//   universe.paint(h + 49, h + x, 204, Species.Glass);
-//   universe.paint(h + 49, h + x, 200, Species.Air);
-// }
-// universe.paint(h, h, 299, Species.Air);
 for (var x = 30; x < d - 30; x += 10) {
   universe.paint(x, h * 1.2, h, Species.Water);
 }
@@ -106,16 +92,16 @@ const renderLoop = () => {
     fps.render(); // new
     universe.tick();
   }
-  t++;
-  if (t > 10) {
-    t = 0;
-    universe.inc_time();
-  }
+  t += 1;
+  // if (t > 10) {
+  // t = 0;
+  universe.set_time(t % 255);
+  // }
   drawSand();
-
-  window.animationId = requestAnimationFrame(renderLoop);
+  webGL.frame(t / 255);
+  window.animWebationId = requestAnimationFrame(renderLoop);
 };
-
+255;
 function reset() {
   universe.reset();
 }

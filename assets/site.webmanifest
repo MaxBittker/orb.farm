@@ -1,8 +1,8 @@
 {
-    "name": "sandspiel",
-    "short_name": "sandspiel",
-    "start_url": "https://sandspiel.club/",
-    "scope": "https://sandspiel.club/",
+    // "name": "sandspiel",
+    // "short_name": "sandspiel",
+    // "start_url": "https://sandspiel.club/",
+    // "scope": "https://sandspiel.club/",
     "icons": [
         {
             "src": "/assets/android-chrome-192x192.png",

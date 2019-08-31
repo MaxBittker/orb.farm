@@ -252,6 +252,11 @@ pub fn update_bacteria(cell: Cell, mut api: SandApi) {
 }
 
 pub fn update_sand(cell: Cell, mut api: SandApi) {
+    let mut age = cell.age;
+    if cell.age == 0 {
+        age = rand_int(255)as u8;
+    }
+
     let (dx, dy) = rand_vec_8();
 
     let down = api.get(0, 1);
@@ -299,6 +304,7 @@ pub fn update_sand(cell: Cell, mut api: SandApi) {
             0,
             Cell {
                 energy: new_energy,
+                age,
                 ..cell
             },
         );
@@ -743,7 +749,7 @@ pub fn update_Fish(cell: Cell, mut api: SandApi) {
                 Cell {
                     species: Species::FishTail,
                     energy: 1,
-                    age: 3,
+                    age: 13 * 2,
                     clock: cell.clock,
                 },
             );
@@ -754,7 +760,7 @@ pub fn update_Fish(cell: Cell, mut api: SandApi) {
                     Cell {
                         species: Species::FishTail,
                         energy: 0,
-                        age: 2,
+                        age: 12 * 2,
                         clock: cell.clock,
                     },
                 );
@@ -766,7 +772,7 @@ pub fn update_Fish(cell: Cell, mut api: SandApi) {
                     Cell {
                         species: Species::FishTail,
                         energy: 0,
-                        age: 2,
+                        age: 10 * 2,
                         clock: cell.clock,
                     },
                 );
