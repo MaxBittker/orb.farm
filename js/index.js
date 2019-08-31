@@ -5,7 +5,7 @@ import { fps } from "./fps";
 import {} from "./paint";
 import {} from "./app";
 import {} from "./setup";
-import { webGL } from "./shaderToy";
+import { startSky } from "./shaderToy";
 
 let n = 200;
 let h = n / 2;
@@ -43,7 +43,7 @@ canvas.height = n * ratio * Math.ceil(window.devicePixelRatio);
 canvas.width = n * ratio * Math.ceil(window.devicePixelRatio);
 
 const ui = document.getElementById("ui");
-
+let canvasSize;
 let resize = () => {
   let screen_width = window.innerWidth;
   let uiheight = 50;
@@ -55,17 +55,22 @@ let resize = () => {
     if (screen_width - window.innerHeight < 400) {
       // landscape compressed
       canvasStyle = `height: ${window.innerHeight}px; margin:3px`;
+      canvasSize = window.innerHeight;
       uiStyle = `width: ${screen_width -
         window.innerHeight -
         12}px; margin: 2px;`;
     } else {
       // landscape wide
       canvasStyle = `height: ${window.innerHeight}px`;
+      canvasSize = window.innerHeight;
+
       uiStyle = `width: ${(screen_width - window.innerHeight) / 2 -
         7}px; margin: 2px;`;
     }
   } else {
     //portrait (mobile)
+    canvasSize = screen_width;
+
     canvasStyle = `width: ${screen_width}px; `;
     uiStyle = "";
   }
@@ -78,20 +83,26 @@ window.addEventListener("deviceorientation", resize, true);
 window.addEventListener("resize", resize);
 
 let drawSand = startWebGL({ canvas, universe });
+let sky_ratio = canvasSize / n;
+let sky = startSky(sky_ratio * 2);
+
 let t = 0;
 const renderLoop = () => {
   if (!window.paused) {
     fps.render(); // new
     universe.tick();
   }
-  t += 0.1;
   // t++;
   // if (t > 10) {
   // t = 0;
   universe.set_time(t % 255);
   // }
   drawSand();
-  webGL.frame(t / 255);
+  // if (t % 1 == 0) {
+  sky.frame(t / 255);
+  // }
+  t += 0.5;
+
   window.animWebationId = requestAnimationFrame(renderLoop);
 };
 255;

@@ -2,16 +2,33 @@ let fsh = require("./glsl/sky.glsl");
 
 /*forked from https://github.com/bysse/shadertoy-webgl-harness*/
 class WebGL {
-  constructor(canvasId) {
+  constructor(canvasId, res) {
     this.canvas = document.getElementById(canvasId);
     this.gl = this.canvas.getContext("webgl");
-    this.gl.getExtension("EXT_shader_texture_lod");
-
     this.textures = {};
 
     let vertexShader =
       "attribute vec4 aPosition; void main() { gl_Position = aPosition; } ";
-    let fragmentShader = fsh;
+    let fragmentShader = "";
+
+    let mIs20 = !(this.gl instanceof WebGLRenderingContext);
+    let mDerivatives;
+    let mShaderTextureLOD;
+    if (mIs20) {
+      mDerivatives = true;
+      mShaderTextureLOD = true;
+    } else {
+      mDerivatives = this.gl.getExtension("OES_standard_derivatives");
+      mShaderTextureLOD = this.gl.getExtension("EXT_shader_texture_lod");
+    }
+    if (mShaderTextureLOD) {
+      fragmentShader += "#extension GL_EXT_shader_texture_lod : enable\n";
+    }
+    if (mDerivatives) {
+      fragmentShader +=
+        "#ifdef GL_OES_standard_derivatives\n#extension GL_OES_standard_derivatives : enable\n#endif\n";
+    }
+    fragmentShader += fsh;
 
     this.shader = WebGL.linkShader(this.gl, vertexShader, fragmentShader);
     this.shader.vertexAttribute = this.gl.getAttribLocation(
@@ -20,7 +37,6 @@ class WebGL {
     );
     this.gl.enableVertexAttribArray(this.shader.vertexAttribute);
 
-    let res = 8;
     this.height = window.innerHeight / res;
     this.width = window.innerWidth / res;
     this.canvas.setAttribute("width", this.width);
@@ -226,8 +242,12 @@ class WebGL {
   }
 }
 
-var webGL = new WebGL("sky-canvas");
-webGL.loadTexture(0, "assets/noise.png");
-webGL.start();
+function startSky(res) {
+  var webGL = new WebGL("sky-canvas", res);
+  webGL.loadTexture(0, "assets/noise.png");
 
-export { webGL };
+  webGL.start();
+  return webGL;
+}
+
+export { startSky };

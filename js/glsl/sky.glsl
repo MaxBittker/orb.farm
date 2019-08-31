@@ -1,15 +1,17 @@
 
 // clang-format off
 
-#extension GL_EXT_shader_texture_lod : enable
 
-precision mediump float; uniform vec3 iResolution;
+#ifdef GL_ES
+precision highp float;
+precision highp int;
+#endif
+
+uniform vec3 iResolution;
 uniform float iGlobalTime, iTime, gameTime;
 uniform sampler2D iChannel0;
-uniform sampler2D iChannel1;
-uniform sampler2D iChannel2;
-uniform sampler2D iChannel3;
-         // The sun, the sky and the clouds. By StillTravelling
+// Appropriated with love from:///
+// The sun, the sky and the clouds. By StillTravelling
 // https://www.shadertoy.com/view/tdSXzD
 // Very much a messy hack sorry!!
 
@@ -33,8 +35,8 @@ uniform sampler2D iChannel3;
 
 #define ORIG_CLOUD 0
 #define ENABLE_RAIN 0 // enable rain drops on screen
-#define SIMPLE_SUN 0
-#define NICE_HACK_SUN 1
+#define SIMPLE_SUN 1
+#define NICE_HACK_SUN 0
 #define SOFT_SUN 1
 #define cloudy 0.5 // 0.0 clear sky
 #define haze 0.01 * (cloudy * 20.)
@@ -50,6 +52,35 @@ uniform sampler2D iChannel3;
 #define yaxiscloud 0.      // 0.
 #define zaxiscloud t * 6e2 // t*6e2 +t away from horizon -t towards horizon *speed
 #define cloudnoise 2e-4 // 2e-4
+
+vec4 texture(     sampler2D   s, vec2 c)                   { return texture2D(s,c); }
+vec4 texture(     sampler2D   s, vec2 c, float b)          { return texture2D(s,c,b); }
+vec4 texture(     samplerCube s, vec3 c )                  { return textureCube(s,c); }
+vec4 texture(     samplerCube s, vec3 c, float b)          { return textureCube(s,c,b); }
+float round( float x ) { return floor(x+0.5); }
+vec2 round(vec2 x) { return floor(x + 0.5); }
+vec3 round(vec3 x) { return floor(x + 0.5); }
+vec4 round(vec4 x) { return floor(x + 0.5); }
+float trunc( float x, float n ) { return floor(x*n)/n; }
+mat3 transpose(mat3 m) { return mat3(m[0].x, m[1].x, m[2].x, m[0].y, m[1].y, m[2].y, m[0].z, m[1].z, m[2].z); }
+float determinant( in mat2 m ) { return m[0][0]*m[1][1] - m[0][1]*m[1][0]; }
+float determinant( mat4 m ) { float b00 = m[0][0] * m[1][1] - m[0][1] * m[1][0], b01 = m[0][0] * m[1][2] - m[0][2] * m[1][0], b02 = m[0][0] * m[1][3] - m[0][3] * m[1][0], b03 = m[0][1] * m[1][2] - m[0][2] * m[1][1], b04 = m[0][1] * m[1][3] - m[0][3] * m[1][1], b05 = m[0][2] * m[1][3] - m[0][3] * m[1][2], b06 = m[2][0] * m[3][1] - m[2][1] * m[3][0], b07 = m[2][0] * m[3][2] - m[2][2] * m[3][0], b08 = m[2][0] * m[3][3] - m[2][3] * m[3][0], b09 = m[2][1] * m[3][2] - m[2][2] * m[3][1], b10 = m[2][1] * m[3][3] - m[2][3] * m[3][1], b11 = m[2][2] * m[3][3] - m[2][3] * m[3][2];  return b00 * b11 - b01 * b10 + b02 * b09 + b03 * b08 - b04 * b07 + b05 * b06;}
+mat2 inverse(mat2 m) { float det = determinant(m); return mat2(m[1][1], -m[0][1], -m[1][0], m[0][0]) / det; }
+mat4 inverse(mat4 m ) { float inv0 = m[1].y*m[2].z*m[3].w - m[1].y*m[2].w*m[3].z - m[2].y*m[1].z*m[3].w + m[2].y*m[1].w*m[3].z + m[3].y*m[1].z*m[2].w - m[3].y*m[1].w*m[2].z; float inv4 = -m[1].x*m[2].z*m[3].w + m[1].x*m[2].w*m[3].z + m[2].x*m[1].z*m[3].w - m[2].x*m[1].w*m[3].z - m[3].x*m[1].z*m[2].w + m[3].x*m[1].w*m[2].z; float inv8 = m[1].x*m[2].y*m[3].w - m[1].x*m[2].w*m[3].y - m[2].x  * m[1].y * m[3].w + m[2].x  * m[1].w * m[3].y + m[3].x * m[1].y * m[2].w - m[3].x * m[1].w * m[2].y; float inv12 = -m[1].x  * m[2].y * m[3].z + m[1].x  * m[2].z * m[3].y +m[2].x  * m[1].y * m[3].z - m[2].x  * m[1].z * m[3].y - m[3].x * m[1].y * m[2].z + m[3].x * m[1].z * m[2].y; float inv1 = -m[0].y*m[2].z * m[3].w + m[0].y*m[2].w * m[3].z + m[2].y  * m[0].z * m[3].w - m[2].y  * m[0].w * m[3].z - m[3].y * m[0].z * m[2].w + m[3].y * m[0].w * m[2].z; float inv5 = m[0].x  * m[2].z * m[3].w - m[0].x  * m[2].w * m[3].z - m[2].x  * m[0].z * m[3].w + m[2].x  * m[0].w * m[3].z + m[3].x * m[0].z * m[2].w - m[3].x * m[0].w * m[2].z; float inv9 = -m[0].x  * m[2].y * m[3].w +  m[0].x  * m[2].w * m[3].y + m[2].x  * m[0].y * m[3].w - m[2].x  * m[0].w * m[3].y - m[3].x * m[0].y * m[2].w + m[3].x * m[0].w * m[2].y; float inv13 = m[0].x  * m[2].y * m[3].z - m[0].x  * m[2].z * m[3].y - m[2].x  * m[0].y * m[3].z + m[2].x  * m[0].z * m[3].y + m[3].x * m[0].y * m[2].z - m[3].x * m[0].z * m[2].y; float inv2 = m[0].y  * m[1].z * m[3].w - m[0].y  * m[1].w * m[3].z - m[1].y  * m[0].z * m[3].w + m[1].y  * m[0].w * m[3].z + m[3].y * m[0].z * m[1].w - m[3].y * m[0].w * m[1].z; float inv6 = -m[0].x  * m[1].z * m[3].w + m[0].x  * m[1].w * m[3].z + m[1].x  * m[0].z * m[3].w - m[1].x  * m[0].w * m[3].z - m[3].x * m[0].z * m[1].w + m[3].x * m[0].w * m[1].z; float inv10 = m[0].x  * m[1].y * m[3].w - m[0].x  * m[1].w * m[3].y - m[1].x  * m[0].y * m[3].w + m[1].x  * m[0].w * m[3].y + m[3].x * m[0].y * m[1].w - m[3].x * m[0].w * m[1].y; float inv14 = -m[0].x  * m[1].y * m[3].z + m[0].x  * m[1].z * m[3].y + m[1].x  * m[0].y * m[3].z - m[1].x  * m[0].z * m[3].y - m[3].x * m[0].y * m[1].z + m[3].x * m[0].z * m[1].y; float inv3 = -m[0].y * m[1].z * m[2].w + m[0].y * m[1].w * m[2].z + m[1].y * m[0].z * m[2].w - m[1].y * m[0].w * m[2].z - m[2].y * m[0].z * m[1].w + m[2].y * m[0].w * m[1].z; float inv7 = m[0].x * m[1].z * m[2].w - m[0].x * m[1].w * m[2].z - m[1].x * m[0].z * m[2].w + m[1].x * m[0].w * m[2].z + m[2].x * m[0].z * m[1].w - m[2].x * m[0].w * m[1].z; float inv11 = -m[0].x * m[1].y * m[2].w + m[0].x * m[1].w * m[2].y + m[1].x * m[0].y * m[2].w - m[1].x * m[0].w * m[2].y - m[2].x * m[0].y * m[1].w + m[2].x * m[0].w * m[1].y; float inv15 = m[0].x * m[1].y * m[2].z - m[0].x * m[1].z * m[2].y - m[1].x * m[0].y * m[2].z + m[1].x * m[0].z * m[2].y + m[2].x * m[0].y * m[1].z - m[2].x * m[0].z * m[1].y; float det = m[0].x * inv0 + m[0].y * inv4 + m[0].z * inv8 + m[0].w * inv12; det = 1.0 / det; return det*mat4( inv0, inv1, inv2, inv3,inv4, inv5, inv6, inv7,inv8, inv9, inv10, inv11,inv12, inv13, inv14, inv15);}
+float sinh(float x)  { return (exp(x)-exp(-x))/2.; }
+float cosh(float x)  { return (exp(x)+exp(-x))/2.; }
+float tanh(float x)  { return sinh(x)/cosh(x); }
+float coth(float x)  { return cosh(x)/sinh(x); }
+float sech(float x)  { return 1./cosh(x); }
+float csch(float x)  { return 1./sinh(x); }
+float asinh(float x) { return    log(x+sqrt(x*x+1.)); }
+float acosh(float x) { return    log(x+sqrt(x*x-1.)); }
+float atanh(float x) { return .5*log((1.+x)/(1.-x)); }
+float acoth(float x) { return .5*log((x+1.)/(x-1.)); }
+float asech(float x) { return    log((1.+sqrt(1.-x*x))/x); }
+float acsch(float x) { return    log((1.+sqrt(1.+x*x))/x); }
+vec4 textureLod(  sampler2D   s, vec2 c, float b)          { return texture2DLodEXT(s,c,b); }
+vec4 textureGrad( sampler2D   s, vec2 c, vec2 dx, vec2 dy) { return texture2DGradEXT(s,c,dx,dy); }
 // clang-format on
 
 //#define cloud2
@@ -171,7 +202,7 @@ vec4 aurora(vec3 ro, vec3 rd) {
 
 float noise(in vec2 v) {
   return 0.5;
-  // texture2DLodEXT(iChannel0,(v+.5)/256., 0.).r;
+  //    texture(iChannel0,(v+.5)/256., 0.).r * 0.01;
 }
 
 // by iq
@@ -181,7 +212,7 @@ float Noise(in vec3 x) {
   f = f * f * (3.0 - 2.0 * f);
 
   vec2 uv = (p.xy + vec2(37.0, 17.0) * p.z) + f.xy;
-  vec2 rg = texture2DLodEXT(iChannel0, (uv + 0.5) / 256.0, -100.0).yx;
+  vec2 rg = textureLod(iChannel0, (uv + 0.5) / 256.0, -100.0).yx;
   return mix(rg.x, rg.y, f.z);
 }
 
@@ -475,12 +506,16 @@ vec2 GetDrops(vec2 uv, float seed, float m) {
 void mainImage(out vec4 fragColor, in vec2 fragCoord) {
 
   float AR = iResolution.x / iResolution.y;
+  float smallSide = min(iResolution.x, iResolution.y);
+  float bigSide = max(iResolution.x, iResolution.y);
   float M = 1.0; // canvas.innerWidth/M //canvas.innerHeight/M --res
   // vec2 circle = vec2(cos(gameTime* PI2), sin(gameTime*PI2));
   vec2 circle = vec2(1.0) + vec2(sin(-gameTime * PI2), cos(gameTime * PI2));
   circle *= 0.5;
   // circle.x = iResolution.x/2.;
   // circle.y = circle.;
+//   circle += vec2((bigSide - smallSide) / 4., 0.);
+  // circle = vec2(sin(gameTime*PI2));
   vec2 uvMouse = circle;
   // / iResolution.xy);
   // uvMouse.x *= AR;
@@ -563,7 +598,7 @@ void mainImage(out vec4 fragColor, in vec2 fragCoord) {
 
   color += scat;
   color += star;
-  // color=color*(1.-(aur.a)*scatatt) + (aur.rgb*scatatt);
+  //   color=color*(1.-(aur.a)*scatatt) + (aur.rgb*scatatt);
   color += aur.rgb * scatatt;
 
 #if ENABLE_RAIN

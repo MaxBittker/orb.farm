@@ -254,7 +254,7 @@ pub fn update_bacteria(cell: Cell, mut api: SandApi) {
 pub fn update_sand(cell: Cell, mut api: SandApi) {
     let mut age = cell.age;
     if cell.age == 0 {
-        age = rand_int(255)as u8;
+        age = rand_int(255) as u8;
     }
 
     let (dx, dy) = rand_vec_8();
@@ -716,7 +716,7 @@ pub fn update_Fish(cell: Cell, mut api: SandApi) {
                 0,
                 Cell {
                     age: Fish_padding + join_dy_dx(dx, dy, 0),
-                    energy: energy.saturating_sub(1),
+                    energy: energy.saturating_sub(0),
 
                     ..cell
                 },
@@ -726,7 +726,7 @@ pub fn update_Fish(cell: Cell, mut api: SandApi) {
                 0,
                 0,
                 Cell {
-                    energy: energy.saturating_sub(1),
+                    energy: energy.saturating_sub(0),
                     ..cell
                 },
             );
@@ -743,13 +743,15 @@ pub fn update_Fish(cell: Cell, mut api: SandApi) {
         if (nbr.species == Species::Water || nbr.species == Species::FishTail)
         // && (api.use_oxygen())
         {
+            let fish_length = (energy+25)/ 25;
+
             api.set(
                 0,
                 0,
                 Cell {
                     species: Species::FishTail,
                     energy: 1,
-                    age: 7,
+                    age: fish_length,
                     clock: cell.clock,
                 },
             );
@@ -760,7 +762,7 @@ pub fn update_Fish(cell: Cell, mut api: SandApi) {
                     Cell {
                         species: Species::FishTail,
                         energy: 0,
-                        age: 6,
+                        age: fish_length.saturating_sub(1),
                         clock: cell.clock,
                     },
                 );
@@ -772,7 +774,7 @@ pub fn update_Fish(cell: Cell, mut api: SandApi) {
                     Cell {
                         species: Species::FishTail,
                         energy: 0,
-                        age: 5,
+                        age: fish_length.saturating_sub(2),
                         clock: cell.clock,
                     },
                 );

@@ -60,28 +60,7 @@ class Index extends React.Component {
     this.load();
   }
 
-  componentDidUpdate(prevProps) {
-    if (
-      this.props.location.pathname === "/" &&
-      prevProps.location.pathname !== "/" &&
-      this.state.currentSubmission
-    ) {
-      window.location = `#${this.state.currentSubmission.id}`;
-      return;
-    }
-    if (
-      this.props.location.pathname !== "/" &&
-      prevProps.location.pathname == "/"
-    ) {
-      this.pause();
-    }
-    if (
-      prevProps.location.hash === "" ||
-      prevProps.location.hash != this.props.location.hash
-    ) {
-      this.load();
-    }
-  }
+  componentDidUpdate(prevProps) {}
   togglePause() {
     window.paused = !this.state.paused;
     this.setState({ paused: !this.state.paused });
@@ -104,7 +83,6 @@ class Index extends React.Component {
   reset() {
     if (window.confirm("Reset?")) {
       this.play();
-      window.location = "#";
       this.setState({ currentSubmission: null });
       reset();
     }
@@ -152,29 +130,6 @@ class Index extends React.Component {
       data: { dataURL, cells: cellData },
       submissionMenuOpen: true
     });
-  }
-  submit() {
-    let { title, data } = this.state;
-    let { dataURL, cells } = data;
-    let payload = { title, image: dataURL, cells };
-    this.setState({ submitting: true });
-
-    fetch(functions._url("api/creations"), {
-      method: "POST",
-      body: JSON.stringify(payload), // data can be `string` or {object}!
-      headers: {
-        "Content-Type": "application/json"
-      }
-    })
-      .then(res => res.json())
-      .then(response => {
-        console.log("Success:", JSON.stringify(response));
-        this.play();
-      })
-      .catch(error => console.error("Error:", error))
-      .then(() => {
-        this.setState({ submissionMenuOpen: false, submitting: false });
-      });
   }
 
   load() {
