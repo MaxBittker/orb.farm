@@ -28,8 +28,8 @@ body,
   /* background-image: url("http://api.thumbr.it/whitenoise-361x370.png?background=c7c1b9ff&noise=626262&density=45&opacity=15"); */
 }
 #background {
-  background-image: url("https://source.unsplash.com/collection/2152825/");
-  background-image: url("https://i.imgur.com/GJtS1mA.png");
+  /* background-image: url("https://source.unsplash.com/collection/2152825/"); */
+  /* background-image: url("https://i.imgur.com/GJtS1mA.png"); */
   
   filter: blur(1px);
   z-index: -1;
@@ -44,7 +44,7 @@ body,
   left: -20px;
   width: 200vw;
   height: 300px;
-  background-image: url("https://northernlogsupply.com/wp-content/uploads/2017/02/weathered-barn-red.jpg");
+  /* background-image: url("https://northernlogsupply.com/wp-content/uploads/2017/02/weathered-barn-red.jpg"); */
   filter: contrast(0.2);
 }
 
@@ -71,6 +71,10 @@ canvas {
 
 #sand-canvas {
   z-index: 2;
+}
+#sky-canvas{
+  z-index: 1;
+  
 }
 canvas,
 img {

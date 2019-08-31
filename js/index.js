@@ -5,6 +5,7 @@ import { fps } from "./fps";
 import {} from "./paint";
 import {} from "./app";
 import {} from "./setup";
+import {} from "./shaderToy";
 
 let n = 200;
 let h = n / 2;
@@ -99,13 +100,11 @@ window.addEventListener("deviceorientation", resize, true);
 window.addEventListener("resize", resize);
 
 let drawSand = startWebGL({ canvas, universe });
-// let light = startLight({ universe });
 let t = 0;
 const renderLoop = () => {
   if (!window.paused) {
     fps.render(); // new
     universe.tick();
-    // light.update();
   }
   t++;
   if (t > 10) {
