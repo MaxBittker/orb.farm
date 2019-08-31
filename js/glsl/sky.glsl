@@ -477,10 +477,11 @@ void mainImage(out vec4 fragColor, in vec2 fragCoord) {
   float AR = iResolution.x / iResolution.y;
   float M = 1.0; // canvas.innerWidth/M //canvas.innerHeight/M --res
   // vec2 circle = vec2(cos(gameTime* PI2), sin(gameTime*PI2));
-  vec2 circle = vec2(1. + cos(gameTime * PI2), 1. + sin(gameTime * PI2));
+  vec2 circle = vec2(1.0) + vec2(sin(-gameTime * PI2), cos(gameTime * PI2));
+  circle *= 0.5;
   // circle.x = iResolution.x/2.;
   // circle.y = circle.;
-  vec2 uvMouse = circle * 10.;
+  vec2 uvMouse = circle;
   // / iResolution.xy);
   // uvMouse.x *= AR;
 

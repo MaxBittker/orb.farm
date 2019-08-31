@@ -169,7 +169,7 @@ impl Universe {
 
         let mut brightness = 255;
         if dy < 0.5 {
-            // brightness = (255.0 * (dy / 0.5)) as u8;
+            brightness = (255.0 * (dy / 0.5)) as u8;
         }
         let start_y = if dy > 0. { 0 } else { self.height - 1 };
         for start_x in 0..self.width {

@@ -749,7 +749,7 @@ pub fn update_Fish(cell: Cell, mut api: SandApi) {
                 Cell {
                     species: Species::FishTail,
                     energy: 1,
-                    age: 13 * 2,
+                    age: 7,
                     clock: cell.clock,
                 },
             );
@@ -760,7 +760,7 @@ pub fn update_Fish(cell: Cell, mut api: SandApi) {
                     Cell {
                         species: Species::FishTail,
                         energy: 0,
-                        age: 12 * 2,
+                        age: 6,
                         clock: cell.clock,
                     },
                 );
@@ -772,7 +772,7 @@ pub fn update_Fish(cell: Cell, mut api: SandApi) {
                     Cell {
                         species: Species::FishTail,
                         energy: 0,
-                        age: 10 * 2,
+                        age: 5,
                         clock: cell.clock,
                     },
                 );

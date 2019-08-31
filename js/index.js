@@ -14,8 +14,8 @@ let d = n - 6;
 const universe = Universe.new(n, n);
 universe.paint(h, h, d + 2, Species.Glass);
 
-universe.paint(h - 10, d + 2, 10, Species.Wood);
-universe.paint(h + 10, d + 2, 10, Species.Wood);
+universe.paint(h - 30, d - 3, 20, Species.Wood);
+universe.paint(h + 30, d - 3, 20, Species.Wood);
 universe.paint(h, h, d - 2, Species.Air);
 for (var x = 30; x < d - 30; x += 10) {
   universe.paint(x, h * 1.2, h, Species.Water);
@@ -41,14 +41,6 @@ const canvas = document.getElementById("sand-canvas");
 
 canvas.height = n * ratio * Math.ceil(window.devicePixelRatio);
 canvas.width = n * ratio * Math.ceil(window.devicePixelRatio);
-
-document.getElementById("background").addEventListener("touchmove", e => {
-  if (!window.paused) {
-    if (e.cancelable) {
-      e.preventDefault();
-    }
-  }
-});
 
 const ui = document.getElementById("ui");
 
@@ -92,8 +84,8 @@ const renderLoop = () => {
     fps.render(); // new
     universe.tick();
   }
-  // t += 0.1;
-  t++;
+  t += 0.1;
+  // t++;
   // if (t > 10) {
   // t = 0;
   universe.set_time(t % 255);

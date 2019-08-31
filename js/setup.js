@@ -27,6 +27,14 @@ if (mobileAndTabletcheck()) {
   };
 }
 
+document.getElementById("background").addEventListener("touchmove", e => {
+  if (!window.paused) {
+    if (e.cancelable) {
+      e.preventDefault();
+    }
+  }
+});
+
 // if ("serviceWorker" in navigator) {
 //   window.addEventListener("load", () => {
 //     navigator.serviceWorker
