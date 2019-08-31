@@ -49,7 +49,6 @@ impl Species {
             Species::Stone => update_stone(cell, api),
             Species::Wood => {}
 
-            // Species::Anaerobic => {}
             Species::Bacteria => update_bacteria(cell, api),
             Species::Zoop => update_zoop(cell, api),
             Species::Egg => update_egg(cell, api),
@@ -57,11 +56,34 @@ impl Species {
             Species::Nitrogen => update_nitrogen(cell, api),
             Species::Algae => update_algae(cell, api),
 
-            // Species::Dust => update_dust(cell, api),
             Species::Fish => update_Fish(cell, api),
             Species::FishTail => update_Fishtail(cell, api),
             Species::Plant => update_plant(cell, api),
             Species::Seed => update_seed(cell, api),
+        }
+    }
+    pub fn blocked_light(&self) -> u8 {
+        match self {
+            Species::Water => 1,
+            Species::Fish => 25,
+            Species::FishTail => 25,
+
+            Species::Plant => 50,
+            Species::Seed => 35,
+
+            Species::Algae => 30,
+            Species::Bacteria => 10,
+            Species::Waste => 10,
+            Species::Nitrogen => 10,
+            Species::Zoop => 10,
+            Species::Egg => 5,
+
+            Species::Air => 0,
+            Species::Glass => 0,
+
+            Species::Stone => 100,
+            Species::Wood => 100,
+            Species::Sand => 100,
         }
     }
 }

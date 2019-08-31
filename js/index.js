@@ -100,11 +100,17 @@ window.addEventListener("resize", resize);
 
 let drawSand = startWebGL({ canvas, universe });
 // let light = startLight({ universe });
+let t = 0;
 const renderLoop = () => {
   if (!window.paused) {
     fps.render(); // new
     universe.tick();
     // light.update();
+  }
+  t++;
+  if (t > 10) {
+    t = 0;
+    universe.inc_time();
   }
   drawSand();
 

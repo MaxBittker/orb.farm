@@ -12,7 +12,7 @@ module.exports = {
   output: {
     path: dist,
     filename: "[name].[contenthash].js",
-    publicPath: "/jar/"
+    publicPath: "/"
   },
   devServer: {
     contentBase: dist,

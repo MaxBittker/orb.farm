@@ -48,21 +48,12 @@ body,
   filter: contrast(0.2);
 }
 
-#bottom {
-  margin: 0;
-  margin-left: 190px;
-  margin-right: 190px;
-  background-color: #866414;
-  background-image: url("https://allfreedesigns.com/wp-content/uploads/2013/05/cork-texture-1.jpg");
-  border-radius: 0px 0px 5px 5px;
-  height: 10px;
-}
 #jar{
   line-height: 0px;
 
 }
 canvas {
-  position: relative;
+  position: absolute;
   bottom: 0;
   /* top: 0; */
   right: 0px;

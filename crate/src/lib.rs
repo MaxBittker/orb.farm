@@ -10,6 +10,7 @@ use utils::*;
 use species::Species;
 use std::collections::VecDeque;
 use std::f32;
+// use std::float;
 use wasm_bindgen::prelude::*;
 // use web_sys::console;
 #[wasm_bindgen]
@@ -41,8 +42,12 @@ impl Cell {
             clock: 0,
         }
     }
+
     pub fn update(&self, api: SandApi) {
         self.species.update(*self, api);
+    }
+    pub fn blocked_light(&self) -> u8 {
+        self.species.blocked_light()
     }
 }
 
@@ -156,39 +161,49 @@ impl Universe {
         }
     }
     pub fn calculate_light(&mut self) {
-        for x in 0..self.width {
-            let mut sunlight: u8 = 255;
+        let time = ((self.time as f32) / 255.) * f32::consts::PI * 2.;
 
-            for y in 0..self.height {
-                let idx = self.get_index(x, y);
-                let cell = self.get_cell(x, y);
-                let block: u8 = match cell.species {
-                    Species::Water => 1,
-                    Species::Fish => 25,
-                    Species::FishTail => 25,
+        // let time: f32 = 0.1;
+        let dx = time.sin();
+        let dy = time.cos();
 
-                    Species::Plant => 50,
-                    Species::Seed => 35,
+        let mut brightness = 255;
+        if dy < 0.5 {
+            brightness = (255.0 * (dy / 0.5)) as u8;
+        }
+        let start_y = if dy > 0. { 0 } else { self.height - 1 };
+        for start_x in 0..self.width {
+            self.cast_ray(brightness, start_x, start_y, dx, dy);
+        }
 
-                    Species::Algae => 30,
-                    // Species::Anaerobic => 10,
-                    Species::Bacteria => 10,
-                    Species::Waste => 10,
-                    Species::Nitrogen => 10,
-                    Species::Zoop => 10,
-                    Species::Egg => 5,
+        let start_x = if dx > 0. { 0 } else { self.width - 1 };
+        for start_y in 0..self.height {
+            self.cast_ray(brightness, start_x, start_y, dx, dy);
+        }
+    }
+    pub fn cast_ray(&mut self, brightness: u8, x: i32, y: i32, dx: f32, dy: f32) {
+        let ray_length =
+            (((self.width * self.width) + (self.height * self.height)) as f32).sqrt() as i32;
 
-                    Species::Air => 0,
-                    Species::Glass => 0,
+        let mut sunlight: u8 = brightness;
+        for r in 0..ray_length {
+            let rx = (r as f32 * dx) as i32 + x;
+            let ry = (r as f32 * dy) as i32 + y;
 
-                    Species::Stone => 100,
-                    Species::Wood => 100,
-                    Species::Sand => 100,
-                };
-                sunlight = sunlight.saturating_sub(block);
-
-                self.lights[idx].sun = sunlight;
+            let idx = self.get_index(rx, ry);
+            if rx < 0
+                || ry < 0
+                || rx >= self.width
+                || ry >= self.height
+                || idx > self.get_max_index()
+            {
+                break;
             }
+            let cell = self.get_cell(rx, ry);
+            let block: u8 = cell.blocked_light();
+            sunlight = sunlight.saturating_sub(block);
+
+            self.lights[idx].sun = sunlight;
         }
     }
 
@@ -220,7 +235,7 @@ impl Universe {
                 );
             }
         }
-        self.time = self.time.wrapping_add(1);
+        // self.time = self.time.wrapping_add(1);
         self.calculate_light();
     }
 
@@ -294,6 +309,12 @@ impl Universe {
     pub fn flush_undos(&mut self) {
         self.undo_stack.clear();
     }
+    pub fn set_time(&mut self, t: u8) {
+        self.time = t;
+    }
+    pub fn inc_time(&mut self) {
+        self.time = self.time.wrapping_add(1);
+    }
 
     pub fn new(width: i32, height: i32) -> Universe {
         let cells = (0..width * height).map(|_| EMPTY_CELL).collect();
@@ -326,6 +347,11 @@ impl Universe {
 impl Universe {
     fn get_index(&self, x: i32, y: i32) -> usize {
         (x + (y * self.width)) as usize
+    }
+    fn get_max_index(&self) -> usize {
+        let mW = (self.width - 1) as usize;
+        let mH = self.height - 1;
+        return ((mW + (mH * self.width) as usize) as usize);
     }
 
     fn get_cell(&self, x: i32, y: i32) -> Cell {
