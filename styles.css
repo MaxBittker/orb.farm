@@ -31,8 +31,8 @@ body,
   /* background-image: url("https://source.unsplash.com/collection/2152825/"); */
   /* background-image: url("https://i.imgur.com/GJtS1mA.png"); */
   
-  filter: blur(1px);
-  z-index: -1;
+  /* filter: blur(1px); */
+  /* z-index: -1; */
 }
 #scene {
   display: flex;
@@ -59,7 +59,7 @@ canvas {
   right: 0px;
   left: 0px;
   z-index: 1;
-  max-width: calc(100% - 3px);
+  max-width: calc(100%);
   /* width: calc(100% - 0px); */
   /* max-width: ca100%; */
   margin: auto;
@@ -76,6 +76,7 @@ canvas {
   z-index: 1;
   width: 100%;
   height: 100%;
+  margin: 0;
   /* image-rendering: pixelated;; */
 }
 canvas,
@@ -87,6 +88,7 @@ img {
   image-rendering: -moz-crisp-edges;
   image-rendering: -o-crisp-edges;
   image-rendering: pixelated;
+  margin: 0;
 }
 
 button {
