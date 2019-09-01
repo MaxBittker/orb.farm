@@ -79,6 +79,12 @@ canvas {
   margin: 0;
   /* image-rendering: pixelated;; */
 }
+#plot-canvas{
+  pointer-events: none;
+
+  z-index: 6;
+  width:100%;
+}
 canvas,
 img {
   image-rendering: crisp-edges;
@@ -107,6 +113,7 @@ button {
   fill: black;
   line-height: 0px;
   cursor: pointer;
+  border-radius: 25px;
 }
 .active button {
   background-color: gainsboro;
