@@ -92,17 +92,27 @@ let drawPlot = startPlotter({ canvas: plotcanvas, universe });
 let t = 0;
 
 const renderLoop = () => {
+  let dayTime = (t / 50) % 255;
+
   if (!window.paused) {
     fps.render(); // new
     universe.tick();
     t += 1;
+
+    // let dt = (t / 50) % 255;
+    // console.log(dayTime);
+    if (dayTime > 70 && dayTime < 170) {
+      t += 4;
+      // console.log("ff");
+    }
+
+    // if(t)
   }
-  let dayTime = t / 50;
-  universe.set_time(dayTime % 255);
+  universe.set_time(dayTime);
   drawSand();
   sky.frame(dayTime / 255);
 
-  if (t % 25 == 0) {
+  if (t % 20 == 0) {
     drawPlot();
   }
   window.animWebationId = requestAnimationFrame(renderLoop);

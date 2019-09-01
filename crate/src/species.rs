@@ -5,7 +5,6 @@ use Cell;
 use SandApi;
 use EMPTY_CELL;
 use WASTE;
-use WATER;
 
 use std::cmp;
 // use std::mem;
@@ -400,7 +399,7 @@ pub fn update_algae(cell: Cell, mut api: SandApi) {
             energy: cell
                 .energy
                 .saturating_add(photosynth)
-                .saturating_sub(5) //cost of life
+                .saturating_sub(3) //cost of life
                 .saturating_sub(split_energy),
             age: cell.age.saturating_add(api.universe.generation),
             ..cell
@@ -428,11 +427,11 @@ pub fn update_zoop(cell: Cell, mut api: SandApi) {
             0,
             0,
             Cell {
-                energy: energy.saturating_add(10 + sample.energy / 2),
+                energy: energy.saturating_add(40 + sample.energy / 2),
                 ..cell
             },
         );
-        api.set(sx, sy, WATER);
+        api.set(sx, sy, Cell::new(Species::Water));
 
         if energy > 230 && api.use_oxygen() {
             let new_energy = energy / 4;
@@ -780,7 +779,7 @@ pub fn update_Fish(cell: Cell, mut api: SandApi) {
                 );
             }
 
-            let (ndx, ndy) = match rand_int(20) {
+            let (ndx, ndy) = match rand_int(50) {
                 0 => adjacency_left((dx, dy)),
                 1 => adjacency_right((dx, dy)),
                 _ => (dx, dy),
