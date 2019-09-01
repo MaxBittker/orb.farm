@@ -1,6 +1,7 @@
 import { Universe, Species } from "../crate/pkg";
 
 import { startWebGL } from "./render";
+import { startPlotter } from "./plot";
 import { fps } from "./fps";
 import {} from "./paint";
 import {} from "./app";
@@ -85,27 +86,27 @@ window.addEventListener("resize", resize);
 let drawSand = startWebGL({ canvas, universe });
 let sky_ratio = canvasSize / n;
 let sky = startSky(sky_ratio * 2);
+let plotcanvas = document.getElementById("plot-canvas");
+let drawPlot = startPlotter({ canvas: plotcanvas, universe });
 
 let t = 0;
+
 const renderLoop = () => {
   if (!window.paused) {
     fps.render(); // new
     universe.tick();
-    t += 0.1;
+    t += 1;
   }
-  // t++;
-  // if (t > 10) {
-  // t = 0;
-  universe.set_time(t % 255);
-  // }
+  let dayTime = t / 50;
+  universe.set_time(dayTime % 255);
   drawSand();
-  // if (t % 1 == 0) {
-  sky.frame(t / 255);
-  // }
+  sky.frame(dayTime / 255);
 
+  if (t % 25 == 0) {
+    drawPlot();
+  }
   window.animWebationId = requestAnimationFrame(renderLoop);
 };
-255;
 function reset() {
   universe.reset();
 }

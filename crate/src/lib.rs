@@ -250,7 +250,9 @@ impl Universe {
     pub fn O2(&self) -> u32 {
         self.O2
     }
-
+   pub fn total_gas(&self) -> u32 {
+        self.total_gas
+    }
     pub fn CO2(&self) -> u32 {
         self.CO2
     }

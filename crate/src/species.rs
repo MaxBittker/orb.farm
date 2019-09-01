@@ -388,7 +388,7 @@ pub fn update_algae(cell: Cell, mut api: SandApi) {
     if split_energy == 0 {
         api.set(0, 0, nbr);
     }
-    let mut photosynth: u8 = api.get_light().sun / 10;
+    let mut photosynth: u8 = api.get_light().sun / 7;
     if photosynth > 0 && !api.use_co2() {
         photosynth = 0; //need co2
     }
@@ -400,7 +400,7 @@ pub fn update_algae(cell: Cell, mut api: SandApi) {
             energy: cell
                 .energy
                 .saturating_add(photosynth)
-                .saturating_sub(8) //cost of life
+                .saturating_sub(5) //cost of life
                 .saturating_sub(split_energy),
             age: cell.age.saturating_add(api.universe.generation),
             ..cell
@@ -743,7 +743,7 @@ pub fn update_Fish(cell: Cell, mut api: SandApi) {
         if (nbr.species == Species::Water || nbr.species == Species::FishTail)
         // && (api.use_oxygen())
         {
-            let fish_length = (energy+25)/ 25;
+            let fish_length = (energy + 25) / 25;
 
             api.set(
                 0,
