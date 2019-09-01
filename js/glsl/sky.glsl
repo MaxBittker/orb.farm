@@ -10,7 +10,7 @@ precision highp int;
 uniform vec3 iResolution;
 uniform float iGlobalTime, iTime, gameTime;
 uniform sampler2D iChannel0;
-// Appropriated with love from:///
+// Appropriated with love & respect from:///
 // The sun, the sky and the clouds. By StillTravelling
 // https://www.shadertoy.com/view/tdSXzD
 // Very much a messy hack sorry!!
@@ -23,12 +23,10 @@ uniform sampler2D iChannel0;
 // Weather. By David Hoskins, May 2014.
 // https://www.shadertoy.com/view/4dsXWn
 
-// Edge of atmosphere
-// created by dmytro rubalskyi (ruba)
+// Edge of atmosphere by dmytro rubalskyi (ruba)
 // https://www.shadertoy.com/view/XlXGzB
 
-// Auroras
-// created by nimitz
+// Auroras by nimitz
 // https://www.shadertoy.com/view/XtGGRt
 
 // Sorry to those I've missed out!!
@@ -36,7 +34,7 @@ uniform sampler2D iChannel0;
 #define ORIG_CLOUD 0
 #define ENABLE_RAIN 0 // enable rain drops on screen
 #define SIMPLE_SUN 1
-#define NICE_HACK_SUN 0
+#define NICE_HACK_SUN 1
 #define SOFT_SUN 1
 #define cloudy 0.5 // 0.0 clear sky
 #define haze 0.01 * (cloudy * 20.)
@@ -506,17 +504,17 @@ vec2 GetDrops(vec2 uv, float seed, float m) {
 void mainImage(out vec4 fragColor, in vec2 fragCoord) {
 
   float AR = iResolution.x / iResolution.y;
-  float smallSide = min(iResolution.x, iResolution.y);
-  float bigSide = max(iResolution.x, iResolution.y);
+//   float YAR = iResolution.y / iResolution.x;
+//   float SAR = min(AR, YAR);
+//   float BAR = max(AR, YAR);
+//   float smallSide = min(iResolution.x, iResolution.y);
+//   float bigSide = max(iResolution.x, iResolution.y);
   float M = 1.0; // canvas.innerWidth/M //canvas.innerHeight/M --res
-  // vec2 circle = vec2(cos(gameTime* PI2), sin(gameTime*PI2));
-  vec2 circle = vec2(1.0) + vec2(sin(-gameTime * PI2), cos(gameTime * PI2));
-  circle *= 0.5;
-  // circle.x = iResolution.x/2.;
-  // circle.y = circle.;
-//   circle += vec2((bigSide - smallSide) / 4., 0.);
+  vec2 sunPos = vec2(sin(-gameTime * PI2), cos(gameTime * PI2)) *0.5;
+  sunPos.x += AR * 0.5;
+  sunPos.y += 0.5;
   // circle = vec2(sin(gameTime*PI2));
-  vec2 uvMouse = circle;
+  vec2 uvMouse = sunPos;
   // / iResolution.xy);
   // uvMouse.x *= AR;
 

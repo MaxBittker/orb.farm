@@ -91,6 +91,7 @@ const renderLoop = () => {
   if (!window.paused) {
     fps.render(); // new
     universe.tick();
+    t += 0.1;
   }
   // t++;
   // if (t > 10) {
@@ -101,7 +102,6 @@ const renderLoop = () => {
   // if (t % 1 == 0) {
   sky.frame(t / 255);
   // }
-  t += 0.5;
 
   window.animWebationId = requestAnimationFrame(renderLoop);
 };
