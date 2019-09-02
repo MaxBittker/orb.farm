@@ -76,7 +76,7 @@ void main() {
   } else if (type == 4) { // Algae
     hue = 0.4 - age * 0.3;
     lightness += 0.0;
-    saturation = 0.5 - (energy * .2);
+    saturation = 0.5 - (energy * .1);
   } else if (type == 5) { // Plant
     hue = 0.4;
     lightness -= 0.1;

@@ -49,6 +49,7 @@ class Index extends React.Component {
     this.state = {
       submissionMenuOpen: false,
       paused: false,
+      ff: false,
       submitting: false,
       size: 1,
       dataURL: {},
@@ -64,6 +65,10 @@ class Index extends React.Component {
   togglePause() {
     window.paused = !this.state.paused;
     this.setState({ paused: !this.state.paused });
+  }
+  toggleFF() {
+    window.ff = !this.state.ff;
+    this.setState({ ff: !this.state.ff });
   }
   play() {
     window.paused = false;
@@ -206,7 +211,7 @@ class Index extends React.Component {
   }
 
   render() {
-    let { size, paused, selectedElement, currentSubmission } = this.state;
+    let { size, paused, ff, selectedElement, currentSubmission } = this.state;
     let hash =
       currentSubmission && currentSubmission.id
         ? `#${currentSubmission.id}`
@@ -228,7 +233,16 @@ class Index extends React.Component {
             </svg>
           )}
         </button>
-        {/* <button onClick={() => this.upload()}>Upload</button> */}
+
+        <button
+          onClick={() => this.toggleFF()}
+          className={ff ? "selected" : ""}
+        >
+          <svg height="20" width="20" id="d" viewBox="0 0 300 300">
+            <polygon id="play" points="0,0 , 150,150 0,300" />
+            <polygon id="play" points="150,0, 300,150 150,300" />
+          </svg>
+        </button>
 
         <button onClick={() => this.reset()}>Reset</button>
         <Link

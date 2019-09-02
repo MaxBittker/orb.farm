@@ -58,12 +58,7 @@ static EMPTY_CELL: Cell = Cell {
     clock: 0,
 };
 
-static WATER: Cell = Cell {
-    species: Species::Water,
-    energy: 0,
-    age: 0,
-    clock: 0,
-};
+
 
 static WASTE: Cell = Cell {
     species: Species::Waste,
@@ -82,8 +77,8 @@ pub struct Universe {
     generation: u8,
     time: u8,
     total_gas: u32,
-    O2: u32,
-    CO2: u32,
+    o2: u32,
+    co2: u32,
 }
 
 pub struct SandApi<'a> {
@@ -131,20 +126,24 @@ impl<'a> SandApi<'a> {
         self.universe.lights[idx]
     }
     pub fn use_co2(&mut self) -> bool {
-        if (1 + rand_int(self.universe.total_gas as i32 / 3) as u32) > self.universe.CO2 {
+        if (1 + rand_int(self.universe.total_gas as i32 / 3) as u32) > self.universe.co2 {
             return false;
         }
-        self.universe.CO2 = self.universe.CO2.saturating_sub(1);
-        self.universe.O2 = self.universe.O2.saturating_add(1);
+        self.universe.co2 = self.universe.co2.saturating_sub(1);
+        self.universe.o2 = self.universe.o2.saturating_add(1);
 
         return true;
     }
+    pub fn can_use_oxygen(&mut self) -> bool {
+         (1 + rand_int(self.universe.total_gas as i32 / 3) as u32) < self.universe.o2
+    }
+
     pub fn use_oxygen(&mut self) -> bool {
-        if (1 + rand_int(self.universe.total_gas as i32 / 3) as u32) > self.universe.O2 {
+        if !self.can_use_oxygen() {
             return false;
         }
-        self.universe.O2 = self.universe.O2.saturating_sub(1);
-        self.universe.CO2 = self.universe.CO2.saturating_add(1);
+        self.universe.o2 = self.universe.o2.saturating_sub(1);
+        self.universe.co2 = self.universe.co2.saturating_add(1);
 
         return true;
     }
@@ -247,14 +246,14 @@ impl Universe {
         self.height
     }
 
-    pub fn O2(&self) -> u32 {
-        self.O2
+    pub fn o2(&self) -> u32 {
+        self.o2
     }
-   pub fn total_gas(&self) -> u32 {
+    pub fn total_gas(&self) -> u32 {
         self.total_gas
     }
-    pub fn CO2(&self) -> u32 {
-        self.CO2
+    pub fn co2(&self) -> u32 {
+        self.co2
     }
     pub fn cells(&self) -> *const Cell {
         self.cells.as_ptr()
@@ -264,7 +263,11 @@ impl Universe {
     }
 
     pub fn paint(&mut self, x: i32, y: i32, size: i32, species: Species) {
-        let radius = size / 2;
+        let mut radius = size / 2;
+
+        if species== Species::Fish{
+            radius = 1;
+        }
         for dx in -radius..radius + 1 {
             for dy in -radius..radius + 1 {
                 if dx * dx + dy * dy > (radius * radius) - 1 {
@@ -337,8 +340,8 @@ impl Universe {
             lights,
             time: 0,
             total_gas,
-            O2: total_gas / 2,
-            CO2: total_gas / 2,
+            o2: total_gas / 2,
+            co2: total_gas / 2,
             undo_stack: VecDeque::with_capacity(50),
             generation: 0,
         }

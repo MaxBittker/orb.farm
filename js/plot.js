@@ -1,5 +1,3 @@
-import { universe_O2 } from "../crate/pkg/sandtable_bg";
-
 const reglBuilder = require("regl");
 // import { memory } from "../crate/pkg/sandtable_bg";
 // window.memory = memory;
@@ -26,7 +24,11 @@ let startPlotter = ({ canvas, universe }) => {
     height,
     data: readings
   });
-
+  let recordDataPoint = () => {
+    readings[readingsIndex] = (255 * universe.o2()) / universe.total_gas();
+    readingsIndex = (readingsIndex + 1) % max_readings;
+    n_readings = Math.max(readingsIndex, n_readings);
+  };
   let drawPlot = regl({
     blend: {
       enable: true,
@@ -49,10 +51,6 @@ let startPlotter = ({ canvas, universe }) => {
       n_readings: () => n_readings,
       max_readings,
       data: () => {
-        readings[readingsIndex] = (255 * universe.O2()) / universe.total_gas();
-        readingsIndex = (readingsIndex + 1) % max_readings;
-        n_readings = Math.max(readingsIndex, n_readings);
-
         // console.log(readings);
         return dataTexture({
           width,
@@ -77,9 +75,12 @@ let startPlotter = ({ canvas, universe }) => {
     count: 3
   });
 
-  return () => {
-    regl.poll();
-    drawPlot();
+  return {
+    drawPlot: () => {
+      regl.poll();
+      drawPlot();
+    },
+    recordDataPoint
   };
 };
 

@@ -87,34 +87,45 @@ let drawSand = startWebGL({ canvas, universe });
 let sky_ratio = canvasSize / n;
 let sky = startSky(sky_ratio * 2);
 let plotcanvas = document.getElementById("plot-canvas");
-let drawPlot = startPlotter({ canvas: plotcanvas, universe });
+let { drawPlot, recordDataPoint } = startPlotter({
+  canvas: plotcanvas,
+  universe
+});
 
 let t = 0;
 
 const renderLoop = () => {
-  let dayTime = (t / 50) % 255;
+  const now = performance.now();
 
-  if (!window.paused) {
-    fps.render(); // new
-    universe.tick();
-    t += 1;
+  let max_tick_per_frame = window.ff ? 10 : 1;
+  for (var i = 0; i < max_tick_per_frame; i++) {
+    var dayTime = (t / 50) % 255;
 
-    // let dt = (t / 50) % 255;
-    // console.log(dayTime);
-    if (dayTime > 70 && dayTime < 170) {
-      t += 4;
-      // console.log("ff");
+    if (!window.paused) {
+      fps.render(); // new
+
+      universe.tick();
+      t += 1;
+
+      if (dayTime > 70 && dayTime < 170) {
+        t += 4;
+      }
     }
+    universe.set_time(dayTime);
 
-    // if(t)
+    if (t % 20 == 0) {
+      recordDataPoint();
+    }
+    let elapsed_time = performance.now() - now;
+    if (elapsed_time > 12) {
+      break;
+    }
   }
-  universe.set_time(dayTime);
+
   drawSand();
   sky.frame(dayTime / 255);
+  drawPlot();
 
-  if (t % 20 == 0) {
-    drawPlot();
-  }
   window.animWebationId = requestAnimationFrame(renderLoop);
 };
 function reset() {
