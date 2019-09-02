@@ -159,7 +159,12 @@ pub fn update_nitrogen(cell: Cell, mut api: SandApi) {
         return;
     }
     let dnbr = api.get(dx, 1);
-    if nbr.species == Species::Air || nbr.species == Species::Water {
+    if nbr.species == Species::Air
+        || nbr.species == Species::Water
+        || nbr.species == Species::Zoop
+        || nbr.species == Species::Bacteria
+        || nbr.species == Species::Egg
+    {
         api.set(0, 0, nbr);
         api.set(0, 1, cell);
     } else if dnbr.species == Species::Air || dnbr.species == Species::Water {
@@ -211,12 +216,12 @@ pub fn update_bacteria(cell: Cell, mut api: SandApi) {
         return;
     }
 
-    if down.species == Species::Air {
-        api.set(0, 0, EMPTY_CELL);
+    if down.species == Species::Air || down.species == Species::Water {
+        api.set(0, 0, down);
         api.set(0, 1, cell);
         return;
     } else if nbr.species == Species::Air {
-        api.set(0, 0, EMPTY_CELL);
+        api.set(0, 0, nbr);
         api.set(dx, 1, cell);
         return;
     }
@@ -233,11 +238,7 @@ pub fn update_bacteria(cell: Cell, mut api: SandApi) {
         api.set(dx, dy, cell);
         return;
     }
-    if nbr.species == Species::Water {
-        api.set(0, 0, nbr);
-        api.set(dx, 1, cell);
-        return;
-    }
+
     api.use_oxygen();
 
     api.set(
@@ -587,13 +588,17 @@ pub fn update_egg(cell: Cell, mut api: SandApi) {
         api.set(0, 0, dnbr);
         api.set(dx * dy, dy, cell);
     } else {
+        if !api.can_use_oxygen() {
+            //gestate
+            return;
+        }
         api.set(
             0,
             0,
             Cell {
                 age: cell
                     .age
-                    .saturating_add(cell.clock * (rand_int(5) / 4) as u8),
+                    .saturating_add(cell.clock * (rand_int(5) / 4)  as u8),
                 ..cell
             },
         );
@@ -665,7 +670,7 @@ pub fn update_Fish(cell: Cell, mut api: SandApi) {
             0,
             0,
             Cell {
-                energy: energy.saturating_add(10 + sample.energy / 2),
+                energy: energy.saturating_add(10 + sample.energy ),
                 ..cell
             },
         );
@@ -739,11 +744,12 @@ pub fn update_Fish(cell: Cell, mut api: SandApi) {
         }
         let nbr = api.get(dx, dy);
         //   api.use_oxygen()
-        if (nbr.species == Species::Water || nbr.species == Species::FishTail)
+        if nbr.species == Species::Water
+            || nbr.species == Species::FishTail
+            || nbr.species == Species::Algae
         // && (api.use_oxygen())
         {
             let fish_length = (energy + 25) / 25;
-
             api.set(
                 0,
                 0,
@@ -765,6 +771,10 @@ pub fn update_Fish(cell: Cell, mut api: SandApi) {
                         clock: cell.clock,
                     },
                 );
+
+                if nbr.species == Species::Algae {
+                    api.set(0, 1, nbr);
+                }
             }
             if api.get(0, -1).species == Species::Water {
                 api.set(
@@ -829,10 +839,14 @@ pub fn update_plant(cell: Cell, mut api: SandApi) {
     let (dx, dy) = rand_vec_8();
     let energy = cell.energy;
 
-    let light = api.get_light().sun;
     // todo slow down and give max age
+    if energy < 10 {
+        api.set(0, 0, WASTE);
+    }
 
-    if energy > 200
+    let light = api.get_light().sun;
+
+    if energy > 20
         && rand_int(light as i32) > 100
         && (api.get(dx, -1).species == Species::Water
             && api.get(0, -1).species == Species::Water
@@ -959,7 +973,7 @@ pub fn update_seed(cell: Cell, mut api: SandApi) {
                         },
                     )
                 } else {
-                    api.set(0, 0, WATER);
+                    api.set(0, 0, Cell::new(Species::Water));
                 }
             }
         } else {

@@ -23,7 +23,7 @@ for (var x = 30; x < d - 30; x += 10) {
 }
 
 for (var x = 0; x < d; x += 10) {
-  universe.paint(x, d * 0.75, 20, Species.Sand);
+  universe.paint(x, n - 50, 40, Species.Sand);
 }
 universe.paint(h, h, h * 1.1, Species.Water);
 

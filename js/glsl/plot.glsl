@@ -28,7 +28,9 @@ void main() {
   //   vec2 textCoord = (uv * vec2(0.5, 0)) + vec2(0.5);
 
   vec4 data = texture2D(data, textCoord);
-  float v = data.x + data.y + data.z + data.w;
+  float v = data.x ;
+  
+  
   float a = 1.0;
 
   //   vec2 pos+= (i*4.)/max_readings;
@@ -39,7 +41,7 @@ void main() {
   //   if (
   if (
       pos.x < n_readings /max_readings &&
-      abs(v / 4. - pos.y) < pixel.y * 1.) {
+      abs(v  - pos.y) < pixel.y * 0.5) {
     gl_FragColor = vec4(0.3, 0.8, 0.3, 0.5);
 
   } else {

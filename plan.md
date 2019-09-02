@@ -29,13 +29,15 @@ mites
 
 
 lights
-co2 graph
+co2 graph 
 plant 
 fish
 ui
-images
-colors
-saving
+sand
+element images + description
+color grade
+night light?
+localstorage
 intro text / copy
 non-circlular tank
 prizes/ tchotchkeys

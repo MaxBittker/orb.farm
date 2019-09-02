@@ -193,7 +193,7 @@ vec4 aurora(vec3 ro, vec3 rd) {
   }
 
   col *= (clamp(rd.y * 15. + .4, 0., 1.2));
-  return col * 2.8;
+  return col * 1.8;
 }
 
 // END AURORA STUFF

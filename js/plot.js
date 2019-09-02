@@ -11,7 +11,7 @@ let vsh = require("./glsl/sandVertex.glsl");
 
 let readingsIndex = 0;
 let n_readings = 0;
-let max_readings = 60 * 10;
+let max_readings = 60 * 60;
 let readings = new Uint8Array(max_readings);
 
 let startPlotter = ({ canvas, universe }) => {

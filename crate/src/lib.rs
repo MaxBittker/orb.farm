@@ -329,7 +329,7 @@ impl Universe {
                 a: 0,
             })
             .collect();
-        let total_gas = (width * height) as u32;
+        let total_gas = (width * height * 10) as u32;
         Universe {
             width,
             height,
