@@ -75,7 +75,7 @@ void main() {
     }
   } else if (type == 4) { // Algae
     hue = 0.4 - age * 0.3;
-    lightness += 0.0;
+    lightness += 0.1;
     saturation = 0.5 - (energy * .1);
   } else if (type == 5) { // Plant
     hue = 0.4;
@@ -88,9 +88,11 @@ void main() {
     hue = 0.0;
     lightness += 0.4;
   } else if (type == 8) { // Bacteria
-    hue = 0.9;
-    saturation -= 0.2;
-    lightness -= 0.1;
+    hue = 0.14;
+    saturation += 0.2;
+    lightness += 0.2;
+    a = 0.8;
+
   } else if (type == 9) { // ???
     hue = 0.6;
     saturation = 0.4;
@@ -111,8 +113,10 @@ void main() {
     lightness = 0.3 + data.g * 0.3;
   } else if (type == 14) { // Egg
     hue = 0.9;
-    saturation = age;
+    saturation = age/3.;
     lightness = 1.0;
+    a = 0.8;
+
   } else if (type == 15) { // Tail
     hue += fract(age * 255.*1.2)*0.2;
     lightness += 0.4;

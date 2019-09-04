@@ -97,7 +97,7 @@ let t = 0;
 const renderLoop = () => {
   const now = performance.now();
 
-  let max_tick_per_frame = window.ff ? 10 : 1;
+  let max_tick_per_frame = window.ff ? 11 : 1;
   for (var i = 0; i < max_tick_per_frame; i++) {
     var dayTime = (t / 50) % 255;
 
@@ -117,7 +117,7 @@ const renderLoop = () => {
       recordDataPoint();
     }
     let elapsed_time = performance.now() - now;
-    if (elapsed_time > 12) {
+    if (elapsed_time > 13) {
       break;
     }
   }

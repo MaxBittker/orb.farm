@@ -28,23 +28,23 @@ void main() {
   //   vec2 textCoord = (uv * vec2(0.5, 0)) + vec2(0.5);
 
   vec4 data = texture2D(data, textCoord);
-  float v = data.x ;
-  
-  
+  float v = data.x;
+
   float a = 1.0;
 
   //   vec2 pos+= (i*4.)/max_readings;
   //   lightness = min(lightness, 1.0);
   vec3 green = vec3(0., 1.0, 0.);
-  gl_FragColor = vec4(0.,0.,0., 0.);
+  gl_FragColor = vec4(1.,1.,1.0,0.5);
 
   //   if (
-  if (
-      pos.x < n_readings /max_readings &&
-      abs(v  - pos.y) < pixel.y * 0.5) {
-    gl_FragColor = vec4(0.3, 0.8, 0.3, 0.5);
+  if (pos.x < n_readings / max_readings && abs(v - pos.y) < pixel.y * 2.0) {
+    gl_FragColor = vec4(hsv2rgb(vec3(-0.1 + v*0.8, 0.5, 0.5)), 1.0);
 
   } else {
+    if (abs(uv.y) < pixel.y * 3. && mod(grid.x, 8.0) > 4.0) {
+      gl_FragColor = vec4(0., 0., 0., 1.0);
+    }
     //     if (abs((i * 4. / max_readings) - pos.x) < pixel.x * 1.) {
     //       gl_FragColor = vec4(1.0, 0.0, 0.0, 1.0);
 

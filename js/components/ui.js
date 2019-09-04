@@ -239,8 +239,8 @@ class Index extends React.Component {
           className={ff ? "selected" : ""}
         >
           <svg height="20" width="20" id="d" viewBox="0 0 300 300">
-            <polygon id="play" points="0,0 , 150,150 0,300" />
-            <polygon id="play" points="150,0, 300,150 150,300" />
+            <polygon id="play" points="0,50 , 150,150 0,250" />
+            <polygon id="play" points="150,50, 300,150 150,250" />
           </svg>
         </button>
 

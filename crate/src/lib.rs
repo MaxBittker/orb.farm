@@ -166,9 +166,9 @@ impl Universe {
 
         let mut brightness = 255.0;
         if dy < 0.5 {
-            brightness = 20.0 + (235.0 * (dy / 0.5)) as f32;
+            brightness = 30.0 + (225.0 * (dy / 0.5)) as f32;
         }
-        if dy < 0.0 {
+        if dy < -0.1 {
             dx = 0.0;
             dy = 1.0;
         }
@@ -267,7 +267,7 @@ impl Universe {
     pub fn paint(&mut self, x: i32, y: i32, size: i32, species: Species) {
         let mut radius = size / 2;
 
-        if species== Species::Fish{
+        if species == Species::Fish {
             radius = 1;
         }
         for dx in -radius..radius + 1 {
