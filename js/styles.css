@@ -71,6 +71,7 @@ canvas {
 
 #sand-canvas {
   z-index: 2;
+  margin:auto;
 }
 #sky-canvas{
   z-index: 1;

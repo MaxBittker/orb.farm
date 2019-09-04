@@ -46,7 +46,7 @@ impl Cell {
     pub fn update(&self, api: SandApi) {
         self.species.update(*self, api);
     }
-    pub fn blocked_light(&self) -> u8 {
+    pub fn blocked_light(&self) -> f32 {
         self.species.blocked_light()
     }
 }
@@ -57,8 +57,6 @@ static EMPTY_CELL: Cell = Cell {
     age: 0,
     clock: 0,
 };
-
-
 
 static WASTE: Cell = Cell {
     species: Species::Waste,
@@ -135,7 +133,7 @@ impl<'a> SandApi<'a> {
         return true;
     }
     pub fn can_use_oxygen(&mut self) -> bool {
-         (1 + rand_int(self.universe.total_gas as i32 / 3) as u32) < self.universe.o2
+        (1 + rand_int(self.universe.total_gas as i32 / 3) as u32) < self.universe.o2
     }
 
     pub fn use_oxygen(&mut self) -> bool {
@@ -163,13 +161,18 @@ impl Universe {
         let time = ((self.time as f32) / 255.) * f32::consts::PI * 2.;
 
         // let time: f32 = 0.1;
-        let dx = time.sin();
-        let dy = time.cos();
+        let mut dx = time.sin();
+        let mut dy = time.cos();
 
-        let mut brightness = 255;
+        let mut brightness = 255.0;
         if dy < 0.5 {
-            brightness = (255.0 * (dy / 0.5)) as u8;
+            brightness = 20.0 + (235.0 * (dy / 0.5)) as f32;
         }
+        if dy < 0.0 {
+            dx = 0.0;
+            dy = 1.0;
+        }
+
         let start_y = if dy > 0. { 0 } else { self.height - 1 };
         for start_x in 0..self.width {
             self.cast_ray(brightness, start_x, start_y, dx, dy);
@@ -180,11 +183,11 @@ impl Universe {
             self.cast_ray(brightness, start_x, start_y, dx, dy);
         }
     }
-    pub fn cast_ray(&mut self, brightness: u8, x: i32, y: i32, dx: f32, dy: f32) {
+    pub fn cast_ray(&mut self, brightness: f32, x: i32, y: i32, dx: f32, dy: f32) {
         let ray_length =
             (((self.width * self.width) + (self.height * self.height)) as f32).sqrt() as i32;
 
-        let mut sunlight: u8 = brightness;
+        let mut sunlight: f32 = brightness;
         for r in 0..ray_length {
             let rx = (r as f32 * dx) as i32 + x;
             let ry = (r as f32 * dy) as i32 + y;
@@ -199,10 +202,9 @@ impl Universe {
                 break;
             }
             let cell = self.get_cell(rx, ry);
-            let block: u8 = cell.blocked_light();
-            sunlight = sunlight.saturating_sub(block);
+            sunlight = (sunlight) * cell.blocked_light();
 
-            self.lights[idx].sun = sunlight;
+            self.lights[idx].sun = sunlight as u8;
         }
     }
 

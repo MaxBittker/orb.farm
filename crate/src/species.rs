@@ -61,29 +61,31 @@ impl Species {
             Species::Seed => update_seed(cell, api),
         }
     }
-    pub fn blocked_light(&self) -> u8 {
-        match self {
-            Species::Water => 1,
-            Species::Fish => 25,
-            Species::FishTail => 25,
+    pub fn blocked_light(&self) -> f32 {
+        (100.0
+            - match self {
+                Species::Water => 1.0,
+                Species::Fish => 25.0,
+                Species::FishTail => 25.0,
 
-            Species::Plant => 50,
-            Species::Seed => 35,
+                Species::Plant => 30.0,
+                Species::Seed => 35.0,
 
-            Species::Algae => 30,
-            Species::Bacteria => 10,
-            Species::Waste => 10,
-            Species::Nitrogen => 10,
-            Species::Zoop => 10,
-            Species::Egg => 5,
+                Species::Algae => 30.0,
+                Species::Bacteria => 10.0,
+                Species::Waste => 10.0,
+                Species::Nitrogen => 10.0,
+                Species::Zoop => 10.0,
+                Species::Egg => 5.0,
 
-            Species::Air => 0,
-            Species::Glass => 0,
+                Species::Air => 0.0,
+                Species::Glass => 0.0,
 
-            Species::Stone => 100,
-            Species::Wood => 100,
-            Species::Sand => 100,
-        }
+                Species::Stone => 50.0,
+                Species::Wood => 50.0,
+                Species::Sand => 10.0,
+            })
+            / 100.0
     }
 }
 
@@ -282,9 +284,6 @@ pub fn update_sand(cell: Cell, mut api: SandApi) {
         //diffuse nutrients
 
         let shared_energy = (energy / 2) + (nbr.energy / 2);
-
-        //higher is faster
-        let diffusion_factor = 0.5;
 
         let new_energy = (energy / 2).saturating_add(shared_energy / 2) as u8;
         let new_nbr_energy = (nbr.energy / 2).saturating_add(shared_energy / 2) as u8;
