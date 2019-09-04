@@ -85,6 +85,7 @@ canvas {
 border: dashed 2px black;
   z-index: 6;
   /* width:100%; */
+  max-width:40%;
 }
 canvas,
 img {
