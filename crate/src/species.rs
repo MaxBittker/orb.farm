@@ -644,39 +644,39 @@ pub fn update_fish(cell: Cell, mut api: SandApi) {
     let sample = api.get(sx, sy);
     // api.use_oxygen();
     // Eat
-    if sample.species == Species::Zoop  {
+    if sample.species == Species::Zoop || sample.species == Species::Egg {
         api.set(
             0,
             0,
             Cell {
-                energy: energy.saturating_add(200 + sample.energy),
+                energy: energy.saturating_add(100 + sample.energy),
                 ..cell
             },
         );
         api.set(sx, sy, Cell::new(Species::Water));
-    //reproduce
-        // if energy > 230 && api.use_oxygen() {
-        //     let new_energy = energy / 4;
-        //     api.set(
-        //         sx,
-        //         sy,
-        //         Cell {
-        //             species: Species::Fish,
-        //             energy: new_energy * 3,
-        //             age: 0,
-        //             ..cell
-        //         },
-        //     );
+        //reproduce
+        if energy > 250 && api.use_oxygen() && rand_int(20) == 2 {
+            let new_energy = energy / 4;
+            api.set(
+                sx,
+                sy,
+                Cell {
+                    species: Species::Fish,
+                    energy: new_energy * 3,
+                    age: 0,
+                    ..cell
+                },
+            );
 
-        //     api.set(
-        //         0,
-        //         0,
-        //         Cell {
-        //             energy: new_energy,
-        //             ..cell
-        //         },
-        //     );
-        // }
+            api.set(
+                0,
+                0,
+                Cell {
+                    energy: new_energy,
+                    ..cell
+                },
+            );
+        }
         return;
     }
 
@@ -690,30 +690,29 @@ pub fn update_fish(cell: Cell, mut api: SandApi) {
         let (mut dx, mut dy) = (rand_dir_2(), 0);
         let nbr = api.get(dx, dy);
         if nbr.species != Species::Water {
-            dx *= -1;
-            dy *= -1;
+            dy = rand_dir_2();
         }
-        if api.use_oxygen() {
-            api.set(
-                0,
-                0,
-                Cell {
-                    age: FISH_PADDING + join_dy_dx(dx, dy, 0),
-                    energy: energy.saturating_sub(0),
+         api.use_oxygen() ;
+        api.set(
+            0,
+            0,
+            Cell {
+                age: FISH_PADDING + join_dy_dx(dx, dy, 0),
+                energy: energy.saturating_sub(0),
 
-                    ..cell
-                },
-            );
-        } else {
-            api.set(
-                0,
-                0,
-                Cell {
-                    energy: energy.saturating_sub(0),
-                    ..cell
-                },
-            );
-        }
+                ..cell
+            },
+        );
+    // } else {
+    //     api.set(
+    //         0,
+    //         0,
+    //         Cell {
+    //             energy: energy.saturating_sub(0),
+    //             ..cell
+    //         },
+    //     );
+    // }
     } else {
         // swimming
         let (dx, dy, rem) = split_dy_dx(cell.age - FISH_PADDING);
@@ -724,11 +723,11 @@ pub fn update_fish(cell: Cell, mut api: SandApi) {
         let nbr = api.get(dx, dy);
         //   api.use_oxygen()
         if nbr.species == Species::Water
-            || nbr.species == Species::FishTail
-            || nbr.species == Species::Algae
+            // || nbr.species == Species::FishTail
+            // || nbr.species == Species::Algae
         // && (api.use_oxygen())
         {
-            let fish_length = (energy + 25) / 25;
+            let fish_length = 4;
             api.set(
                 0,
                 0,
@@ -787,7 +786,7 @@ pub fn update_fish(cell: Cell, mut api: SandApi) {
                 0,
                 0,
                 Cell {
-                    age: FISH_PADDING + join_dy_dx(-dx, dy, rem),
+                    age: 0,
                     energy: energy.saturating_sub(cell.clock % 2),
                     ..cell
                 },
