@@ -5,7 +5,7 @@ pub fn rand_int(n: i32) -> i32 {
 }
 
 pub fn once_in(n: i32) -> bool {
-    (js_sys::Math::random() * n as f64) as i32 == 1
+   rand_int(n) ==0
 }
 // pub fn rand_int(n: u8) -> u8 {
 //     (js_sys::Math::random() * n as f64) as u8

@@ -293,7 +293,7 @@ pub fn update_sand(cell: Cell, mut api: SandApi) {
 
     let nbr = api.get(dx, dy);
 
-    if rand_int(8) == 1 && nbr.species == Species::Sand {
+    if rand_int(257 - cell.energy as i32) == 1 && nbr.species == Species::Sand {
         //diffuse nutrients
 
         let shared_energy = (energy / 2) + (nbr.energy / 2);
@@ -644,7 +644,7 @@ pub fn update_fish(cell: Cell, mut api: SandApi) {
     let sample = api.get(sx, sy);
     // api.use_oxygen();
     // Eat
-    if sample.species == Species::Zoop || sample.species == Species::Egg {
+    if sample.species == Species::Zoop || (rand_int(10)==1 && sample.species == Species::Plant) {
         api.set(
             0,
             0,
@@ -692,7 +692,7 @@ pub fn update_fish(cell: Cell, mut api: SandApi) {
         if nbr.species != Species::Water {
             dy = rand_dir_2();
         }
-         api.use_oxygen() ;
+        api.use_oxygen();
         api.set(
             0,
             0,
@@ -723,8 +723,8 @@ pub fn update_fish(cell: Cell, mut api: SandApi) {
         let nbr = api.get(dx, dy);
         //   api.use_oxygen()
         if nbr.species == Species::Water
-            // || nbr.species == Species::FishTail
-            // || nbr.species == Species::Algae
+        // || nbr.species == Species::FishTail
+        // || nbr.species == Species::Algae
         // && (api.use_oxygen())
         {
             let fish_length = 4;
@@ -816,15 +816,21 @@ pub fn update_stone(cell: Cell, mut api: SandApi) {
 pub fn update_plant(cell: Cell, mut api: SandApi) {
     let (dx, dy) = rand_vec_8();
     let energy = cell.energy;
+    let age = cell.age;
 
     // todo slow down and give max age
-    if energy < 10 {
-        api.set(0, 0, WASTE);
+    if age > 250 {
+        if rand_int(5) == 1 {
+            api.set(0, 0, Cell::new(Species::Seed));
+        } else {
+            api.set(0, 0, Cell::new(Species::Waste));
+        }
+        return;
     }
 
     let light = api.get_light().sun;
 
-    if energy > 20
+    if energy > 90
         && rand_int(light as i32) > 100
         && (api.get(dx, -1).species == Species::Water
             && api.get(0, -1).species == Species::Water
@@ -852,17 +858,15 @@ pub fn update_plant(cell: Cell, mut api: SandApi) {
         //diffuse nutrients
 
         let shared_energy = (energy / 2) + (nbr.energy / 2);
-        let cappilary_action = dy * -2;
+        let cappilary_action: u8 = (dy + 1) as u8 * 1;
 
-        let new_energy = cmp::min(
-            (((energy / 2) + (shared_energy / 2)) as i32).saturating_sub(cappilary_action),
-            255,
-        ) as u8;
 
-        let new_nbr_energy = cmp::min(
-            (((nbr.energy / 2) + (shared_energy / 2)) as i32).saturating_add(cappilary_action),
-            255,
-        ) as u8;
+        let new_energy =
+            ((energy / 2) + (shared_energy / 2)).saturating_add(cappilary_action) as u8;
+
+        let new_nbr_energy =
+            ((nbr.energy / 2) + (shared_energy / 2)).saturating_sub(cappilary_action) as u8;
+        let conservation = (nbr.energy + energy) - (new_nbr_energy + new_energy);
 
         api.set(
             dx,
@@ -876,7 +880,18 @@ pub fn update_plant(cell: Cell, mut api: SandApi) {
             0,
             0,
             Cell {
-                energy: new_energy,
+                energy: new_energy.saturating_add(conservation),
+                ..cell
+            },
+        );
+    } else if rand_int(100) == 1 {
+        api.use_co2();
+        api.set(
+            0,
+            0,
+            Cell {
+                age: age.saturating_add(1),
+
                 ..cell
             },
         );
@@ -961,64 +976,3 @@ pub fn update_seed(cell: Cell, mut api: SandApi) {
         }
     }
 }
-
-// pub fn update_mite(cell: Cell, mut api: SandApi) {
-//     let mut i = rand_int(100);
-//     let mut dx = 0;
-//     if cell.ra < 20 {
-//         dx = (cell.ra as i32) - 1;
-//     }
-//     let mut dy = 1;
-//     let mut mite = cell.clone();
-
-//     if cell.rb > 10 {
-//         // /
-//         mite.rb = mite.rb.saturating_sub(1);
-//         dy = -1;
-//     } else if cell.rb > 1 {
-//         // \
-//         mite.rb = mite.rb.saturating_sub(1);
-//     } else {
-//         // |
-//         dx = 0;
-//     }
-//     let nbr = api.get(dx, dy);
-
-//     let sx = (i % 3) - 1;
-//     i = rand_int(1000);
-//     let sy = (i % 3) - 1;
-//     let sample = api.get(sx, sy).species;
-
-//     if (sample == Species::Plant || sample == Species::Seed) && i > 800 {
-//         api.set(0, 0, EMPTY_CELL);
-//         api.set(sx, sy, cell);
-
-//         return;
-//     }
-
-//     if nbr.species == Species::Air {
-//         api.set(0, 0, EMPTY_CELL);
-//         api.set(dx, dy, mite);
-//     } else if dy == 1 && i > 800 {
-//         i = rand_int(100);
-//         let mut ndx = (i % 3) - 1;
-//         if i < 6 {
-//             //switch direction
-//             ndx = dx;
-//         }
-
-//         mite.ra = (1 + ndx) as u8;
-//         mite.rb = 10 + (i % 10) as u8; //hop height
-
-//         api.set(0, 0, mite);
-//     } else {
-//         if api.get(-1, 0).species == Species::Mite
-//             && api.get(1, 0).species == Species::Mite
-//             && api.get(0, -1).species == Species::Mite
-//         {
-//             api.set(0, 0, EMPTY_CELL);
-//         } else {
-//             api.set(0, 0, mite);
-//         }
-//     }
-// }

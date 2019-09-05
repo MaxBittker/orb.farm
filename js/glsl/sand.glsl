@@ -120,6 +120,8 @@ void main() {
   } else if (type == 15) { // Tail
     hue += fract(age * 255.*1.2)*0.2;
     lightness += 0.4;
+    saturation -= fract(age * 255.*0.7)*0.8;
+
     // saturation += fract(age * 255.*6.);
   }
   //  else if (type == 15) { // mite
