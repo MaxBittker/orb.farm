@@ -30,7 +30,7 @@ body,
 #background {
   /* background-image: url("https://source.unsplash.com/collection/2152825/"); */
   /* background-image: url("https://i.imgur.com/GJtS1mA.png"); */
-  
+
   /* filter: blur(1px); */
   /* z-index: -1; */
 }
@@ -48,9 +48,8 @@ body,
   filter: contrast(0.2);
 }
 
-#jar{
+#jar {
   line-height: 0px;
-
 }
 canvas {
   position: absolute;
@@ -71,21 +70,21 @@ canvas {
 
 #sand-canvas {
   z-index: 2;
-  margin:auto;
+  margin: auto;
 }
-#sky-canvas{
+#sky-canvas {
   z-index: 1;
   width: 100%;
   height: 100%;
   margin: 0;
   /* image-rendering: pixelated;; */
 }
-#plot-canvas{
+#plot-canvas {
   pointer-events: none;
-border: dashed 2px black;
+  border: dashed 2px black;
   z-index: 6;
   /* width:100%; */
-  max-width:40%;
+  max-width: 40%;
 }
 canvas,
 img {
