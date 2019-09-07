@@ -31,18 +31,18 @@ let background = document.getElementById("background");
 
 let timeout = window.setTimeout(() => {
   document.body.classList.add("faded");
-}, 20000);
+}, 12 * 1000);
 let handleActivity = e => {
   window.clearTimeout(timeout);
   document.body.classList.remove("faded");
   timeout = window.setTimeout(() => {
     document.body.classList.add("faded");
-  }, 20000);
+  }, 12 * 1000);
 };
 document.body.addEventListener("mousemove", handleActivity);
+document.body.addEventListener("touchstart", handleActivity);
 
 background.addEventListener("touchmove", e => {
-  handleActivity;
   if (!window.paused) {
     if (e.cancelable) {
       e.preventDefault();

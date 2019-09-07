@@ -194,7 +194,7 @@ pub fn update_nitrogen(cell: Cell, mut api: SandApi) {
 }
 
 pub fn update_bacteria(cell: Cell, mut api: SandApi) {
-    if rand_int(7) < 6 {
+    if !once_in(7) {
         return;
     }
     let energy = cell.energy;
@@ -719,7 +719,8 @@ pub fn update_fish(cell: Cell, mut api: SandApi) {
     } else {
         // swimming
         let (dx, dy, rem) = split_dy_dx(cell.age - FISH_PADDING);
-        if once_in(50) {
+        if once_in(90) {
+            //kick
             api.set(0, 0, Cell { age: 0, ..cell });
             return;
         }
@@ -730,7 +731,7 @@ pub fn update_fish(cell: Cell, mut api: SandApi) {
         // || nbr.species == Species::Algae
         // && (api.use_oxygen())
         {
-            let fish_length = 4;
+            let fish_length = 1 + energy / 50;
             api.set(
                 0,
                 0,
@@ -770,7 +771,7 @@ pub fn update_fish(cell: Cell, mut api: SandApi) {
                 );
             }
 
-            let (ndx, ndy) = match rand_int(50) {
+            let (ndx, ndy) = match rand_int(80) {
                 0 => adjacency_left((dx, dy)),
                 1 => adjacency_right((dx, dy)),
                 _ => (dx, dy),
@@ -785,6 +786,7 @@ pub fn update_fish(cell: Cell, mut api: SandApi) {
                 },
             );
         } else {
+            //kick
             api.set(
                 0,
                 0,
@@ -984,7 +986,7 @@ pub fn update_bubble(cell: Cell, mut api: SandApi) {
 
     let up = api.get(0, -1);
     let up_dnbr = api.get(dx, -1);
-    if api.get(dx, dy).species == Species::Air || rand_int(50) == 2 {
+    if api.get(dx, dy).species == Species::Air || once_in(50) {
         api.set(0, 0, Cell::new(Species::Water));
         return;
     }
