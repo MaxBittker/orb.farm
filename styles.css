@@ -145,11 +145,26 @@ button.selected {
   overflow: hidden;
 }
 #ui {
+  position: relative;
+
   display: flex;
   flex-wrap: wrap;
   float: right;
+  z-index: 3;
+}
+.fade {
+  opacity: 1;
+  transition: opacity 1s linear;
+  -moz-transition: opacity 1s linear;
+  -webkit-transition: opacity 1s linear;
 }
 
+.faded .fade {
+  transition: opacity 5s linear;
+  -moz-transition: opacity 5s linear;
+  -webkit-transition: opacity 5s linear;
+  opacity: 0;
+}
 #fps {
   pointer-events: none;
 
