@@ -79,7 +79,8 @@ void main() {
     saturation = 0.5 - (energy * .1);
   } else if (type == 5) { // Plant
     hue = 0.4;
-    lightness -= 0.1;
+    lightness = 0.3 + (1.0 - energy) * 0.5;
+
     saturation = 0.4;
   } else if (type == 6) { // Zoop
     hue = 0.9;

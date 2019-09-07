@@ -70,7 +70,7 @@ impl Species {
                 Species::Fish => 25.0,
                 Species::FishTail => 25.0,
 
-                Species::Plant => 30.0,
+                Species::Plant => 20.0,
                 Species::Seed => 35.0,
 
                 Species::Algae => 20.0,
@@ -625,7 +625,7 @@ pub fn update_egg(cell: Cell, mut api: SandApi) {
         );
     }
 }
-const FISH_PADDING: u8 = 1;
+const FISH_PADDING: u8 = 8;
 pub fn update_fish(cell: Cell, mut api: SandApi) {
     let down = api.get(0, 1);
     if down.species == Species::Air {
@@ -688,7 +688,7 @@ pub fn update_fish(cell: Cell, mut api: SandApi) {
         return;
     }
 
-    if age == 0 {
+    if age < FISH_PADDING {
         // kick
         let (mut dx, mut dy) = (rand_dir_2(), 0);
         let nbr = api.get(dx, dy);
@@ -700,38 +700,30 @@ pub fn update_fish(cell: Cell, mut api: SandApi) {
             0,
             0,
             Cell {
-                age: FISH_PADDING + join_dy_dx(dx, dy, 0),
+                age: FISH_PADDING + join_dy_dx(dx, dy, age),
                 energy: energy.saturating_sub(0),
-
                 ..cell
             },
         );
-    // } else {
-    //     api.set(
-    //         0,
-    //         0,
-    //         Cell {
-    //             energy: energy.saturating_sub(0),
-    //             ..cell
-    //         },
-    //     );
-    // }
     } else {
         // swimming
-        let (dx, dy, rem) = split_dy_dx(cell.age - FISH_PADDING);
+        let (dx, dy, mut rem) = split_dy_dx(cell.age - FISH_PADDING);
         if once_in(90) {
             //kick
-            api.set(0, 0, Cell { age: 0, ..cell });
+            api.set(0, 0, Cell { age: rem, ..cell });
             return;
         }
         let nbr = api.get(dx, dy);
         //   api.use_oxygen()
+        if energy > 200 && once_in(500) && rem <= FISH_PADDING - 2 {
+            rem += 1;
+        }
         if nbr.species == Species::Water
         // || nbr.species == Species::FishTail
-        // || nbr.species == Species::Algae
+        || (nbr.species == Species::Algae && once_in(2))
         // && (api.use_oxygen())
         {
-            let fish_length = 1 + energy / 50;
+            let fish_length = 1 + rem;
             api.set(
                 0,
                 0,
@@ -791,7 +783,7 @@ pub fn update_fish(cell: Cell, mut api: SandApi) {
                 0,
                 0,
                 Cell {
-                    age: 0,
+                    age: rem,
                     energy: energy.saturating_sub(cell.clock % 2),
                     ..cell
                 },
