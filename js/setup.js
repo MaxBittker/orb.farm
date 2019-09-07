@@ -27,7 +27,22 @@ if (mobileAndTabletcheck()) {
   };
 }
 
-document.getElementById("background").addEventListener("touchmove", e => {
+let background = document.getElementById("background");
+
+let timeout = window.setTimeout(() => {
+  document.body.classList.add("faded");
+}, 20000);
+let handleActivity = e => {
+  window.clearTimeout(timeout);
+  document.body.classList.remove("faded");
+  timeout = window.setTimeout(() => {
+    document.body.classList.add("faded");
+  }, 20000);
+};
+document.body.addEventListener("mousemove", handleActivity);
+
+background.addEventListener("touchmove", e => {
+  handleActivity;
   if (!window.paused) {
     if (e.cancelable) {
       e.preventDefault();

@@ -267,12 +267,12 @@ impl Universe {
     pub fn paint(&mut self, x: i32, y: i32, size: i32, species: Species) {
         let mut radius = size / 2;
 
-        if species == Species::Fish {
+        if species == Species::Fish || species == Species::Zoop {
             radius = 1;
         }
-        for dx in -radius..radius + 1 {
-            for dy in -radius..radius + 1 {
-                if dx * dx + dy * dy > (radius * radius) - 1 {
+        for dx in -radius..radius {
+            for dy in -radius..radius {
+                if (dx * dx * 4) + (dy * dy * 4) > (size * size) - 2 {
                     continue;
                 };
                 let px = x + dx;

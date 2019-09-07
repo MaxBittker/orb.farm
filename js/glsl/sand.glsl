@@ -61,8 +61,8 @@ void main() {
     saturation = 0.1;
     lightness = 0.5;
   } else if (type == 2) { // Sand
-    hue =  0.1;
-    saturation = 0.4 + (age*0.2)  ;
+    hue = 0.1;
+    saturation = 0.4 + (age * 0.2);
     lightness = 1.3 - energy;
 
   } else if (type == 3) { // Water
@@ -113,16 +113,27 @@ void main() {
     lightness = 0.3 + data.g * 0.3;
   } else if (type == 14) { // Egg
     hue = 0.9;
-    saturation = age/3.;
+    saturation = age / 3.;
     lightness = 1.0;
     a = 0.8;
 
   } else if (type == 15) { // Tail
-    hue += fract(age * 255.*1.2)*0.2;
+    hue += fract(age * 255. * 1.2) * 0.2;
     lightness += 0.4;
-    saturation -= fract(age * 255.*0.7)*0.8;
+    saturation -= fract(age * 255. * 0.7) * 0.8;
 
     // saturation += fract(age * 255.*6.);
+  } else if (type == 16) {
+
+    hue = 0.0;
+    saturation = 0.1;
+    lightness = 0.1;
+    a = 0.0;
+    if (isSnapshot) {
+      saturation = 0.05;
+      lightness = 1.01;
+      a = 1.0;
+    }
   }
   //  else if (type == 15) { // mite
 

@@ -17,7 +17,7 @@ module.exports = {
   devServer: {
     contentBase: dist,
     disableHostCheck: true,
-    publicPath: "/",
+    publicPath: "/jar/",
     historyApiFallback: true
   },
 

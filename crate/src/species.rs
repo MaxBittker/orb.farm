@@ -35,6 +35,7 @@ pub enum Species {
     Seed = 11,
     Stone = 12,
     Wood = 13,
+    Bubble = 16,
 }
 
 impl Species {
@@ -59,6 +60,7 @@ impl Species {
             Species::FishTail => update_fishtail(cell, api),
             Species::Plant => update_plant(cell, api),
             Species::Seed => update_seed(cell, api),
+            Species::Bubble => update_bubble(cell, api),
         }
     }
     pub fn blocked_light(&self) -> f32 {
@@ -79,6 +81,7 @@ impl Species {
                 Species::Egg => 5.0,
 
                 Species::Air => 0.0,
+                Species::Bubble => 2.0,
                 Species::Glass => 0.0,
 
                 Species::Stone => 50.0,
@@ -104,7 +107,7 @@ pub fn update_waste(cell: Cell, mut api: SandApi) {
 }
 pub fn update_fishtail(cell: Cell, mut api: SandApi) {
     let age = cell.age;
-    if (age == 0) {
+    if age == 0 {
         api.set(0, 0, Cell::new(Species::Water));
 
         let energy = cell.energy;
@@ -152,7 +155,7 @@ pub fn update_nitrogen(cell: Cell, mut api: SandApi) {
         return;
     }
     if nbr.species == Species::Sand || nbr.species == Species::Plant {
-        api.set(0, 0, Cell::new(Species::Water));
+        api.set(0, 0, Cell::new(Species::Bubble));
         api.set(
             0,
             1,
@@ -349,15 +352,15 @@ pub fn update_water(cell: Cell, mut api: SandApi) {
         api.set(dx, 0, cell);
     } else if dx0r.species == Species::Air {
         api.set(-dx, 0, cell);
-        if api.get(dx * -2, 0).species == Species::Water
-            && dx0.species == Species::Water
-            && api.get(0, -1).species == Species::Air
-            && rand_int(5) == 1
-        {
-            api.set(0, 0, Cell::new(Species::Water));
-        } else {
-            api.set(0, 0, dx0r);
-        }
+        // if api.get(dx * -2, 0).species == Species::Water
+        //     && dx0.species == Species::Water
+        //     && api.get(0, -1).species == Species::Air
+        //     && rand_int(5) == 1
+        // {
+        //     api.set(0, 0, Cell::new(Species::Water));
+        // } else {
+        api.set(0, 0, dx0r);
+    // }
     } else if dx1.species == Species::Air {
         api.set(0, 0, dx1);
         api.set(dx, 1, cell);
@@ -644,7 +647,7 @@ pub fn update_fish(cell: Cell, mut api: SandApi) {
     let sample = api.get(sx, sy);
     // api.use_oxygen();
     // Eat
-    if sample.species == Species::Zoop || (rand_int(10)==1 && sample.species == Species::Plant) {
+    if sample.species == Species::Zoop || (rand_int(10) == 1 && sample.species == Species::Plant) {
         api.set(
             0,
             0,
@@ -655,7 +658,7 @@ pub fn update_fish(cell: Cell, mut api: SandApi) {
         );
         api.set(sx, sy, Cell::new(Species::Water));
         //reproduce
-        if energy > 250 && api.use_oxygen() && rand_int(20) == 2 {
+        if energy > 250 && api.use_oxygen() && rand_int(200) == 2 {
             let new_energy = energy / 4;
             api.set(
                 sx,
@@ -860,7 +863,6 @@ pub fn update_plant(cell: Cell, mut api: SandApi) {
         let shared_energy = (energy / 2) + (nbr.energy / 2);
         let cappilary_action: u8 = (dy + 1) as u8 * 1;
 
-
         let new_energy =
             ((energy / 2) + (shared_energy / 2)).saturating_add(cappilary_action) as u8;
 
@@ -974,5 +976,31 @@ pub fn update_seed(cell: Cell, mut api: SandApi) {
                 api.set(dx, dy, Cell::new(Species::Seed))
             }
         }
+    }
+}
+
+pub fn update_bubble(cell: Cell, mut api: SandApi) {
+    let (dx, dy) = rand_vec_8();
+
+    let up = api.get(0, -1);
+    let up_dnbr = api.get(dx, -1);
+    if api.get(dx, dy).species == Species::Air || rand_int(50) == 2 {
+        api.set(0, 0, Cell::new(Species::Water));
+        return;
+    }
+    if up_dnbr.species != Species::Wood
+        && up_dnbr.species != Species::Glass
+        && up_dnbr.species != Species::Plant
+    {
+        api.set(0, 0, up_dnbr);
+        api.set(dx, -1, cell);
+        return;
+    } else if up.species != Species::Wood
+        && up.species != Species::Glass
+        && up.species != Species::Plant
+    {
+        api.set(0, 0, up);
+        api.set(0, -1, cell);
+        return;
     }
 }

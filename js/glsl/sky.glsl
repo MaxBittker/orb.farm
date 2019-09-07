@@ -547,7 +547,7 @@ void mainImage(out vec4 fragColor, in vec2 fragCoord) {
   vec3 star = vec3(0.);
   vec4 aur = vec4(0.);
 
-  float fade = smoothstep(0., 0.01, abs(D.y)) * 0.5 + 0.9;
+  float fade = smoothstep(0., 0.01, abs(D.y)) * 0.5 + 0.6;
 
   staratt = 1. - min(1.0, (uvMouse.y * 2.0));
   scatatt = 1. - min(1.0, (uvMouse.y * 2.2));

@@ -25,7 +25,7 @@ for (var x = 30; x < d - 30; x += 10) {
 for (var x = 0; x < d; x += 10) {
   universe.paint(x, n - 50, 40, Species.Sand);
 }
-universe.paint(h, h, h * 1.1, Species.Water);
+universe.paint(h, h, h * 0.85, Species.Water);
 
 universe.paint(h, h, 2, Species.Zoop);
 universe.paint(h + 20, h, 2, Species.Fish);

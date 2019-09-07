@@ -40,7 +40,7 @@ const ElementButton = (name, selectedElement, setElement) => {
   );
 };
 
-let sizeMap = [2, 5, 10];
+let sizeMap = [2, 3, 4];
 
 class Index extends React.Component {
   constructor(props) {
@@ -271,7 +271,7 @@ class Index extends React.Component {
               }}
             >
               <svg height="23" width="23" id="d" viewBox="0 0 100 100">
-                <circle cx="50" cy="50" r={2 + v * 3} />
+                <circle cx="50" cy="50" r={2 + v * 5} />
               </svg>
             </button>
           ))}
@@ -286,7 +286,7 @@ class Index extends React.Component {
           ↜
         </button>
         {Object.keys(Species)
-          .filter(name => !["Plant", "FishTail"].includes(name))
+          .filter(name => !["Plant", "FishTail", "Bubble"].includes(name))
           .map(n =>
             ElementButton(n, selectedElement, id =>
               this.setState({ selectedElement: id })
