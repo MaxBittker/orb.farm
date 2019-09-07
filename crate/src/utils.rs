@@ -47,6 +47,18 @@ pub fn rand_vec_up_3() -> (i32, i32) {
         _ => (0, -1),
     }
 }
+pub fn rand_vec_down_5() -> (i32, i32) {
+    let i = rand_int(20000);
+    match i % 6 {
+        0 => (1, 0),
+        1 => (1, 1),
+        3 => (0, 1),
+        4 => (-1, 1),
+        _ => (-1, 0),
+    }
+}
+
+
 pub fn rand_vec_up_5() -> (i32, i32) {
     let i = rand_int(20000);
     match i % 6 {

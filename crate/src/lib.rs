@@ -267,7 +267,7 @@ impl Universe {
     pub fn paint(&mut self, x: i32, y: i32, size: i32, species: Species) {
         let mut radius = size / 2;
 
-        if species == Species::Fish || species == Species::Zoop {
+        if species == Species::Fish || species == Species::Zoop|| species== Species::Bacteria {
             radius = 1;
         }
         for dx in -radius..radius {

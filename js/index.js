@@ -113,9 +113,7 @@ const renderLoop = () => {
     }
     universe.set_time(dayTime);
 
-    if (t % 20 == 0) {
-      recordDataPoint();
-    }
+    recordDataPoint();
     let elapsed_time = performance.now() - now;
     if (elapsed_time > 13) {
       break;

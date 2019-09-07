@@ -16,25 +16,30 @@ use wasm_bindgen::prelude::*;
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub enum Species {
     Air = 0,
+
     Glass = 1,
     Sand = 2,
+    Stone = 12,
+    Wood = 13,
+
     Water = 3,
 
     Algae = 4,
-    Plant = 5,
-
     Zoop = 6,
     Egg = 14,
+
+    Seed = 11,
+
+    Plant = 5,
+
+    Bacteria = 8,
+
     Fish = 7,
     FishTail = 15,
 
-    Bacteria = 8,
     Nitrogen = 9,
 
     Waste = 10,
-    Seed = 11,
-    Stone = 12,
-    Wood = 13,
     Bubble = 16,
 }
 
@@ -647,7 +652,7 @@ pub fn update_fish(cell: Cell, mut api: SandApi) {
     let sample = api.get(sx, sy);
     // api.use_oxygen();
     // Eat
-    if sample.species == Species::Zoop || (rand_int(10) == 1 && sample.species == Species::Plant) {
+    if sample.species == Species::Zoop || (rand_int(100) == 1 && sample.species == Species::Plant) {
         api.set(
             0,
             0,
@@ -816,7 +821,7 @@ pub fn update_plant(cell: Cell, mut api: SandApi) {
     let age = cell.age;
 
     // todo slow down and give max age
-    if age > 250 {
+    if age > 200 {
         if rand_int(5) == 1 {
             api.set(0, 0, Cell::new(Species::Seed));
         } else {
@@ -827,7 +832,7 @@ pub fn update_plant(cell: Cell, mut api: SandApi) {
 
     let light = api.get_light().sun;
 
-    if energy > 90
+    if energy > 110
         && rand_int(light as i32) > 100
         && (api.get(dx, -1).species == Species::Water
             && api.get(0, -1).species == Species::Water
@@ -847,28 +852,33 @@ pub fn update_plant(cell: Cell, mut api: SandApi) {
         );
         api.set(0, 0, Cell { energy: 10, ..cell });
         // api.set(-dx, dy, EMPTY_CELL);
+        return;
     }
 
     let nbr = api.get(dx, dy);
 
-    if nbr.species == Species::Plant || nbr.species == Species::Sand {
+    if nbr.species == Species::Plant || nbr.species == Species::Sand && dy != 1 {
         //diffuse nutrients
 
-        let shared_energy = (energy / 2) + (nbr.energy / 2);
-        let cappilary_action: u8 = (dy + 1) as u8 * 1;
+        let cappilary_action: u8 = (dy + 1) as u8 * 1; // how much to move up
+
+        let available_nbr_energy = nbr.energy.saturating_sub(8);
+        let delta = nbr.energy - available_nbr_energy;
+
+        let shared_energy = (energy / 2) + (available_nbr_energy / 2);
 
         let new_energy =
             ((energy / 2) + (shared_energy / 2)).saturating_add(cappilary_action) as u8;
 
-        let new_nbr_energy =
-            ((nbr.energy / 2) + (shared_energy / 2)).saturating_sub(cappilary_action) as u8;
-        let conservation = (nbr.energy + energy) - (new_nbr_energy + new_energy);
+        let new_nbr_energy = ((available_nbr_energy / 2) + (shared_energy / 2))
+            .saturating_sub(cappilary_action) as u8;
+        let conservation = (available_nbr_energy + energy) - (new_nbr_energy + new_energy);
 
         api.set(
             dx,
             dy,
             Cell {
-                energy: new_nbr_energy,
+                energy: new_nbr_energy.saturating_add(delta),
                 ..nbr
             },
         );

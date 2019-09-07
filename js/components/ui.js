@@ -8,7 +8,10 @@ import { height, universe, width, reset } from "../index.js";
 import { snapshot, pallette } from "../render.js";
 
 import Menu from "./menu";
-let skiplist = ["Plant", "FishTail", "Bubble", "Waste", "Nitrogen"];
+let skiplist = ["FishTail", "Bubble", "Waste"];
+
+// skiplist.push("Plant");
+// skiplist.push("Nitrogen");
 window.species = Species;
 let pallette_data = pallette();
 
