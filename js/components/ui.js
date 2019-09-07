@@ -8,7 +8,7 @@ import { height, universe, width, reset } from "../index.js";
 import { snapshot, pallette } from "../render.js";
 
 import Menu from "./menu";
-
+let skiplist = ["Plant", "FishTail", "Bubble", "Waste", "Nitrogen"];
 window.species = Species;
 let pallette_data = pallette();
 
@@ -286,7 +286,7 @@ class Index extends React.Component {
           ↜
         </button>
         {Object.keys(Species)
-          .filter(name => !["Plant", "FishTail", "Bubble"].includes(name))
+          .filter(name => !skiplist.includes(name))
           .map(n =>
             ElementButton(n, selectedElement, id =>
               this.setState({ selectedElement: id })
