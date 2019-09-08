@@ -77,7 +77,8 @@ canvas {
   width: 100%;
   height: 100%;
   margin: 0;
-  /* image-rendering: pixelated;; */
+  filter: grayscale(20%);
+  /* image-rendering: pixelated; */
 }
 #plot-canvas {
   pointer-events: none;

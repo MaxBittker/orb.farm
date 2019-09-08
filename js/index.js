@@ -13,11 +13,15 @@ let h = n / 2;
 let d = n - 6;
 
 const universe = Universe.new(n, n);
-universe.paint(h, h, d + 2, Species.Glass);
 
-universe.paint(h - 30, d - 3, 20, Species.Wood);
-universe.paint(h + 30, d - 3, 20, Species.Wood);
-universe.paint(h, h, d - 2, Species.Air);
+function drawBowl() {
+  universe.paint(h, h, d + 2, Species.Glass);
+  universe.paint(h - 30, d - 3, 20, Species.Wood);
+  universe.paint(h + 30, d - 3, 20, Species.Wood);
+  universe.paint(h, h, d - 2, Species.Air);
+}
+
+drawBowl();
 // for (var x = 30; x < d - 30; x += 10) {
 // universe.paint(x, h * 1.2, h, Species.Water);
 // }
@@ -130,6 +134,7 @@ function reset() {
   console.log("reseting");
   localStorage.setItem("cell_data", null);
   universe.reset();
+  drawBowl();
 }
 window.u = universe;
 window.universe = universe;

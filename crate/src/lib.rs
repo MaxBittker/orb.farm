@@ -205,6 +205,10 @@ impl Universe {
             sunlight = (sunlight) * cell.blocked_light();
 
             self.lights[idx].sun = sunlight as u8;
+            self.lights[idx].b = self.lights[idx].b.saturating_sub(2);
+            if brightness < 50. && cell.species == Species::Zoop && cell.age > 4 {
+                self.lights[idx].b = 250;
+            }
         }
     }
 
@@ -265,11 +269,22 @@ impl Universe {
     }
 
     pub fn paint(&mut self, x: i32, y: i32, size: i32, species: Species) {
+        let mut size = size;
+
+        if species == Species::Water {
+            size = 13;
+        }
+
+        if species == Species::Fish
+            || species == Species::Daphnia
+            || species == Species::Bacteria
+            || species == Species::Seed
+            || species == Species::Algae
+        {
+            size = 2;
+        }
         let mut radius = size / 2;
 
-        if species == Species::Fish || species == Species::Zoop || species == Species::Bacteria {
-            radius = 1;
-        }
         for dx in -radius..radius {
             for dy in -radius..radius {
                 if (dx * dx * 4) + (dy * dy * 4) > (size * size) - 2 {

@@ -40,13 +40,13 @@ let startWebGL = ({ canvas, universe, isSnapshot = false }) => {
     frag: fsh,
     uniforms: {
       t: ({ tick }) => tick,
-      data: () => {
+      dataTexture: () => {
         cell_pointer = universe.cells();
         cells = new Uint8Array(memory.buffer, cell_pointer, width * height * 4);
 
         return dataTexture({ width, height, data: cells });
       },
-      light: () => {
+      lightTexture: () => {
         light_pointer = universe.lights();
 
         lights = new Uint8Array(
@@ -102,7 +102,7 @@ let pallette = () => {
   universe.reset();
 
   species.forEach(id => universe.paint(id, 0, 2, id));
-
+  universe.paint(species.Air, 0, 2, species.Air);
   let render = startWebGL({ universe, canvas, isSnapshot: true });
   render();
   let ctx = canvas.getContext("webgl");

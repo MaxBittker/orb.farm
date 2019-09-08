@@ -45,7 +45,7 @@ uniform sampler2D iChannel0;
 #define S(x, y, z) smoothstep(x, y, z)
 #define cameraheight 5e1   // 50.
 #define mincloudheight 5e3 // 5e3
-#define maxcloudheight 8e3 // 8e3
+#define maxcloudheight 10e3 // 8e3
 #define xaxiscloud t * 5e2 // t*5e2 +t left -t right *speed
 #define yaxiscloud 0.      // 0.
 #define zaxiscloud t * 6e2 // t*6e2 +t away from horizon -t towards horizon *speed
@@ -504,13 +504,13 @@ vec2 GetDrops(vec2 uv, float seed, float m) {
 void mainImage(out vec4 fragColor, in vec2 fragCoord) {
 
   float AR = iResolution.x / iResolution.y;
-//   float YAR = iResolution.y / iResolution.x;
-//   float SAR = min(AR, YAR);
-//   float BAR = max(AR, YAR);
-//   float smallSide = min(iResolution.x, iResolution.y);
-//   float bigSide = max(iResolution.x, iResolution.y);
+  //   float YAR = iResolution.y / iResolution.x;
+  //   float SAR = min(AR, YAR);
+  //   float BAR = max(AR, YAR);
+  //   float smallSide = min(iResolution.x, iResolution.y);
+  //   float bigSide = max(iResolution.x, iResolution.y);
   float M = 1.0; // canvas.innerWidth/M //canvas.innerHeight/M --res
-  vec2 sunPos = vec2(sin(-gameTime * PI2), cos(gameTime * PI2)) *0.5;
+  vec2 sunPos = vec2(sin(-gameTime * PI2), cos(gameTime * PI2)) * 0.5;
   sunPos.x += AR * 0.5;
   sunPos.y += 0.5;
   // circle = vec2(sin(gameTime*PI2));

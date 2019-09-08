@@ -4,8 +4,8 @@ uniform float dpi;
 uniform vec2 resolution;
 uniform bool isSnapshot;
 uniform sampler2D backBuffer;
-uniform sampler2D data;
-uniform sampler2D light;
+uniform sampler2D dataTexture;
+uniform sampler2D lightTexture;
 
 varying vec2 uv;
 
@@ -26,13 +26,19 @@ void main() {
   float noise = snoise3(vec3(grid, t * 0.05));
 
   vec2 textCoord = (uv * vec2(0.5, -0.5)) + vec2(0.5);
-  vec2 sampleCoord =
-      (uv * vec2(0.5, -0.5)) + vec2(0.5) + vec2(noise, 0.0) / (resolution/dpi);
+  vec2 sampleCoord = (uv * vec2(0.5, -0.5)) + vec2(0.5) +
+                     vec2(noise, 0.0) / (resolution / dpi);
   // vec3 bb = texture2D(backBuffer, (uv * 0.5) + vec2(0.5)).rgb;
 
-  vec4 data = texture2D(data, textCoord);
-  float lightValue = texture2D(light, textCoord).r;
-  float sampleLightValue = texture2D(light, sampleCoord).r;
+  vec4 data = texture2D(dataTexture, textCoord);
+
+  vec4 lightCell = texture2D(lightTexture, textCoord);
+
+  float lightValue = lightCell.r;
+  float blueLightValue = lightCell.b;
+
+  float sampleLightValue = texture2D(lightTexture, sampleCoord).r;
+
   lightValue = 0.5 * lightValue + 0.5 * sampleLightValue;
   int type = int((data.r * 255.) + 0.1);
   float energy = data.g;
@@ -63,7 +69,7 @@ void main() {
   } else if (type == 2) { // Sand
     hue = 0.1;
     saturation = 0.4 + (age * 0.3);
-    lightness = 1.3 - energy*1.2;
+    lightness = 1.3 - energy * 1.2;
 
   } else if (type == 3) { // Water
     hue = 0.58;
@@ -79,7 +85,7 @@ void main() {
     saturation = 0.5 - (energy * .1);
   } else if (type == 5) { // Plant
     hue = 0.4;
-    if(energy> 110./255.){
+    if (energy > 110. / 255.) {
       hue = 0.45;
     }
     lightness = 0.3 + (1.0 - energy) * 0.5;
@@ -169,5 +175,6 @@ void main() {
   saturation = min(saturation, 1.0);
   lightness = min(lightness, 1.0);
   color = hsv2rgb(vec3(hue, saturation, lightness));
+  color += vec3(0.4, 0.4, 1.0) * blueLightValue;
   gl_FragColor = vec4(color, a);
 }

@@ -26,7 +26,7 @@ pub enum Species {
 
     Algae = 4,
     Zoop = 6,
-    Egg = 14,
+    Daphnia = 14,
 
     Seed = 11,
 
@@ -56,7 +56,7 @@ impl Species {
 
             Species::Bacteria => update_bacteria(cell, api),
             Species::Zoop => update_zoop(cell, api),
-            Species::Egg => update_egg(cell, api),
+            Species::Daphnia => update_Daphnia(cell, api),
             Species::Waste => update_waste(cell, api),
             Species::Nitrogen => update_nitrogen(cell, api),
             Species::Algae => update_algae(cell, api),
@@ -83,7 +83,7 @@ impl Species {
                 Species::Waste => 10.0,
                 Species::Nitrogen => 10.0,
                 Species::Zoop => 10.0,
-                Species::Egg => 5.0,
+                Species::Daphnia => 5.0,
 
                 Species::Air => 0.0,
                 Species::Bubble => 2.0,
@@ -176,7 +176,7 @@ pub fn update_nitrogen(cell: Cell, mut api: SandApi) {
         || nbr.species == Species::Water
         || nbr.species == Species::Zoop
         || nbr.species == Species::Bacteria
-        || nbr.species == Species::Egg
+        || nbr.species == Species::Daphnia
     {
         api.set(0, 0, nbr);
         api.set(0, 1, cell);
@@ -451,7 +451,7 @@ pub fn update_zoop(cell: Cell, mut api: SandApi) {
     let (sx, sy) = rand_vec_8();
     let sample = api.get(sx, sy);
     api.use_oxygen();
-    if sample.species == Species::Algae || sample.species == Species::Egg {
+    if sample.species == Species::Algae || sample.species == Species::Daphnia {
         api.set(
             0,
             0,
@@ -468,7 +468,7 @@ pub fn update_zoop(cell: Cell, mut api: SandApi) {
                 sx,
                 sy,
                 Cell {
-                    species: Species::Egg,
+                    species: Species::Daphnia,
                     energy: new_energy * 3,
                     age: 0,
                     ..cell
@@ -591,7 +591,7 @@ pub fn update_zoop(cell: Cell, mut api: SandApi) {
     }
 }
 
-pub fn update_egg(cell: Cell, mut api: SandApi) {
+pub fn update_Daphnia(cell: Cell, mut api: SandApi) {
     let dx = rand_dir();
     if cell.age > 250 && api.use_oxygen() {
         // hatch
@@ -832,7 +832,7 @@ pub fn update_plant(cell: Cell, mut api: SandApi) {
 
     let light = api.get_light().sun;
 
-    if energy > 90
+    if energy > 80
         && rand_int(light as i32) > 100
         && (api.get(dx, -1).species == Species::Water
             && api.get(0, -1).species == Species::Water

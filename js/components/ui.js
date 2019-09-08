@@ -135,7 +135,6 @@ class Index extends React.Component {
 
     let cellData = canvas.toDataURL("image/png");
     let dataString = JSON.stringify(cellData);
-    console.log(dataString.length);
     try {
       localStorage.setItem("cell_data", dataString);
     } catch {
@@ -150,7 +149,7 @@ class Index extends React.Component {
     var cellData = JSON.parse(localStorage.getItem("cell_data"));
     if (!cellData) {
       console.log("no save");
-      window.setInterval(this.upload, 1000 * 2);
+      window.setInterval(this.upload, 1000 * 10);
 
       return;
     }
@@ -173,13 +172,13 @@ class Index extends React.Component {
         width * height * 4
       );
 
-      reset();
+      universe.reset();
 
       for (var i = 0; i < width * height * 4; i++) {
         cellsData[i] = imgData.data[i];
       }
     };
-    window.setInterval(this.upload, 1000 * 2);
+    window.setInterval(this.upload, 1000 * 10);
 
     // universe.flush_undos();
     // universe.push_undo();
@@ -233,7 +232,7 @@ class Index extends React.Component {
         </Link>
 
         {/* {paused && <button onClick={() => universe.tick()}>Tick</button>} */}
-        <span className="sizes">
+        {/* <span className="sizes">
           {sizeMap.map((v, i) => (
             <button
               key={i}
@@ -253,7 +252,7 @@ class Index extends React.Component {
               </svg>
             </button>
           ))}
-        </span>
+        </span> */}
         <button
           onClick={() => {
             reset();
