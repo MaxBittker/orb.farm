@@ -56,7 +56,7 @@ impl Species {
 
             Species::Bacteria => update_bacteria(cell, api),
             Species::Zoop => update_zoop(cell, api),
-            Species::Daphnia => update_Daphnia(cell, api),
+            Species::Daphnia => update_daphnia(cell, api),
             Species::Waste => update_waste(cell, api),
             Species::Nitrogen => update_nitrogen(cell, api),
             Species::Algae => update_algae(cell, api),
@@ -520,7 +520,7 @@ pub fn update_zoop(cell: Cell, mut api: SandApi) {
     } else if age == ZOOP_PADDING {
         // kick
         let (mut dx, mut dy) = if api.get_light().sun < 30 {
-            rand_vec_up_3() // climb at night
+            rand_vec_ennnws() // climb at night
         } else {
             rand_vec_8() // wander
         }; // pointed up
@@ -529,14 +529,14 @@ pub fn update_zoop(cell: Cell, mut api: SandApi) {
             dx *= -1;
             dy *= -1;
         }
+
         if api.use_oxygen() {
             api.set(
                 0,
                 0,
                 Cell {
-                    age: ZOOP_PADDING + join_dy_dx(dx, dy, 0),
+                    age: ZOOP_PADDING + join_dx_dy(dx, dy, 0),
                     energy: energy.saturating_sub(1),
-
                     ..cell
                 },
             );
@@ -552,7 +552,8 @@ pub fn update_zoop(cell: Cell, mut api: SandApi) {
         }
     } else {
         //gliding
-        let (dx, dy, rem) = split_dy_dx(cell.age - ZOOP_PADDING);
+        let (dx, dy, rem) = split_dx_dy(cell.age - ZOOP_PADDING);
+
         if rem > GLIDE_LENGTH {
             api.set(0, 0, Cell { age: 0, ..cell });
             return;
@@ -572,7 +573,7 @@ pub fn update_zoop(cell: Cell, mut api: SandApi) {
                 dx,
                 dy,
                 Cell {
-                    age: ZOOP_PADDING + join_dy_dx(ndx, ndy, rem + 1),
+                    age: ZOOP_PADDING + join_dx_dy(ndx, ndy, rem + 1),
                     // energy: energy.saturating_sub(cell.clock),
                     ..cell
                 },
@@ -582,7 +583,7 @@ pub fn update_zoop(cell: Cell, mut api: SandApi) {
                 0,
                 0,
                 Cell {
-                    age: ZOOP_PADDING + join_dy_dx(dx, dy, GLIDE_LENGTH + 1),
+                    age: 0,
                     energy: energy.saturating_sub(cell.clock),
                     ..cell
                 },
@@ -591,7 +592,7 @@ pub fn update_zoop(cell: Cell, mut api: SandApi) {
     }
 }
 
-pub fn update_Daphnia(cell: Cell, mut api: SandApi) {
+pub fn update_daphnia(cell: Cell, mut api: SandApi) {
     let dx = rand_dir();
     if cell.age > 250 && api.use_oxygen() {
         // hatch
@@ -705,14 +706,14 @@ pub fn update_fish(cell: Cell, mut api: SandApi) {
             0,
             0,
             Cell {
-                age: FISH_PADDING + join_dy_dx(dx, dy, age),
+                age: FISH_PADDING + join_dx_dy(dx, dy, age),
                 energy: energy.saturating_sub(0),
                 ..cell
             },
         );
     } else {
         // swimming
-        let (dx, dy, mut rem) = split_dy_dx(cell.age - FISH_PADDING);
+        let (dx, dy, mut rem) = split_dx_dy(cell.age - FISH_PADDING);
         if once_in(90) {
             //kick
             api.set(0, 0, Cell { age: rem, ..cell });
@@ -777,7 +778,7 @@ pub fn update_fish(cell: Cell, mut api: SandApi) {
                 dx,
                 dy,
                 Cell {
-                    age: FISH_PADDING + join_dy_dx(ndx, ndy, rem),
+                    age: FISH_PADDING + join_dx_dy(ndx, ndy, rem),
                     // energy: energy.saturating_sub(cell.clock),
                     ..cell
                 },

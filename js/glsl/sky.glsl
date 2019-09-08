@@ -33,7 +33,7 @@ uniform sampler2D iChannel0;
 
 #define ORIG_CLOUD 0
 #define ENABLE_RAIN 0 // enable rain drops on screen
-#define SIMPLE_SUN 1
+#define SIMPLE_SUN 0
 #define NICE_HACK_SUN 1
 #define SOFT_SUN 1
 #define cloudy 0.5 // 0.0 clear sky

@@ -19,25 +19,28 @@ varying vec2 uv;
 
 void main() {
   vec3 color;
-  vec2 grid = floor(uv * resolution / dpi);
+  vec2 grid = floor(uv * (resolution / dpi));
   //   float r = abs(sin(t / 25.));
   //   if (length(uv) < r && length(uv) > r - 0.1) {
   // color = hsv2rgb(vec3(sin(t * 0.01), 0.5, 0.5));
   float noise = snoise3(vec3(grid, t * 0.05));
+  vec2 noise_2d = vec2(noise, snoise3(vec3(grid, (t + 20.) * 0.05)));
 
   vec2 textCoord = (uv * vec2(0.5, -0.5)) + vec2(0.5);
-  vec2 sampleCoord = (uv * vec2(0.5, -0.5)) + vec2(0.5) +
-                     vec2(noise, 0.0) / (resolution / dpi);
-  // vec3 bb = texture2D(backBuffer, (uv * 0.5) + vec2(0.5)).rgb;
+  vec2 sampleCoord = textCoord + (noise_2d / (resolution));
+  // vec3 bb = texture2D(backBuffer, (uv * 0.5) +
+  // vec2(0.5)).rgb;
 
   vec4 data = texture2D(dataTexture, textCoord);
+  // vec4 dataSample = texture2D(dataTexture, sampleCoord);
 
   vec4 lightCell = texture2D(lightTexture, textCoord);
 
   float lightValue = lightCell.r;
   float blueLightValue = lightCell.b;
 
-  float sampleLightValue = texture2D(lightTexture, sampleCoord).r;
+  vec4 lightSampleCell = texture2D(lightTexture, sampleCoord);
+  float sampleLightValue = lightSampleCell.r;
 
   lightValue = 0.5 * lightValue + 0.5 * sampleLightValue;
   int type = int((data.r * 255.) + 0.1);
@@ -175,6 +178,8 @@ void main() {
   saturation = min(saturation, 1.0);
   lightness = min(lightness, 1.0);
   color = hsv2rgb(vec3(hue, saturation, lightness));
-  color += vec3(0.4, 0.4, 1.0) * blueLightValue;
+
+  color += vec3(0.25, 0.25, 0.7) * (blueLightValue + lightSampleCell.b);
+  a += blueLightValue + lightSampleCell.b;
   gl_FragColor = vec4(color, a);
 }

@@ -4,7 +4,7 @@ extern crate wasm_bindgen;
 extern crate web_sys;
 
 mod species;
-mod utils;
+pub mod utils;
 use utils::*;
 
 use species::Species;
@@ -206,8 +206,8 @@ impl Universe {
 
             self.lights[idx].sun = sunlight as u8;
             self.lights[idx].b = self.lights[idx].b.saturating_sub(2);
-            if brightness < 50. && cell.species == Species::Zoop && cell.age > 4 {
-                self.lights[idx].b = 250;
+            if brightness < 70. && cell.species == Species::Zoop && cell.age > 4 {
+                self.lights[idx].b = 210 - (brightness * 3.0) as u8;
             }
         }
     }
@@ -283,7 +283,7 @@ impl Universe {
         {
             size = 2;
         }
-        let mut radius = size / 2;
+        let radius = size / 2;
 
         for dx in -radius..radius {
             for dy in -radius..radius {
