@@ -6,10 +6,10 @@ use SandApi;
 use EMPTY_CELL;
 use WASTE;
 
-use std::cmp;
+// use std::cmp;
 // use std::mem;
 use wasm_bindgen::prelude::*;
-use web_sys::console;
+// use web_sys::console;
 
 #[wasm_bindgen]
 #[repr(u8)]
@@ -233,7 +233,7 @@ pub fn update_bacteria(cell: Cell, mut api: SandApi) {
                 ..cell
             },
         );
-        api.use_oxygen();
+        // api.use_oxygen();
         api.use_oxygen();
 
         return;
@@ -399,7 +399,11 @@ pub fn update_algae(cell: Cell, mut api: SandApi) {
         dx = 0;
         dy = 0;
     } else {
-        if cell.age > 10 && cell.energy > 220 && api.get(-dx, -dy).species == Species::Water {
+        if cell.age > 10
+            && cell.energy > 220
+            && api.get(-dx, -dy).species == Species::Water
+            && api.use_co2()
+        {
             split_energy = cell.energy / 2;
             api.set(
                 0,
@@ -834,7 +838,7 @@ pub fn update_plant(cell: Cell, mut api: SandApi) {
     let light = api.get_light().sun;
 
     if energy > 80
-        && rand_int(light as i32) > 100
+        && rand_int(light as i32) > 70
         && (api.get(dx, -1).species == Species::Water
             && api.get(0, -1).species == Species::Water
             && api.get(-dx, -1).species == Species::Water

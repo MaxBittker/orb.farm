@@ -1,6 +1,6 @@
 use cfg_if::cfg_if;
-use wasm_bindgen::prelude::*;
-use web_sys::console;
+// use wasm_bindgen::prelude::*;
+// use web_sys::console;
 
 pub fn rand_int(n: i32) -> i32 {
     (js_sys::Math::random() * n as f64) as i32

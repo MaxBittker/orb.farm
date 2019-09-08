@@ -67,8 +67,9 @@ void main() {
 
   } else if (type == 1) { // Glass
     hue = 0.1;
-    saturation = 0.1;
-    lightness = 0.5;
+    saturation = 0.2;
+    lightness = 1.0;
+    a = 0.4 + lightValue * 0.3;
   } else if (type == 2) { // Sand
     hue = 0.1;
     saturation = 0.4 + (age * 0.3);
@@ -179,7 +180,7 @@ void main() {
   lightness = min(lightness, 1.0);
   color = hsv2rgb(vec3(hue, saturation, lightness));
 
-  color += vec3(0.25, 0.25, 0.7) * (blueLightValue + lightSampleCell.b);
+  color += vec3(0.25, 0.25, 0.7) * 0.6 * (blueLightValue + lightSampleCell.b);
   a += blueLightValue + lightSampleCell.b;
   gl_FragColor = vec4(color, a);
 }

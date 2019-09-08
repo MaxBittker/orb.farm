@@ -512,7 +512,11 @@ void mainImage(out vec4 fragColor, in vec2 fragCoord) {
   float M = 1.0; // canvas.innerWidth/M //canvas.innerHeight/M --res
   vec2 sunPos = vec2(sin(-gameTime * PI2), cos(gameTime * PI2)) * 0.5;
   sunPos.x += AR * 0.5;
+  if (sunPos.y < 0.) {
+    sunPos.y = sunPos.y / 4.;
+  }
   sunPos.y += 0.5;
+
   // circle = vec2(sin(gameTime*PI2));
   vec2 uvMouse = sunPos;
   // / iResolution.xy);
