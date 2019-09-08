@@ -9,7 +9,7 @@ use WASTE;
 use std::cmp;
 // use std::mem;
 use wasm_bindgen::prelude::*;
-// use web_sys::console;
+use web_sys::console;
 
 #[wasm_bindgen]
 #[repr(u8)]
@@ -695,7 +695,7 @@ pub fn update_fish(cell: Cell, mut api: SandApi) {
 
     if age < FISH_PADDING {
         // kick
-        let (mut dx, mut dy) = (rand_dir_2(), 0);
+        let (dx, mut dy) = (rand_dir_2(), 0);
         let nbr = api.get(dx, dy);
         if nbr.species != Species::Water {
             dy = rand_dir_2();
@@ -720,7 +720,7 @@ pub fn update_fish(cell: Cell, mut api: SandApi) {
         }
         let nbr = api.get(dx, dy);
         //   api.use_oxygen()
-        if energy > 200 && once_in(500) && rem <= FISH_PADDING - 2 {
+        if energy > 200 && once_in(1000) && rem <= FISH_PADDING - 2 {
             rem += 1;
         }
         if nbr.species == Species::Water
@@ -822,7 +822,7 @@ pub fn update_plant(cell: Cell, mut api: SandApi) {
 
     // todo slow down and give max age
     if age > 200 {
-        if rand_int(5) == 1 {
+        if once_in(2) {
             api.set(0, 0, Cell::new(Species::Seed));
         } else {
             api.set(0, 0, Cell::new(Species::Waste));
@@ -832,12 +832,13 @@ pub fn update_plant(cell: Cell, mut api: SandApi) {
 
     let light = api.get_light().sun;
 
-    if energy > 110
+    if energy > 90
         && rand_int(light as i32) > 100
         && (api.get(dx, -1).species == Species::Water
             && api.get(0, -1).species == Species::Water
             && api.get(-dx, -1).species == Species::Water
             && api.get(dx * 2, -1).species == Species::Water
+            && api.get(-dx * 2, -1).species == Species::Water
             && api.use_co2())
     {
         // let i = rand_int(100);
@@ -846,7 +847,7 @@ pub fn update_plant(cell: Cell, mut api: SandApi) {
             -1,
             Cell {
                 energy: 10,
-                age: 0,
+                age: age.saturating_add(2),
                 ..cell
             },
         );
@@ -855,30 +856,56 @@ pub fn update_plant(cell: Cell, mut api: SandApi) {
         return;
     }
 
+    if once_in(200) {
+        api.use_co2();
+        api.set(
+            0,
+            0,
+            Cell {
+                age: age.saturating_add(1),
+                ..cell
+            },
+        );
+        return;
+    }
+
     let nbr = api.get(dx, dy);
 
-    if nbr.species == Species::Plant || nbr.species == Species::Sand && dy != 1 {
+    if nbr.species == Species::Plant || nbr.species == Species::Sand && dy != -1 {
         //diffuse nutrients
+        if nbr.energy.saturating_sub(5) < energy {
+            return;
+        }
+        let cappilary_action: u8 = (1 - dy) as u8 * 1; // how much to pull up
+                                                       // let reserve = cmp::min(nbr.energy, 20);
 
-        let cappilary_action: u8 = (dy + 1) as u8 * 1; // how much to move up
+        let available_nbr_energy = nbr.energy.saturating_sub(0);
 
-        let available_nbr_energy = nbr.energy.saturating_sub(8);
-        let delta = nbr.energy - available_nbr_energy;
+        let shared_energy = ((energy / 2) + (available_nbr_energy / 2)) / 2;
 
-        let shared_energy = (energy / 2) + (available_nbr_energy / 2);
+        let new_energy = ((energy / 2) + (shared_energy)).saturating_add(cappilary_action) as u8;
 
-        let new_energy =
-            ((energy / 2) + (shared_energy / 2)).saturating_add(cappilary_action) as u8;
+        let new_nbr_energy =
+            ((available_nbr_energy / 2) + (shared_energy)).saturating_sub(cappilary_action) as u8;
 
-        let new_nbr_energy = ((available_nbr_energy / 2) + (shared_energy / 2))
-            .saturating_sub(cappilary_action) as u8;
-        let conservation = (available_nbr_energy + energy) - (new_nbr_energy + new_energy);
+        let conservation =
+            (available_nbr_energy + energy).saturating_sub(new_nbr_energy + new_energy);
 
+        // if conservation > 10 {
+        //     let mut js: JsValue = conservation.into();
+        //     console::log_2(&"conservation: ".into(), &js);
+        //     js = shared_energy.into();
+        //     console::log_2(&"shared_energy: ".into(), &js);
+        //     js = new_energy.into();
+        //     console::log_2(&"new_energy: ".into(), &js);
+        //     js = available_nbr_energy.into();
+        //     console::log_2(&"available_nbr_energy: ".into(), &js);
+        // }
         api.set(
             dx,
             dy,
             Cell {
-                energy: new_nbr_energy.saturating_add(delta),
+                energy: new_nbr_energy,
                 ..nbr
             },
         );
@@ -890,97 +917,42 @@ pub fn update_plant(cell: Cell, mut api: SandApi) {
                 ..cell
             },
         );
-    } else if rand_int(100) == 1 {
-        api.use_co2();
-        api.set(
-            0,
-            0,
-            Cell {
-                age: age.saturating_add(1),
-
-                ..cell
-            },
-        );
+    } else {
     }
 }
 
 pub fn update_seed(cell: Cell, mut api: SandApi) {
-    let age = cell.age;
-    let energy = cell.energy;
+    // let age = cell.age;
+    // let energy = cell.energy;
 
-    let (dx, dy) = rand_vec();
+    // let (dx, dy) = rand_vec();
 
-    let nbr_species = api.get(dx, dy).species;
+    // let nbr_species = api.get(dx, dy).species;
 
-    if age == 0 {
-        //falling
+    // if age == 0 {
+    //falling
 
-        let dxf = rand_dir(); //falling dx
-        let nbr_species_below = api.get(dxf, 1).species;
-        if nbr_species_below == Species::Sand || nbr_species_below == Species::Plant {
-            api.set(
-                0,
-                0,
-                Cell {
-                    age: (rand_int(253) + 1) as u8,
-                    ..cell
-                },
-            );
-            return;
-        }
-
-        let nbr = api.get(0, 1);
-        if nbr.species == Species::Air {
-            api.set(0, 0, EMPTY_CELL);
-            api.set(0, 1, cell);
-        } else if api.get(dxf, 1).species == Species::Air {
-            api.set(0, 0, EMPTY_CELL);
-            api.set(dxf, 1, cell);
-        } else if nbr.species == Species::Water {
-            api.set(0, 0, nbr);
-            api.set(0, 1, cell);
-        } else {
-            api.set(0, 0, cell);
-        }
-    } else {
-        if energy > 60 {
-            //stem
-            let dxr = rand_dir(); //raising dx
-            if rand_int(100) > 75 {
-                if (api.get(dxr, -1).species == Species::Air
-                    || api.get(dxr, -1).species == Species::Sand
-                    || api.get(dxr, -1).species == Species::Seed)
-                    && api.get(1, -1).species != Species::Plant
-                    && api.get(-1, -1).species != Species::Plant
-                {
-                    api.set(
-                        dxr,
-                        -1,
-                        Cell {
-                            energy: (energy as i32 - rand_int(10)) as u8,
-                            ..cell
-                        },
-                    );
-                    api.set(
-                        0,
-                        0,
-                        Cell {
-                            species: Species::Plant,
-                            energy: 80 + (js_sys::Math::random() * 30.) as u8,
-                            age: 0,
-                            clock: 0,
-                        },
-                    )
-                } else {
-                    api.set(0, 0, Cell::new(Species::Water));
-                }
-            }
-        } else {
-            if nbr_species == Species::Water {
-                api.set(dx, dy, Cell::new(Species::Seed))
-            }
-        }
+    let dxf = rand_dir(); //falling dx
+    let nbr_species_below = api.get(dxf, 1).species;
+    if nbr_species_below == Species::Sand || nbr_species_below == Species::Plant {
+        api.set(0, 0, Cell::new(Species::Plant));
+        return;
     }
+
+    let nbr = api.get(0, 1);
+    if nbr.species == Species::Air {
+        api.set(0, 0, EMPTY_CELL);
+        api.set(0, 1, cell);
+    } else if api.get(dxf, 1).species == Species::Air {
+        api.set(0, 0, EMPTY_CELL);
+        api.set(dxf, 1, cell);
+    } else if nbr.species == Species::Water {
+        api.set(0, 0, nbr);
+        api.set(0, 1, cell);
+    } else {
+        api.set(0, 0, cell);
+    }
+    // }
 }
 
 pub fn update_bubble(cell: Cell, mut api: SandApi) {

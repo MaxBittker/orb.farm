@@ -10,8 +10,10 @@ import { snapshot, pallette } from "../render.js";
 import Menu from "./menu";
 let skiplist = ["FishTail", "Bubble", "Waste"];
 
-// skiplist.push("Plant");
-// skiplist.push("Nitrogen");
+skiplist.push("Plant");
+skiplist.push("Zoop");
+skiplist.push("Nitrogen");
+
 window.species = Species;
 let pallette_data = pallette();
 
@@ -57,11 +59,10 @@ class Index extends React.Component {
       size: 1,
       dataURL: {},
       currentSubmission: null,
-      selectedElement: Species.Water
+      selectedElement: Species.Sand
     };
     window.UI = this;
-
-    this.load();
+    // this.load();
   }
 
   componentDidUpdate(prevProps) {}
@@ -105,7 +106,8 @@ class Index extends React.Component {
     this.setState({ submissionMenuOpen: false });
   }
   upload() {
-    let dataURL = snapshot(universe);
+    console.log("saving");
+    // let dataURL = snapshot(universe);
     const cells = new Uint8Array(
       memory.buffer,
       universe.cells(),
@@ -132,85 +134,56 @@ class Index extends React.Component {
     context.putImageData(imgData, 0, 0);
 
     let cellData = canvas.toDataURL("image/png");
+    let dataString = JSON.stringify(cellData);
+    console.log(dataString.length);
+    try {
+      localStorage.setItem("cell_data", dataString);
+    } catch {
+      console.log("store failed");
+    }
 
-    this.pause();
-    this.setState({
-      data: { dataURL, cells: cellData },
-      submissionMenuOpen: true
-    });
+    // this.load();
   }
 
   load() {
-    let { location } = this.props;
-    let id = location.hash.replace(/#/, "");
-    if (id === "") {
+    console.log("loading");
+    var cellData = JSON.parse(localStorage.getItem("cell_data"));
+    if (!cellData) {
+      console.log("no save");
+      window.setInterval(this.upload, 1000 * 2);
+
       return;
     }
+    // console.log(cellData);
+    var canvas = document.createElement("canvas");
+    canvas.width = width;
+    canvas.height = height;
+    // console.log(width, height);
+    var ctx = canvas.getContext("2d");
+    var img = new Image();
+    img.src = cellData;
+    img.onload = () => {
+      // debugger;
+      ctx.drawImage(img, 0, 0);
+      var imgData = ctx.getImageData(0, 0, canvas.width, canvas.height);
 
-    if (this.state.currentSubmission && this.state.currentSubmission.id == id) {
-      return;
-    }
+      const cellsData = new Uint8Array(
+        memory.buffer,
+        universe.cells(),
+        width * height * 4
+      );
 
-    fetch(functions._url(`api/creations/${id}`), {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json"
+      reset();
+
+      for (var i = 0; i < width * height * 4; i++) {
+        cellsData[i] = imgData.data[i];
       }
-    })
-      .then(res => res.json())
-      .then(data => {
-        storage
-          .refFromURL(
-            `gs://sandtable-8d0f7.appspot.com/creations/${data.id}.data.png`
-          )
-          .getDownloadURL()
-          .then(dlurl => {
-            fetch(dlurl, {
-              method: "GET"
-            })
-              .then(res => res.blob())
-              .then(blob => {
-                // console.log(response);
-                this.setState({ currentSubmission: { id, data } });
+    };
+    window.setInterval(this.upload, 1000 * 2);
 
-                var url = URL.createObjectURL(blob);
-                var img = new Image();
-                img.src = url;
-                img.onload = () => {
-                  var canvas = document.createElement("canvas");
-                  canvas.width = width;
-                  canvas.height = height;
-                  var ctx = canvas.getContext("2d");
-                  ctx.drawImage(img, 0, 0);
-                  var imgData = ctx.getImageData(
-                    0,
-                    0,
-                    canvas.width,
-                    canvas.height
-                  );
-
-                  const cellsData = new Uint8Array(
-                    memory.buffer,
-                    universe.cells(),
-                    width * height * 4
-                  );
-
-                  reset();
-
-                  for (var i = 0; i < width * height * 4; i++) {
-                    cellsData[i] = imgData.data[i];
-                  }
-                  universe.flush_undos();
-                  universe.push_undo();
-                  this.pause();
-                };
-              })
-              .catch(error => console.error("Error:", error));
-          });
-      })
-      .catch(error => {
-        console.error("Error:", error);
-      });
+    // universe.flush_undos();
+    // universe.push_undo();
+    // this.pause();
   }
 
   render() {
@@ -248,6 +221,8 @@ class Index extends React.Component {
         </button>
 
         <button onClick={() => this.reset()}>Reset</button>
+        {/* <button onClick={() => this.upload()}>upload</button> */}
+        {/* <button onClick={() => this.load()}>load</button> */}
         <Link
           to={{
             pathname: "/info/",

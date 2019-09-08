@@ -5,7 +5,7 @@ pub fn rand_int(n: i32) -> i32 {
 }
 
 pub fn once_in(n: i32) -> bool {
-   rand_int(n) ==0
+    rand_int(n) == 0
 }
 // pub fn rand_int(n: u8) -> u8 {
 //     (js_sys::Math::random() * n as f64) as u8
@@ -47,40 +47,39 @@ pub fn rand_vec_up_3() -> (i32, i32) {
         _ => (0, -1),
     }
 }
-pub fn rand_vec_down_5() -> (i32, i32) {
-    let i = rand_int(20000);
-    match i % 6 {
-        0 => (1, 0),
-        1 => (1, 1),
-        3 => (0, 1),
-        4 => (-1, 1),
-        _ => (-1, 0),
-    }
-}
+// pub fn rand_vec_down_5() -> (i32, i32) {
+//     let i = rand_int(20000);
+//     match i % 6 {
+//         0 => (1, 0),
+//         1 => (1, 1),
+//         3 => (0, 1),
+//         4 => (-1, 1),
+//         _ => (-1, 0),
+//     }
+// }
 
+// pub fn rand_vec_up_5() -> (i32, i32) {
+//     let i = rand_int(20000);
+//     match i % 6 {
+//         0 => (1, 0),
+//         1 => (1, -1),
+//         3 => (0, -1),
+//         4 => (-1, -1),
+//         _ => (-1, 0),
+//     }
+// }
 
-pub fn rand_vec_up_5() -> (i32, i32) {
-    let i = rand_int(20000);
-    match i % 6 {
-        0 => (1, 0),
-        1 => (1, -1),
-        3 => (0, -1),
-        4 => (-1, -1),
-        _ => (-1, 0),
-    }
-}
-
-pub fn rand_vec_horizontal_6() -> (i32, i32) {
-    let i = rand_int(20000);
-    match i % 6 {
-        0 => (1, 1),
-        1 => (1, 0),
-        2 => (1, -1),
-        3 => (-1, -1),
-        4 => (-1, 0),
-        _ => (-1, 1),
-    }
-}
+// pub fn rand_vec_horizontal_6() -> (i32, i32) {
+//     let i = rand_int(20000);
+//     match i % 6 {
+//         0 => (1, 1),
+//         1 => (1, 0),
+//         2 => (1, -1),
+//         3 => (-1, -1),
+//         4 => (-1, 0),
+//         _ => (-1, 1),
+//     }
+// }
 pub fn rand_vec_8() -> (i32, i32) {
     let i = rand_int(20000);
     match i % 8 {

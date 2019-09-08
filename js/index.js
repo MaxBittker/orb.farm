@@ -18,21 +18,21 @@ universe.paint(h, h, d + 2, Species.Glass);
 universe.paint(h - 30, d - 3, 20, Species.Wood);
 universe.paint(h + 30, d - 3, 20, Species.Wood);
 universe.paint(h, h, d - 2, Species.Air);
-for (var x = 30; x < d - 30; x += 10) {
-  universe.paint(x, h * 1.2, h, Species.Water);
-}
+// for (var x = 30; x < d - 30; x += 10) {
+// universe.paint(x, h * 1.2, h, Species.Water);
+// }
 
-for (var x = 0; x < d; x += 10) {
-  universe.paint(x, n - 50, 40, Species.Sand);
-}
-universe.paint(h, h, h * 0.9, Species.Water);
+// for (var x = 0; x < d; x += 10) {
+// universe.paint(x, n - 50, 40, Species.Sand);
+// }
+// universe.paint(h, h, h * 0.9, Species.Water);
 
-universe.paint(h, h, 2, Species.Zoop);
-universe.paint(h + 20, h, 2, Species.Fish);
-universe.paint(h, h * 1.2, 2, Species.Bacteria);
-universe.paint(h * 1.5, h * 1.2, 2, Species.Seed);
+// universe.paint(h, h, 2, Species.Zoop);
+// universe.paint(h + 20, h, 2, Species.Fish);
+// universe.paint(h, h * 1.2, 2, Species.Bacteria);
+// universe.paint(h * 1.5, h * 1.2, 2, Species.Seed);
 
-universe.paint(h, h, 10, Species.Algae);
+// universe.paint(h, h, 10, Species.Algae);
 
 // universe.paint(150, 50, 25, Species.Seed);
 let ratio = 2;
@@ -108,7 +108,7 @@ const renderLoop = () => {
       t += 1;
 
       if (dayTime > 70 && dayTime < 170) {
-        t += 4;
+        t += 10;
       }
     }
     universe.set_time(dayTime);
@@ -127,10 +127,14 @@ const renderLoop = () => {
   window.animWebationId = requestAnimationFrame(renderLoop);
 };
 function reset() {
+  console.log("reseting");
+  localStorage.setItem("cell_data", null);
   universe.reset();
 }
 window.u = universe;
 window.universe = universe;
 renderLoop();
 
+window.UI.load();
+// debugger;
 export { canvas, width, height, ratio, universe, reset };

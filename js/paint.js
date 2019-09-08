@@ -34,6 +34,7 @@ let repeat = null;
 canvas.addEventListener("mousedown", event => {
   event.preventDefault();
   universe.push_undo();
+
   painting = true;
   clearInterval(repeat);
   repeat = window.setInterval(() => paint(event), 100);
@@ -62,6 +63,7 @@ canvas.addEventListener("mouseleave", event => {
 
 canvas.addEventListener("touchstart", event => {
   universe.push_undo();
+
   if (event.cancelable) {
     event.preventDefault();
   }

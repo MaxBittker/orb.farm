@@ -267,7 +267,7 @@ impl Universe {
     pub fn paint(&mut self, x: i32, y: i32, size: i32, species: Species) {
         let mut radius = size / 2;
 
-        if species == Species::Fish || species == Species::Zoop|| species== Species::Bacteria {
+        if species == Species::Fish || species == Species::Zoop || species == Species::Bacteria {
             radius = 1;
         }
         for dx in -radius..radius {
@@ -356,9 +356,9 @@ impl Universe {
         (x + (y * self.width)) as usize
     }
     fn get_max_index(&self) -> usize {
-        let mW = (self.width - 1) as usize;
-        let mH = self.height - 1;
-        return ((mW + (mH * self.width) as usize) as usize);
+        let m_w = (self.width - 1) as usize;
+        let m_h = self.height - 1;
+        return (m_w + (m_h * self.width) as usize) as usize;
     }
 
     fn get_cell(&self, x: i32, y: i32) -> Cell {

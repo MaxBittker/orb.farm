@@ -27,7 +27,7 @@ void main() {
 
   vec2 textCoord = (uv * vec2(0.5, -0.5)) + vec2(0.5);
   vec2 sampleCoord =
-      (uv * vec2(0.5, -0.5)) + vec2(0.5) + vec2(noise, 0.0) / resolution;
+      (uv * vec2(0.5, -0.5)) + vec2(0.5) + vec2(noise, 0.0) / (resolution/dpi);
   // vec3 bb = texture2D(backBuffer, (uv * 0.5) + vec2(0.5)).rgb;
 
   vec4 data = texture2D(data, textCoord);
@@ -62,8 +62,8 @@ void main() {
     lightness = 0.5;
   } else if (type == 2) { // Sand
     hue = 0.1;
-    saturation = 0.4 + (age * 0.2);
-    lightness = 1.3 - energy;
+    saturation = 0.4 + (age * 0.3);
+    lightness = 1.3 - energy*1.2;
 
   } else if (type == 3) { // Water
     hue = 0.58;
@@ -79,6 +79,9 @@ void main() {
     saturation = 0.5 - (energy * .1);
   } else if (type == 5) { // Plant
     hue = 0.4;
+    if(energy> 110./255.){
+      hue = 0.45;
+    }
     lightness = 0.3 + (1.0 - energy) * 0.5;
 
     saturation = 0.4;
@@ -92,7 +95,7 @@ void main() {
     hue = 0.14;
     saturation += 0.2;
     lightness += 0.2;
-    a = 0.8;
+    a = 0.5;
 
   } else if (type == 9) { // ???
     hue = 0.6;
