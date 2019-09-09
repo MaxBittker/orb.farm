@@ -98,7 +98,7 @@ button {
   padding: 1px 5px;
   background-color: whitesmoke;
   color: black;
-  border: 2px solid whitesmoke;
+  border: 3px ridge whitesmoke;
   border-color: gainsboro;
   flex-grow: 1;
   max-width: 100px;
@@ -123,6 +123,7 @@ button.selected {
   background-color: black;
   color: whitesmoke;
   border-color: grey;
+  border-style: inset;
   fill: whitesmoke;
   /* font-weight: bold; */
   text-shadow: 1.6px 1.5px 0 grey, -1px -1px 0 grey, 1px -1px 0 grey,
@@ -138,8 +139,8 @@ button.selected {
 #ui {
   position: relative;
 
-  /* display: flex; */
-  /* flex-wrap: wrap; */
+  display: flex;
+  flex-wrap: wrap;
 
   /* float: right; */
   z-index: 3;
