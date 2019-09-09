@@ -25,21 +25,13 @@ snail
 Fishs
 mites
 
-
-
-
-lights
-co2 graph 
-plant 
-fish
+plant
 ui
 sand
 element images + description
 color grade
 night light?
-localstorage
 intro text / copy
 non-circlular tank
 prizes/ tchotchkeys
 punnet square recessive genes red shrimp
-
