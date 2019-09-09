@@ -86,7 +86,7 @@ void main() {
     saturation = 0.5 - (energy * .1);
   } else if (type == 5) { // Plant
     hue = 0.4;
-    if (energy > 110. / 255.) {
+    if (energy > 20. / 255.) {
       hue = 0.45;
     }
     lightness = 0.3 + (1.0 - energy) * 0.5;
@@ -129,9 +129,9 @@ void main() {
     a = 0.8;
 
   } else if (type == 15) { // Tail
-    hue += fract(age * 2. * 255. / 8.) * 0.2;
+    hue += fract(age * 1.9 * 255. / 8.) * 0.2;
     lightness += 0.4;
-    saturation -= (fract(age * 2. * 255. / 8.) - 0.1) * 0.9;
+    saturation -= (fract(age * 1.9 * 255. / 8.) - 0.1) * 0.7;
 
     // saturation += fract(age * 255.*6.);
   } else if (type == 16) {

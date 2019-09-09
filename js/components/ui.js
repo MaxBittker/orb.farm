@@ -17,6 +17,35 @@ skiplist.push("Nitrogen");
 window.species = Species;
 let pallette_data = pallette();
 
+function randomRadius() {
+  return 0 + Math.random() * Math.random() * 12;
+}
+function organicRadius() {
+  return `
+  ${randomRadius()}px
+  ${randomRadius()}px
+  ${randomRadius()}px
+  ${randomRadius()}px
+  /
+  ${randomRadius()}px
+  ${randomRadius()}px
+  ${randomRadius()}px
+  ${randomRadius()}px
+  `;
+}
+const OrganicButton = ({ onClick, className, children }) => {
+  return (
+    <button
+      onClick={onClick}
+      className={className}
+      style={{
+        borderRadius: organicRadius()
+      }}
+    >
+      {children}
+    </button>
+  );
+};
 const ElementButton = (name, selectedElement, setElement) => {
   let elementID = Species[name];
 
@@ -24,7 +53,6 @@ const ElementButton = (name, selectedElement, setElement) => {
   let selected = elementID == selectedElement;
 
   let background = "inherit";
-
   return (
     <button
       className={selected ? "selected" : ""}
@@ -35,6 +63,7 @@ const ElementButton = (name, selectedElement, setElement) => {
       style={{
         background,
         backgroundColor: color,
+        borderRadius: organicRadius(),
         filter: selected || `saturate(0.5) `
       }}
     >
@@ -193,7 +222,7 @@ class Index extends React.Component {
         : "";
     return (
       <React.Fragment>
-        <button
+        <OrganicButton
           onClick={() => this.togglePause()}
           className={paused ? "selected" : ""}
         >
@@ -207,9 +236,9 @@ class Index extends React.Component {
               <polygon id="bar1" points="190,0 300,0 300,300 190,300" />
             </svg>
           )}
-        </button>
+        </OrganicButton>
 
-        <button
+        <OrganicButton
           onClick={() => this.toggleFF()}
           className={ff ? "selected" : ""}
         >
@@ -217,9 +246,9 @@ class Index extends React.Component {
             <polygon id="play" points="0,50 , 150,150 0,250" />
             <polygon id="play" points="150,50, 300,150 150,250" />
           </svg>
-        </button>
+        </OrganicButton>
 
-        <button onClick={() => this.reset()}>Reset</button>
+        <OrganicButton onClick={() => this.reset()}>Reset</OrganicButton>
         {/* <button onClick={() => this.upload()}>upload</button> */}
         {/* <button onClick={() => this.load()}>load</button> */}
         <Link
@@ -228,7 +257,7 @@ class Index extends React.Component {
             hash
           }}
         >
-          <button>Info</button>
+          <OrganicButton>Info</OrganicButton>
         </Link>
 
         {/* {paused && <button onClick={() => universe.tick()}>Tick</button>} */}
@@ -253,7 +282,7 @@ class Index extends React.Component {
             </button>
           ))}
         </span> */}
-        <button
+        <OrganicButton
           onClick={() => {
             reset();
             universe.pop_undo();
@@ -261,7 +290,7 @@ class Index extends React.Component {
           style={{ fontSize: 35 }}
         >
           ↜
-        </button>
+        </OrganicButton>
         {Object.keys(Species)
           .filter(name => !skiplist.includes(name))
           .map(n =>

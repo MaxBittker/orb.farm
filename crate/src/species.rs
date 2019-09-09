@@ -922,7 +922,6 @@ pub fn update_plant(cell: Cell, mut api: SandApi) {
                 ..cell
             },
         );
-    } else {
     }
 }
 

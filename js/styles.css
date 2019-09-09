@@ -92,20 +92,20 @@ img {
 button {
   z-index: 3;
   position: relative;
-  height: 30px;
+  height: 35px;
   min-width: 30px;
   font-size: 19px;
   padding: 1px 5px;
   background-color: whitesmoke;
   color: black;
-  border: 2px solid whitesmoke;
+  border: 3px ridge whitesmoke;
   border-color: gainsboro;
   flex-grow: 1;
-  max-width: 150px;
+  max-width: 100px;
   fill: black;
   line-height: 0px;
   cursor: pointer;
-  border-radius: 25px;
+  /* border-radius: 30px 10px 20px 20px / 30px 20px 10px 15px; */
 }
 .active button {
   background-color: gainsboro;
@@ -123,6 +123,7 @@ button.selected {
   background-color: black;
   color: whitesmoke;
   border-color: grey;
+  border-style: inset;
   fill: whitesmoke;
   /* font-weight: bold; */
   text-shadow: 1.6px 1.5px 0 grey, -1px -1px 0 grey, 1px -1px 0 grey,
@@ -140,7 +141,8 @@ button.selected {
 
   display: flex;
   flex-wrap: wrap;
-  float: right;
+
+  /* float: right; */
   z-index: 3;
 }
 .fade {
