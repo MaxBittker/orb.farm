@@ -20,16 +20,13 @@ varying vec2 uv;
 void main() {
   vec3 color;
   vec2 grid = floor(uv * (resolution / dpi));
-  //   float r = abs(sin(t / 25.));
-  //   if (length(uv) < r && length(uv) > r - 0.1) {
-  // color = hsv2rgb(vec3(sin(t * 0.01), 0.5, 0.5));
+
   float noise = snoise3(vec3(grid, t * 0.05));
-  vec2 noise_2d = vec2(noise, snoise3(vec3(grid, (t + 20.) * 0.05)));
+  vec2 noise_2d = vec2(floor(0.5 + noise),
+                       floor(0.5 + snoise3(vec3(grid, (t + 20.) * 0.05))));
 
   vec2 textCoord = (uv * vec2(0.5, -0.5)) + vec2(0.5);
-  vec2 sampleCoord = textCoord + (noise_2d / (resolution));
-  // vec3 bb = texture2D(backBuffer, (uv * 0.5) +
-  // vec2(0.5)).rgb;
+  vec2 sampleCoord = textCoord + (noise_2d / (resolution / 2.));
 
   vec4 data = texture2D(dataTexture, textCoord);
   // vec4 dataSample = texture2D(dataTexture, sampleCoord);
@@ -132,9 +129,9 @@ void main() {
     a = 0.8;
 
   } else if (type == 15) { // Tail
-    hue += fract(age * 255. * 1.2) * 0.2;
+    hue += fract(age * 2. * 255. / 8.) * 0.2;
     lightness += 0.4;
-    saturation -= fract(age * 255. * 0.7) * 0.8;
+    saturation -= (fract(age * 2. * 255. / 8.) - 0.1) * 0.9;
 
     // saturation += fract(age * 255.*6.);
   } else if (type == 16) {
