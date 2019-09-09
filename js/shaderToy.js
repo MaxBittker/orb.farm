@@ -108,11 +108,13 @@ class WebGL {
           "vec4 textureLod(  sampler2D   s, vec2 c, float b)          { return texture2DLodEXT(s,c,b); }\n";
         fragmentShader +=
           "vec4 textureGrad( sampler2D   s, vec2 c, vec2 dx, vec2 dy) { return texture2DGradEXT(s,c,dx,dy); }\n";
+      } else {
+        fsh = fsh.replace("textureLod", "texture");
       }
     }
 
     fragmentShader += fsh;
-    console.log(fragmentShader);
+    // console.log(fragmentShader);
     this.shader = WebGL.linkShader(this.gl, vertexShader, fragmentShader);
     this.shader.vertexAttribute = this.gl.getAttribLocation(
       this.shader,
@@ -320,12 +322,10 @@ class WebGL {
     return 0.001 * new Date().getTime();
   }
   static showLog(gl, shader) {
-    console.log(shader);
     var compilationLog = gl.getShaderInfoLog(shader);
     console.log("ERROR: " + compilationLog);
   }
   static showLogProgram(gl, program) {
-    console.log(program);
     var compilationLog = gl.getProgramInfoLog(program);
     console.log("ERROR: " + compilationLog);
   }

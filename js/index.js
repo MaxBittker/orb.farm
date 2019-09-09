@@ -89,7 +89,16 @@ window.addEventListener("resize", resize);
 
 let drawSand = startWebGL({ canvas, universe });
 let sky_ratio = canvasSize / n;
-let sky = startSky(sky_ratio * 2);
+
+let sky;
+try {
+  sky = startSky(sky_ratio * 2);
+} catch (e) {
+  console.error("skys haunted");
+  sky = {
+    frame: () => {}
+  };
+}
 let plotcanvas = document.getElementById("plot-canvas");
 let { drawPlot, recordDataPoint } = startPlotter({
   canvas: plotcanvas,
