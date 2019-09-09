@@ -38,15 +38,6 @@ body,
   display: flex;
   width: 100%;
 }
-#table {
-  position: absolute;
-  background-color: #866414;
-  left: -20px;
-  width: 200vw;
-  height: 300px;
-  /* background-image: url("https://northernlogsupply.com/wp-content/uploads/2017/02/weathered-barn-red.jpg"); */
-  filter: contrast(0.2);
-}
 
 #jar {
   line-height: 0px;
@@ -78,7 +69,6 @@ canvas {
   height: 100%;
   margin: 0;
   filter: grayscale(20%);
-  /* image-rendering: pixelated; */
 }
 #plot-canvas {
   pointer-events: none;
