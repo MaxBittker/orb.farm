@@ -142,6 +142,7 @@ const renderLoop = () => {
 function reset() {
   console.log("reseting");
   localStorage.setItem("cell_data", null);
+  localStorage.setItem("o2", universe.total_gas() / 2);
   universe.reset();
   drawBowl();
 }

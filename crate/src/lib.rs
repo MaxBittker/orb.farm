@@ -269,20 +269,7 @@ impl Universe {
     }
 
     pub fn paint(&mut self, x: i32, y: i32, size: i32, species: Species) {
-        let mut size = size;
-
-        if species == Species::Water {
-            size = 13;
-        }
-
-        if species == Species::Fish
-            || species == Species::Daphnia
-            || species == Species::Bacteria
-            || species == Species::Seed
-            || species == Species::Algae
-        {
-            size = 2;
-        }
+        let size = size;
         let radius = size / 2;
 
         for dx in -radius..radius {
@@ -300,6 +287,8 @@ impl Universe {
                 }
                 if self.get_cell(px, py).species == Species::Water
                     || self.get_cell(px, py).species == Species::Air
+                    || ((species == Species::Stone || species == Species::Wood)
+                        && self.get_cell(px, py).species == Species::Sand)
                     || species == Species::Air
                 {
                     self.cells[i] = Cell {
@@ -333,6 +322,10 @@ impl Universe {
     }
     pub fn set_time(&mut self, t: u8) {
         self.time = t;
+    }
+    pub fn set_o2(&mut self, v: u32) {
+        self.o2 = v;
+        self.co2 = self.total_gas - v;
     }
     pub fn inc_time(&mut self) {
         self.time = self.time.wrapping_add(1);

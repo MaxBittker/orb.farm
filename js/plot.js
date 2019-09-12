@@ -71,7 +71,7 @@ let startPlotter = ({ canvas, universe }) => {
         viewportWidth,
         viewportHeight
       ],
-      dpi: window.devicePixelRatio * 2
+      dpi: 4
     },
 
     vert: vsh,

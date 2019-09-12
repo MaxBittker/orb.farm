@@ -101,7 +101,11 @@ function smoothPaint(event) {
   let size = sizeMap[window.UI.state.size];
   let i = 0;
   paint(startEvent);
-  if (lastPaint) {
+  if (
+    lastPaint &&
+    window.UI.state.selectedElement != species.Fish &&
+    window.UI.state.selectedElement != species.GoldFish
+  ) {
     while (eventDistance(startEvent, lastPaint) > size / 3) {
       let d = eventDistance(startEvent, lastPaint);
       startEvent = add(
@@ -127,6 +131,18 @@ const handleTouches = event => {
   }
 };
 
+let speciesSizes = {
+  [species.Water]: 13,
+  [species.Sand]: 7,
+
+  [species.Algae]: 2,
+  [species.Fish]: 2,
+  [species.Daphnia]: 2,
+  [species.Zoop]: 2,
+  [species.Seed]: 2,
+  [species.Bacteria]: 2
+};
+
 const paint = event => {
   if (!painting) {
     return;
@@ -147,11 +163,10 @@ const paint = event => {
 
   const x = Math.min(Math.floor(canvasLeft), width - 1);
   const y = Math.min(Math.floor(canvasTop), height - 1);
+
   if (window.UI.state.selectedElement < 0) return;
-  universe.paint(
-    x,
-    y,
-    sizeMap[window.UI.state.size],
-    window.UI.state.selectedElement
-  );
+
+  let size = sizeMap[window.UI.state.size];
+  size = speciesSizes[window.UI.state.selectedElement] || size;
+  universe.paint(x, y, size, window.UI.state.selectedElement);
 };

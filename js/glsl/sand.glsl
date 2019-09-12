@@ -86,12 +86,16 @@ void main() {
     saturation = 0.5 - (energy * .1);
   } else if (type == 5) { // Plant
     hue = 0.4;
-    if (energy > 20. / 255.) {
-      hue = 0.45;
-    }
-    lightness = 0.3 + (1.0 - energy) * 0.5;
-
     saturation = 0.4;
+
+    if (energy > 45. / 255.) {
+      hue = 0.48;
+    }
+    if (age == 0.) {
+      // saturation = 0.9;
+    }
+    lightness = 0.2 + (1.0 - energy) * 0.4;
+
   } else if (type == 6) { // Zoop
     hue = 0.9;
     lightness += 0.7;
@@ -134,7 +138,7 @@ void main() {
     saturation -= (fract(age * 1.9 * 255. / 8.) - 0.1) * 0.7;
 
     // saturation += fract(age * 255.*6.);
-  } else if (type == 16) {
+  } else if (type == 16) { // bubble
 
     hue = 0.0;
     saturation = 0.1;
@@ -145,8 +149,25 @@ void main() {
       lightness = 1.01;
       a = 1.0;
     }
+  } else if (type == 17) { // biofilm
+    hue = 0.48;
+    saturation = 0.6;
+    lightness = 0.5 + energy * 0.25 + noise * 0.1;
+    a = 0.4;
+    if (isSnapshot) {
+      a = 1.0;
+    }
+  } else if (type == 18) { // goldfish
+    hue = 0.1;
+    lightness += 0.4;
+    saturation = 0.7;
+  } else if (type == 19) { // goldfishtail
+    hue = 0.1;
+    hue += fract(age * 1.9 * 255. / 9.) * 0.1;
+    lightness += 0.8;
+    saturation = 0.8;
+    saturation -= (fract(age * 1.9 * 255. / 7.) - 0.1) * 0.6;
   }
-  //  else if (type == 15) { // mite
 
   // } else if (type == 16) { // oil
   //   hue = (data.g * 5.0) + t * .008;

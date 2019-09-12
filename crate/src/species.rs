@@ -36,11 +36,14 @@ pub enum Species {
 
     Fish = 7,
     FishTail = 15,
+    GoldFish = 18,
+    GoldFishTail = 19,
 
     Nitrogen = 9,
 
     Waste = 10,
     Bubble = 16,
+    Biofilm = 17,
 }
 
 impl Species {
@@ -62,10 +65,13 @@ impl Species {
             Species::Algae => update_algae(cell, api),
 
             Species::Fish => update_fish(cell, api),
+            Species::GoldFish => update_fish(cell, api),
             Species::FishTail => update_fishtail(cell, api),
+            Species::GoldFishTail => update_fishtail(cell, api),
             Species::Plant => update_plant(cell, api),
             Species::Seed => update_seed(cell, api),
             Species::Bubble => update_bubble(cell, api),
+            Species::Biofilm => {}
         }
     }
     pub fn blocked_light(&self) -> f32 {
@@ -73,10 +79,13 @@ impl Species {
             - match self {
                 Species::Water => 1.0,
                 Species::Fish => 25.0,
+                Species::GoldFish => 25.0,
                 Species::FishTail => 25.0,
+                Species::GoldFishTail => 25.0,
 
                 Species::Plant => 20.0,
                 Species::Seed => 35.0,
+                Species::Biofilm => 3.0,
 
                 Species::Algae => 20.0,
                 Species::Bacteria => 10.0,
@@ -120,7 +129,7 @@ pub fn update_fishtail(cell: Cell, mut api: SandApi) {
             //dead
             Species::Waste
         } else {
-            Species::FishTail
+            cell.species
         };
         if energy == 1 {
             //fin
@@ -420,11 +429,13 @@ pub fn update_algae(cell: Cell, mut api: SandApi) {
     if split_energy == 0 {
         api.set(0, 0, nbr);
     }
-    let mut photosynth: u8 = api.get_light().sun.saturating_sub(30) / 4;
+    let mut photosynth: u8 = api.get_light().sun.saturating_sub(30) / 5;
     if photosynth > 0 && !api.use_co2() {
         photosynth = 0; //need co2
     }
-
+    if photosynth == 0 && once_in(3) && api.use_co2() {
+        photosynth = 1;
+    }
     api.set(
         dx,
         dy,
@@ -455,7 +466,10 @@ pub fn update_zoop(cell: Cell, mut api: SandApi) {
     let (sx, sy) = rand_vec_8();
     let sample = api.get(sx, sy);
     api.use_oxygen();
-    if sample.species == Species::Algae || sample.species == Species::Daphnia {
+    if sample.species == Species::Algae
+        || sample.species == Species::Daphnia
+        || sample.species == Species::Biofilm
+    {
         api.set(
             0,
             0,
@@ -619,7 +633,7 @@ pub fn update_daphnia(cell: Cell, mut api: SandApi) {
         api.set(0, 0, dnbr);
         api.set(dx * dy, dy, cell);
     } else {
-        if !api.can_use_oxygen() || api.get_light().sun > 20 {
+        if !api.can_use_oxygen() || api.get_light().sun > 20 || rand_int(10) > 5 {
             //gestate
             return;
         }
@@ -655,9 +669,9 @@ pub fn update_fish(cell: Cell, mut api: SandApi) {
     let energy = cell.energy;
     let (sx, sy) = rand_vec_8();
     let sample = api.get(sx, sy);
-    // api.use_oxygen();
+    api.use_oxygen();
     // Eat
-    if sample.species == Species::Zoop || (rand_int(100) == 1 && sample.species == Species::Plant) {
+    if sample.species == Species::Zoop || sample.species == Species::Biofilm {
         api.set(
             0,
             0,
@@ -668,14 +682,26 @@ pub fn update_fish(cell: Cell, mut api: SandApi) {
         );
         api.set(sx, sy, Cell::new(Species::Water));
         //reproduce
-        if energy > 250 && api.use_oxygen() && rand_int(200) == 2 {
+        let (_, _, rem) = split_dx_dy(cell.age - FISH_PADDING);
+
+        if energy > 250
+            && rem > 5
+            && once_in(90)
+            && api.use_oxygen()
+            && api.use_oxygen()
+            && api.use_oxygen()
+            && api.use_oxygen()
+            && api.use_oxygen()
+            && api.use_oxygen()
+            && api.use_oxygen()
+        {
             let new_energy = energy / 4;
             api.set(
                 sx,
                 sy,
                 Cell {
-                    species: Species::Fish,
-                    energy: new_energy * 3,
+                    species: cell.species,
+                    energy: new_energy * 2,
                     age: 0,
                     ..cell
                 },
@@ -686,6 +712,7 @@ pub fn update_fish(cell: Cell, mut api: SandApi) {
                 0,
                 Cell {
                     energy: new_energy,
+                    age: age.saturating_sub(1),
                     ..cell
                 },
             );
@@ -693,8 +720,33 @@ pub fn update_fish(cell: Cell, mut api: SandApi) {
         return;
     }
 
-    if energy == 0 {
+    //die
+    if energy == 0
+        || !(api.use_oxygen()
+            || api.can_use_oxygen()
+            || api.can_use_oxygen()
+            || api.can_use_oxygen()
+            || api.can_use_oxygen()
+            || api.can_use_oxygen()
+            || api.can_use_oxygen()
+            || api.can_use_oxygen()
+            || api.can_use_oxygen()
+            || api.can_use_oxygen()
+            || api.can_use_oxygen())
+    {
         api.set(0, 0, WASTE);
+        if api.get(-1, 1).species == Species::Water {
+            api.set(-1, 1, WASTE);
+        };
+        if api.get(-1, -1).species == Species::Water {
+            api.set(-1, -1, WASTE);
+        };
+        if api.get(1, -1).species == Species::Water {
+            api.set(1, -1, WASTE);
+        };
+        if api.get(1, 1).species == Species::Water {
+            api.set(1, 1, WASTE);
+        };
         return;
     }
 
@@ -725,20 +777,25 @@ pub fn update_fish(cell: Cell, mut api: SandApi) {
         }
         let nbr = api.get(dx, dy);
         //   api.use_oxygen()
-        if energy > 200 && once_in(1000) && rem <= FISH_PADDING - 2 {
+        if energy > 200 && once_in(20000) && rem <= FISH_PADDING - 2 {
             rem += 1;
         }
         if nbr.species == Species::Water
         // || nbr.species == Species::FishTail
-        || (nbr.species == Species::Algae && once_in(2))
+        || (nbr.species == Species::Algae && once_in(5))
         // && (api.use_oxygen())
         {
             let fish_length = 1 + rem;
+            let tail_species = if cell.species == Species::Fish {
+                Species::FishTail
+            } else {
+                Species::GoldFishTail
+            };
             api.set(
                 0,
                 0,
                 Cell {
-                    species: Species::FishTail,
+                    species: tail_species,
                     energy: 1,
                     age: fish_length,
                     clock: cell.clock,
@@ -749,7 +806,7 @@ pub fn update_fish(cell: Cell, mut api: SandApi) {
                     0,
                     1,
                     Cell {
-                        species: Species::FishTail,
+                        species: tail_species,
                         energy: 0,
                         age: fish_length.saturating_sub(1),
                         clock: cell.clock,
@@ -765,7 +822,7 @@ pub fn update_fish(cell: Cell, mut api: SandApi) {
                     0,
                     -1,
                     Cell {
-                        species: Species::FishTail,
+                        species: tail_species,
                         energy: 0,
                         age: fish_length.saturating_sub(2),
                         clock: cell.clock,
@@ -825,53 +882,66 @@ pub fn update_plant(cell: Cell, mut api: SandApi) {
     let energy = cell.energy;
     let age = cell.age;
 
-    // todo slow down and give max age
-    if age > 200 {
-        if once_in(2) {
-            api.set(0, 0, Cell::new(Species::Seed));
-        } else {
-            api.set(0, 0, Cell::new(Species::Waste));
-        }
-        return;
-    }
+    // if age > 250 {
+    //     if once_in(3) {
+    //         api.set(0, 0, Cell::new(Species::Seed));
+    //     } else {
+    //         api.set(0, 0, Cell::new(Species::Waste));
+    //     }
+    //     return;
+    // }
 
     let light = api.get_light().sun;
 
-    if energy > 80
-        && rand_int(light as i32) > 70
+    if energy > 35
+        && age == 0
+        && rand_int(light as i32) > 50
         && (api.get(dx, -1).species == Species::Water
-            && api.get(0, -1).species == Species::Water
-            && api.get(-dx, -1).species == Species::Water
-            && api.get(dx * 2, -1).species == Species::Water
-            && api.get(-dx * 2, -1).species == Species::Water
-            && api.use_co2())
+        || api.get(dx, -1).species == Species::Biofilm)
+        && (api.get(dx, -2).species == Species::Water||
+        api.get(dx, -2).species == Species::Biofilm)
+            // &&  (api.get(dx-1, -1).species == Species::Water
+// || api.get(dx+1, -1).species == Species::Water)
+            && api.use_co2()
     {
-        // let i = rand_int(100);
         api.set(
             dx,
             -1,
             Cell {
                 energy: 10,
-                age: age.saturating_add(2),
+                age: 0,
+                // age.saturating_add(2),
                 ..cell
             },
         );
-        api.set(0, 0, Cell { energy: 10, ..cell });
-        // api.set(-dx, dy, EMPTY_CELL);
-        return;
-    }
-
-    if once_in(200) {
-        api.use_co2();
         api.set(
             0,
             0,
             Cell {
-                age: age.saturating_add(1),
+                energy: 10,
+                age: age.saturating_add(rand_int(10) as u8),
+                ..cell
+            },
+        );
+        // api.set(-dx, dy, EMPTY_CELL);
+        return;
+    }
+    if energy > 35 && rand_int(light as i32) > 50 && api.get(dx, dy).species == Species::Water {
+        api.set(dx, dy, Cell::new(Species::Biofilm));
+        api.set(
+            0,
+            0,
+            Cell {
+                energy: energy.saturating_sub(5),
                 ..cell
             },
         );
         return;
+    }
+    let mut newage = age;
+    if age > 0 && once_in(cell.energy as i32) {
+        api.use_co2();
+        newage = age.saturating_add(1);
     }
 
     let nbr = api.get(dx, dy);
@@ -881,17 +951,17 @@ pub fn update_plant(cell: Cell, mut api: SandApi) {
         if nbr.energy.saturating_sub(5) < energy {
             return;
         }
-        let cappilary_action: u8 = (1 - dy) as u8 * 1; // how much to pull up
+        let cappilary_action: u8 = (1 - dy) as u8 * 2; // how much to pull up
                                                        // let reserve = cmp::min(nbr.energy, 20);
 
         let available_nbr_energy = nbr.energy.saturating_sub(0);
 
         let shared_energy = ((energy / 2) + (available_nbr_energy / 2)) / 2;
 
-        let new_energy = ((energy / 2) + (shared_energy)).saturating_add(cappilary_action) as u8;
+        let new_energy = ((energy / 2) + (shared_energy)).saturating_sub(cappilary_action) as u8;
 
         let new_nbr_energy =
-            ((available_nbr_energy / 2) + (shared_energy)).saturating_sub(cappilary_action) as u8;
+            ((available_nbr_energy / 2) + (shared_energy)).saturating_add(cappilary_action) as u8;
 
         let conservation =
             (available_nbr_energy + energy).saturating_sub(new_nbr_energy + new_energy);
@@ -919,6 +989,16 @@ pub fn update_plant(cell: Cell, mut api: SandApi) {
             0,
             Cell {
                 energy: new_energy.saturating_add(conservation),
+                age: newage,
+                ..cell
+            },
+        );
+    } else {
+        api.set(
+            0,
+            0,
+            Cell {
+                age: newage,
                 ..cell
             },
         );

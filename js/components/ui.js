@@ -8,17 +8,17 @@ import { height, universe, width, reset } from "../index.js";
 import { snapshot, pallette } from "../render.js";
 
 import Menu from "./menu";
-let skiplist = ["FishTail", "Bubble", "Waste"];
+let skiplist = ["FishTail", "Bubble", "Waste", "Biofilm", "GoldFishTail"];
 
 skiplist.push("Plant");
-skiplist.push("Zoop");
+skiplist.push("Daphnia");
 skiplist.push("Nitrogen");
 
 window.species = Species;
 let pallette_data = pallette();
 
 function randomRadius() {
-  return 0 + Math.random() * Math.random() * 12;
+  return 4 + Math.random() * Math.random() * 12;
 }
 function organicRadius() {
   return `
@@ -166,6 +166,7 @@ class Index extends React.Component {
     let dataString = JSON.stringify(cellData);
     try {
       localStorage.setItem("cell_data", dataString);
+      localStorage.setItem("o2", universe.o2());
     } catch {
       console.log("store failed");
     }
@@ -175,7 +176,10 @@ class Index extends React.Component {
 
   load() {
     console.log("loading");
+
     var cellData = JSON.parse(localStorage.getItem("cell_data"));
+    let o2 = parseInt(localStorage.getItem("o2"), 10);
+    universe.set_o2(o2);
     if (!cellData) {
       console.log("no save");
       window.setInterval(this.upload, 1000 * 10);
