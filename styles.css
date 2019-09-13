@@ -42,7 +42,8 @@ body,
 #jar {
   line-height: 0px;
 }
-canvas {
+canvas,
+#plot-label {
   position: absolute;
   bottom: 0;
   /* top: 0; */
@@ -73,6 +74,16 @@ canvas {
 #plot-canvas {
   pointer-events: none;
   /* border: dashed 2px black; */
+  z-index: 6;
+  /* width:100%; */
+  max-width: 40%;
+}
+#plot-label {
+  z-index: 8;
+  margin: 0;
+  display: block;
+  pointer-events: none;
+  text-align: right;
   z-index: 6;
   /* width:100%; */
   max-width: 40%;
