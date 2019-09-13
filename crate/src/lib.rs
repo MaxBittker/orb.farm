@@ -150,6 +150,8 @@ impl<'a> SandApi<'a> {
 #[wasm_bindgen]
 impl Universe {
     pub fn reset(&mut self) {
+        self.o2 = self.total_gas / 2;
+        self.co2 = self.total_gas / 2;
         for x in 0..self.width {
             for y in 0..self.height {
                 let idx = self.get_index(x, y);

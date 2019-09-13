@@ -6,6 +6,7 @@ const reglBuilder = require("regl");
 
 let fsh = require("./glsl/plot.glsl");
 let vsh = require("./glsl/sandVertex.glsl");
+let label = document.getElementById("plot-label");
 
 let readingsIndex = 0;
 let n_readings = 0;
@@ -33,9 +34,8 @@ let startPlotter = ({ canvas, universe }) => {
     readingsIndex = (readingsIndex + 1) % max_readings;
     n_readings = Math.max(readingsIndex, n_readings);
     let p = (n_readings * 100) / max_readings;
-    canvas.style = `
-    transform: translateX(${p - 100}%)
-    `;
+    canvas.style = `transform: translateX(${p - 100}%)`;
+    label.style = `transform: translateX(${p - 100}%)`;
   };
   let drawPlot = regl({
     blend: {

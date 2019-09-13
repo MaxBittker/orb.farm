@@ -11,7 +11,7 @@ import Menu from "./menu";
 let skiplist = ["FishTail", "Bubble", "Waste", "Biofilm", "GoldFishTail"];
 
 skiplist.push("Plant");
-skiplist.push("Daphnia");
+skiplist.push("Zoop");
 skiplist.push("Nitrogen");
 
 window.species = Species;
@@ -178,13 +178,16 @@ class Index extends React.Component {
     console.log("loading");
 
     var cellData = JSON.parse(localStorage.getItem("cell_data"));
-    let o2 = parseInt(localStorage.getItem("o2"), 10);
-    universe.set_o2(o2);
+
     if (!cellData) {
       console.log("no save");
       window.setInterval(this.upload, 1000 * 10);
 
       return;
+    }
+    if (localStorage.getItem("o2")) {
+      let o2 = parseInt(localStorage.getItem("o2"), 10);
+      universe.set_o2(o2);
     }
     // console.log(cellData);
     var canvas = document.createElement("canvas");
@@ -257,7 +260,7 @@ class Index extends React.Component {
         {/* <button onClick={() => this.load()}>load</button> */}
         <Link
           to={{
-            pathname: "/info/",
+            pathname: "/jar/info/",
             hash
           }}
         >
