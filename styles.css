@@ -248,6 +248,18 @@ button.selected {
 .menu a {
   font-family: serif;
 }
+.species-info {
+  column-count: 2;
+}
+.species-info p {
+  display: inline-block;
+}
+
+@media only screen and (max-width: 700px) {
+  .species-info {
+    column-count: 1;
+  }
+}
 .submission img,
 .submissionImg {
   max-width: 80vh;
@@ -288,58 +300,4 @@ input {
   border-color: gainsboro;
   flex-grow: 1;
   fill: black;
-}
-
-@media only screen and (min-width: 700px) {
-  .submissions {
-    display: grid;
-    grid-template-columns: repeat(2, 50%);
-  }
-}
-
-.submission {
-  margin: 5px;
-  position: relative;
-  background-color: gainsboro;
-  display: flex;
-}
-.submission img {
-  width: 100%;
-}
-.img-link {
-  width: 50%;
-  /* height: 50%; */
-  /* display: inline-block; */
-}
-
-.submission div {
-  margin: 8px 8px 8px 16px;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-}
-.submission div h3 {
-  width: 100%;
-}
-.submission div h2 {
-  display: inline-block;
-  max-width: 50vw;
-}
-
-.submission .adminButtons {
-  display: flex;
-  flex-direction: row;
-  margin: 0;
-}
-.delete {
-  background-color: lightpink;
-}
-
-.pardon {
-  background-color: aliceblue;
-}
-
-.adminButtons button:active {
-  transform: scale(1.2);
-  z-index: 5;
 }
