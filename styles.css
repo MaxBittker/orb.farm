@@ -13,7 +13,7 @@ body {
 body,
 #background {
   position: absolute;
-  overflow: hidden;
+  /* overflow: hidden; */
   /* display: flex; */
   top: 0;
   left: 0;
@@ -158,14 +158,17 @@ button.selected {
   overflow: hidden;
 }
 #ui {
-  position: relative;
-
+}
+#HUD {
+  position: absolute;
+  right: 0;
   display: flex;
+
   flex-wrap: wrap;
 
-  float: right;
   z-index: 3;
 }
+
 .fade {
   opacity: 1;
   transition: opacity 1s linear;
