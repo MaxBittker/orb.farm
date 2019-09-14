@@ -57,7 +57,7 @@ let resize = () => {
 
   let canvasStyle = "";
   let HUDStyle = "";
-  if (screen_width > screen_height) {
+  if (screen_width - 150 > screen_height) {
     if (screen_width - window.innerHeight < 400) {
       // landscape compressed
       canvasStyle = `height: ${window.innerHeight}px; margin:3px`;
@@ -107,7 +107,6 @@ let { drawPlot, recordDataPoint } = startPlotter({
 });
 
 let t = 0;
-
 const renderLoop = () => {
   const now = performance.now();
 
@@ -135,7 +134,8 @@ const renderLoop = () => {
   }
 
   drawSand();
-  sky.frame(dayTime / 255);
+  let skyTime = dayTime / 255;
+  sky.frame(skyTime);
   drawPlot();
 
   window.animWebationId = requestAnimationFrame(renderLoop);

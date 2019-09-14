@@ -8,7 +8,6 @@ import { height, universe, width, reset } from "../index.js";
 import { snapshot, pallette } from "../render.js";
 import { icos, randomIco } from "../tchotchkes";
 
-import Menu from "./menu";
 let skiplist = ["FishTail", "Bubble", "Waste", "Biofilm", "GoldFishTail"];
 
 skiplist.push("Plant");
@@ -79,7 +78,8 @@ const ElementButton = (name, selectedElement, setElement) => {
 class Index extends React.Component {
   constructor(props) {
     super(props);
-
+    let tutorialDone = localStorage.getItem("tutorialDone");
+    console.log(tutorialDone);
     this.state = {
       submissionMenuOpen: false,
       paused: false,
@@ -89,10 +89,18 @@ class Index extends React.Component {
       tchotchkes: new Set(),
       dataURL: {},
       currentSubmission: null,
-      selectedElement: Species.Sand
+      selectedElement: Species.Sand,
+      tutorial: !tutorialDone
     };
     window.UI = this;
     // this.load();
+    if (!tutorialDone) {
+      window.setTimeout(() => {
+        localStorage.setItem("tutorialDone", true);
+
+        this.setState({ tutorial: false });
+      }, 1000 * 10);
+    }
   }
 
   componentDidUpdate(prevProps) {}
@@ -197,6 +205,9 @@ class Index extends React.Component {
   }
   findTchotchke() {
     console.log("finding");
+    if (this.state.tchotchkes.size >= 2) {
+      return;
+    }
     this.setState(({ tchotchkes }) => {
       return { tchotchkes: tchotchkes.add(randomIco()) };
     });
@@ -204,8 +215,8 @@ class Index extends React.Component {
   load() {
     console.log("loading");
 
-    this.findTchotchke();
-    window.setInterval(() => this.findTchotchke(), 1000 * 6);
+    // this.findTchotchke();
+    window.setInterval(() => this.findTchotchke(), 1000 * 60 * 10);
 
     var cellData = JSON.parse(localStorage.getItem("cell_data"));
     var spriteData = JSON.parse(localStorage.getItem("sprite_data"));
@@ -233,7 +244,7 @@ class Index extends React.Component {
         width * height * 4
       );
 
-      universe.reset();
+      // universe.reset();
 
       for (var i = 0; i < width * height * 4; i++) {
         cellsData[i] = imgData.data[i];
@@ -277,12 +288,20 @@ class Index extends React.Component {
       selectedElement,
       currentSubmission,
       selectedTchotchke,
-      tchotchkes
+      tchotchkes,
+      tutorial
     } = this.state;
     let hash =
       currentSubmission && currentSubmission.id
         ? `#${currentSubmission.id}`
         : "";
+
+    let activeSpecies = Object.keys(Species).filter(
+      name => !skiplist.includes(name)
+    );
+    if (tutorial) {
+      activeSpecies = ["Sand", "Water"];
+    }
     return (
       <div id="HUD" className="fade">
         {/* <OrganicButton
@@ -333,13 +352,11 @@ class Index extends React.Component {
         >
           ↜
         </OrganicButton> */}
-        {Object.keys(Species)
-          .filter(name => !skiplist.includes(name))
-          .map(n =>
-            ElementButton(n, selectedTchotchke || selectedElement, id =>
-              this.setState({ selectedElement: id, selectedTchotchke: null })
-            )
-          )}
+        {activeSpecies.map(n =>
+          ElementButton(n, selectedTchotchke || selectedElement, id =>
+            this.setState({ selectedElement: id, selectedTchotchke: null })
+          )
+        )}
         {tchotchkes.size > 0 && (
           <span className="tchotchkes">
             {Array.from(tchotchkes).map(url => (

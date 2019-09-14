@@ -930,7 +930,7 @@ pub fn update_plant(cell: Cell, mut api: SandApi) {
         // api.set(-dx, dy, EMPTY_CELL);
         return;
     }
-    if energy > 35 && rand_int(light as i32) > 50 && api.get(dx, dy).species == Species::Water {
+    if energy > 45 && rand_int(light as i32) > 50 && api.get(dx, dy).species == Species::Water {
         api.set(dx, dy, Cell::new(Species::Biofilm));
         api.set(
             0,

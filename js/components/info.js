@@ -18,7 +18,7 @@ const Info = () => {
         See also: <a href="htts://sandspiel.club">sandspiel.club</a>
       </p>{" "}
       <hr></hr>
-      <div style={{ marginLeft: "10px", columnCount: 2 }}>
+      <div className="species-info">
         <p>
           <h3>Air:</h3> Mostly used to erase things.
         </p>
