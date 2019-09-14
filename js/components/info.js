@@ -6,7 +6,6 @@ const Info = () => {
       <h1>A sealed ecosystem simulation </h1>
       <p>
         Created by <a href="https://maxbittker.com">max bittker</a>
-        Work in progress!
       </p>
       <p>
         Source code:{" "}
@@ -20,11 +19,13 @@ const Info = () => {
       <p>
         <img src="https://i.pinimg.com/originals/79/94/0d/79940dd994fb3e901af4265493515d00.jpg" />
       </p>
-      background shader: forked from{" "}
-      <a href="https://www.shadertoy.com/view/tdSXzD">
-        "The sun, the sky and the clouds"
-      </a>{" "}
-      by stilltravelling
+      <p>
+        background shader: forked from{" "}
+        <a href="https://www.shadertoy.com/view/tdSXzD">
+          "The sun, the sky and the clouds"
+        </a>{" "}
+        by stilltravelling
+      </p>
     </div>
   );
 };

@@ -302,7 +302,7 @@ impl Universe {
                 let b = data[idx + 2];
                 let a = data[idx + 3];
                 let sidx = self.get_index(xi.saturating_add(x as i32), yi.saturating_add(y as i32));
-                if a > 0 {
+                if a > 100 {
                     self.sprite[sidx] = Pixel { r, g, b, a };
                     self.cells[sidx] = Cell::new(Species::Plastic);
                 }
@@ -340,6 +340,14 @@ impl Universe {
                             + ((self.generation % 127) as i8 - 60).abs() as u8,
                         age: 0,
                         clock: self.generation,
+                    };
+                    if species == Species::Air {
+                        self.sprite[i] = Pixel {
+                            r: 0,
+                            g: 0,
+                            b: 0,
+                            a: 0,
+                        };
                     }
                 }
             }

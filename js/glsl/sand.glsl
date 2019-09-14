@@ -210,7 +210,7 @@ void main() {
   if (spriteValue.a > 0.) {
     vec4 spriteColor = spriteValue;
 
-    spriteColor.rgb *= ((lightValue * 0.6) + 0.7);
+    spriteColor.rgb *= ((lightValue) + 0.7);
     gl_FragColor = spriteColor;
   }
 }

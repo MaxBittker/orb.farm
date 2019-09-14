@@ -20,7 +20,7 @@ window.species = Species;
 let pallette_data = pallette();
 
 function randomRadius() {
-  return 4 + Math.random() * Math.random() * 12;
+  return 14 + Math.random() * Math.random() * 24;
 }
 function organicRadius() {
   return `
@@ -326,7 +326,7 @@ class Index extends React.Component {
         {/* {paused && <button onClick={() => universe.tick()}>Tick</button>} */}
         <OrganicButton
           onClick={() => {
-            reset();
+            // reset();
             universe.pop_undo();
           }}
           style={{ fontSize: 35 }}
@@ -336,7 +336,7 @@ class Index extends React.Component {
         {Object.keys(Species)
           .filter(name => !skiplist.includes(name))
           .map(n =>
-            ElementButton(n, selectedElement, id =>
+            ElementButton(n, selectedTchotchke || selectedElement, id =>
               this.setState({ selectedElement: id, selectedTchotchke: null })
             )
           )}
@@ -345,6 +345,8 @@ class Index extends React.Component {
             {Array.from(tchotchkes).map(url => (
               <img
                 onClick={() => {
+                  document.documentElement.style.cursor = `url("${url}"), default`;
+
                   this.setState({ selectedTchotchke: url });
                 }}
                 className={selectedTchotchke == url ? "selected" : ""}
