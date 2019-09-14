@@ -205,7 +205,7 @@ class Index extends React.Component {
     console.log("loading");
 
     this.findTchotchke();
-    window.setInterval(() => this.findTchotchke(), 1000 * 20);
+    window.setInterval(() => this.findTchotchke(), 1000 * 6);
 
     var cellData = JSON.parse(localStorage.getItem("cell_data"));
     var spriteData = JSON.parse(localStorage.getItem("sprite_data"));
@@ -324,7 +324,7 @@ class Index extends React.Component {
         </Link>
 
         {/* {paused && <button onClick={() => universe.tick()}>Tick</button>} */}
-        <OrganicButton
+        {/* <OrganicButton
           onClick={() => {
             // reset();
             universe.pop_undo();
@@ -332,7 +332,7 @@ class Index extends React.Component {
           style={{ fontSize: 35 }}
         >
           ↜
-        </OrganicButton>
+        </OrganicButton> */}
         {Object.keys(Species)
           .filter(name => !skiplist.includes(name))
           .map(n =>

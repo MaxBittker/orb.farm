@@ -293,7 +293,6 @@ impl Universe {
     pub fn place_sprite(&mut self, xi: i32, yi: i32, typebuf: js_sys::Uint8Array) {
         let mut data = vec![0; typebuf.length() as usize];
         typebuf.copy_to(&mut data[..]);
-
         for x in 0..16 {
             for y in 0..16 {
                 let idx = (x + (y * 16)) * 4;
@@ -301,7 +300,13 @@ impl Universe {
                 let g = data[idx + 1];
                 let b = data[idx + 2];
                 let a = data[idx + 3];
-                let sidx = self.get_index(xi.saturating_add(x as i32), yi.saturating_add(y as i32));
+                let nx = xi + x as i32;
+                let ny = yi + y as i32;
+
+                if nx < 0 || nx > self.width - 1 || ny < 0 || ny > self.height - 1 {
+                    continue;
+                }
+                let sidx = self.get_index(nx, ny);
                 if a > 100 {
                     self.sprite[sidx] = Pixel { r, g, b, a };
                     self.cells[sidx] = Cell::new(Species::Plastic);
