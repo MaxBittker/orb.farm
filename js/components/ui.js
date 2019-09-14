@@ -284,7 +284,7 @@ class Index extends React.Component {
         ? `#${currentSubmission.id}`
         : "";
     return (
-      <React.Fragment>
+      <div id="HUD" className="fade">
         {/* <OrganicButton
           onClick={() => this.togglePause()}
           className={paused ? "selected" : ""}
@@ -320,7 +320,7 @@ class Index extends React.Component {
             hash
           }}
         >
-          <OrganicButton>Info</OrganicButton>
+          <OrganicButton>info</OrganicButton>
         </Link>
 
         {/* {paused && <button onClick={() => universe.tick()}>Tick</button>} */}
@@ -356,7 +356,20 @@ class Index extends React.Component {
             ))}
           </span>
         )}
-      </React.Fragment>
+        {selectedTchotchke && (
+          <div
+            className="discard"
+            onClick={() => {
+              window.UI.setState(({ tchotchkes }) => {
+                tchotchkes.delete(selectedTchotchke);
+                return { tchotchkes, selectedTchotchke: null };
+              });
+            }}
+          >
+            Discard
+          </div>
+        )}
+      </div>
     );
   }
 }

@@ -13,11 +13,13 @@ body {
 body,
 #background {
   position: absolute;
-  overflow: hidden;
+  /* overflow: hidden; */
   /* display: flex; */
   top: 0;
   left: 0;
   width: 100%;
+  font-size: 30px;
+
   height: 100%;
   /* background-color: rgba(00, 00, 00, 0.2); */
   background-color: cornsilk;
@@ -156,14 +158,17 @@ button.selected {
   overflow: hidden;
 }
 #ui {
-  position: relative;
-
+}
+#HUD {
+  position: absolute;
+  right: 0;
   display: flex;
+
   flex-wrap: wrap;
 
-  float: right;
   z-index: 3;
 }
+
 .fade {
   opacity: 1;
   transition: opacity 1s linear;
@@ -207,6 +212,14 @@ button.selected {
   /* box-shadow: 0px 0px 3px 3px pink; */
   transform: scale(1.3);
   filter: drop-shadow(0 0 0.5rem black);
+}
+.discard {
+  margin: 3px;
+  height: 28px;
+  line-height: 28px;
+  border: 3px dashed red;
+  background-color: #55000055;
+  border-radius: 3px;
 }
 #controls {
   display: flex;

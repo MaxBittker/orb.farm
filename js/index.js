@@ -48,21 +48,21 @@ const canvas = document.getElementById("sand-canvas");
 canvas.height = n * ratio * Math.ceil(window.devicePixelRatio);
 canvas.width = n * ratio * Math.ceil(window.devicePixelRatio);
 
-const ui = document.getElementById("ui");
+const HUD = document.getElementById("HUD");
 let canvasSize;
 let resize = () => {
   let screen_width = window.innerWidth;
-  let uiheight = 50;
-  let screen_height = window.innerHeight - uiheight;
+  let HUDheight = 50;
+  let screen_height = window.innerHeight - HUDheight;
 
   let canvasStyle = "";
-  let uiStyle = "";
+  let HUDStyle = "";
   if (screen_width > screen_height) {
     if (screen_width - window.innerHeight < 400) {
       // landscape compressed
       canvasStyle = `height: ${window.innerHeight}px; margin:3px`;
       canvasSize = window.innerHeight;
-      uiStyle = `width: ${screen_width -
+      HUDStyle = `width: ${screen_width -
         window.innerHeight -
         12}px; margin: 2px;`;
     } else {
@@ -70,7 +70,7 @@ let resize = () => {
       canvasStyle = `height: ${window.innerHeight}px`;
       canvasSize = window.innerHeight;
 
-      uiStyle = `width: ${(screen_width - window.innerHeight) / 2 -
+      HUDStyle = `width: ${(screen_width - window.innerHeight) / 2 -
         7}px; margin: 2px;`;
     }
   } else {
@@ -78,9 +78,9 @@ let resize = () => {
     canvasSize = screen_width;
 
     canvasStyle = `width: ${screen_width}px; `;
-    uiStyle = "";
+    HUDStyle = "";
   }
-  ui.style = uiStyle;
+  HUD.style = HUDStyle;
   canvas.style = canvasStyle;
 };
 

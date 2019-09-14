@@ -6,30 +6,6 @@ import Info from "./components/info";
 import { Index } from "./components/ui";
 import Menu from "./components/menu";
 
-function BrowseRouter({ match, location }) {
-  return (
-    <Menu>
-      <Browse location={location} />
-    </Menu>
-  );
-}
-
-function AdminRouter({ match, location }) {
-  return (
-    <Menu>
-      <Admin location={location} />
-    </Menu>
-  );
-}
-
-function SigninRouter({ match, location }) {
-  return (
-    <Menu>
-      <SignInScreen location={location} />
-    </Menu>
-  );
-}
-
 function AppRouter() {
   return (
     <Router>
@@ -43,10 +19,6 @@ function AppRouter() {
           </Menu>
         )}
       />
-      <Route path="/browse" component={BrowseRouter} />
-      <Route path="/admin" component={AdminRouter} />
-      <Route path="/login" component={SigninRouter} />
-      <Route path="/__/auth/handler" component={SigninRouter} />
     </Router>
   );
 }
