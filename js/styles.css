@@ -194,7 +194,7 @@ button.selected {
 }
 
 .tchotchkes {
-  border: 1px dashed grey;
+  /* border: 1px dashed grey; */
   margin: 3px;
   padding: 3px;
   line-height: 0;
@@ -239,6 +239,9 @@ button.selected {
   margin: 5px;
   box-shadow: 0px 0px 3px 3px rgba(0, 0, 0, 0.2);
   /* margin: auto; */
+}
+.menu img {
+  max-width: 100%;
 }
 
 .menu-scrim {
@@ -304,37 +307,6 @@ input {
 .submission div h2 {
   display: inline-block;
   max-width: 50vw;
-}
-
-.report {
-  position: absolute;
-  right: 5px;
-  bottom: 5px;
-  color: grey;
-  /* filter: graysca
-  /* line-height: 29px; */
-}
-.report:active {
-  color: red;
-  filter: none;
-  transform: scale(1.5);
-}
-.heart {
-  display: block;
-  background-color: transparent;
-  border-color: transparent;
-  flex-grow: 0;
-  line-break: auto;
-  text-align: left;
-  padding: 0;
-  margin: 0;
-  font-size: 22px;
-  font-weight: bolder;
-}
-.heart:active {
-  color: red;
-  filter: none;
-  transform: scale(1.5);
 }
 
 .submission .adminButtons {

@@ -187,7 +187,6 @@ class Index extends React.Component {
 
     let spriteData = canvas.toDataURL("image/png");
     let spriteDataString = JSON.stringify(spriteData);
-    console.log(spriteDataString);
     try {
       localStorage.setItem("sprite_data", spriteDataString);
     } catch {
@@ -338,7 +337,7 @@ class Index extends React.Component {
           .filter(name => !skiplist.includes(name))
           .map(n =>
             ElementButton(n, selectedElement, id =>
-              this.setState({ selectedElement: id })
+              this.setState({ selectedElement: id, selectedTchotchke: null })
             )
           )}
         {tchotchkes.size > 0 && (

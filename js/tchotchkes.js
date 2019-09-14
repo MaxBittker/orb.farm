@@ -12,8 +12,13 @@ function randomIco() {
 // let images = [];
 const icoToImage = url =>
   fetch(url)
-    .then(res => res.blob()) // Gets the response and returns it as a blob
-    .then(blob => blob.arrayBuffer()) // Gets the response and returns it as a blob
+    .then(res => {
+      if (!res.ok) {
+        throw Error(res.statusText);
+      }
+      return res.arrayBuffer();
+    }) // Gets the response and returns it as a blob
+    // Gets the response and returns it as a blob
     .then(function(buffer) {
       return ICO.parse(buffer).catch(err => {
         console.log(err + url);

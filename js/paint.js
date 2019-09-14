@@ -36,13 +36,13 @@ let repeat = null;
 function tryPlaceTchotchke(event) {
   let url = window.UI.state.selectedTchotchke;
   if (url) {
+    window.UI.setState(({ tchotchkes }) => {
+      tchotchkes.delete(url);
+      return { tchotchkes, selectedTchotchke: null };
+    });
     const [x, y] = convertEventCoordinates(event);
 
     icoToImage(url).then(image => {
-      window.UI.setState(({ tchotchkes }) => {
-        tchotchkes.delete(url);
-        return { tchotchkes, selectedTchotchke: null };
-      });
       universe.place_sprite(x - 8, y - 8, image.data);
       window.UI.upload();
     });
@@ -86,8 +86,8 @@ canvas.addEventListener("touchstart", event => {
   if (event.cancelable) {
     event.preventDefault();
   }
-
-  if (tryPlaceTchotchke(event.touches[0])) {
+  let touches = Array.from(event.touches);
+  if (tryPlaceTchotchke(touches[0])) {
     return;
   }
   universe.push_undo();
