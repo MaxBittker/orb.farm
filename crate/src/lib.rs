@@ -25,6 +25,16 @@ pub struct Light {
 
 #[wasm_bindgen]
 #[repr(C)]
+#[derive(Clone, Copy, Debug, PartialEq)]
+pub struct Pixel {
+    r: u8,
+    g: u8,
+    b: u8,
+    a: u8,
+}
+
+#[wasm_bindgen]
+#[repr(C)]
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub struct Cell {
     species: Species,
@@ -72,6 +82,7 @@ pub struct Universe {
     cells: Vec<Cell>,
     undo_stack: VecDeque<Vec<Cell>>,
     lights: Vec<Light>,
+    sprite: Vec<Pixel>,
     generation: u8,
     time: u8,
     total_gas: u32,
@@ -156,6 +167,12 @@ impl Universe {
             for y in 0..self.height {
                 let idx = self.get_index(x, y);
                 self.cells[idx] = EMPTY_CELL;
+                self.sprite[idx] = Pixel {
+                    r: 0,
+                    g: 0,
+                    b: 0,
+                    a: 0,
+                }
             }
         }
     }
@@ -270,6 +287,29 @@ impl Universe {
         self.lights.as_ptr()
     }
 
+    pub fn sprite(&self) -> *const Pixel {
+        self.sprite.as_ptr()
+    }
+    pub fn place_sprite(&mut self, xi: i32, yi: i32, typebuf: js_sys::Uint8Array) {
+        let mut data = vec![0; typebuf.length() as usize];
+        typebuf.copy_to(&mut data[..]);
+
+        for x in 0..16 {
+            for y in 0..16 {
+                let idx = (x + (y * 16)) * 4;
+                let r = data[idx];
+                let g = data[idx + 1];
+                let b = data[idx + 2];
+                let a = data[idx + 3];
+                let sidx = self.get_index(xi.saturating_add(x as i32), yi.saturating_add(y as i32));
+                if a > 0 {
+                    self.sprite[sidx] = Pixel { r, g, b, a };
+                    self.cells[sidx] = Cell::new(Species::Plastic);
+                }
+            }
+        }
+    }
+
     pub fn paint(&mut self, x: i32, y: i32, size: i32, species: Species) {
         let size = size;
         let radius = size / 2;
@@ -344,12 +384,21 @@ impl Universe {
                 a: 0,
             })
             .collect();
+        let sprite: Vec<Pixel> = (0..width * height)
+            .map(|_i| Pixel {
+                r: 0,
+                g: 0,
+                b: 0,
+                a: 0,
+            })
+            .collect();
         let total_gas = (width * height * 10) as u32;
         Universe {
             width,
             height,
             cells,
             lights,
+            sprite,
             time: 0,
             total_gas,
             o2: total_gas / 2,

@@ -6,6 +6,7 @@ import { Species } from "../../crate/pkg/sandtable";
 
 import { height, universe, width, reset } from "../index.js";
 import { snapshot, pallette } from "../render.js";
+import { icos, randomIco } from "../tchotchkes";
 
 import Menu from "./menu";
 let skiplist = ["FishTail", "Bubble", "Waste", "Biofilm", "GoldFishTail"];
@@ -13,6 +14,7 @@ let skiplist = ["FishTail", "Bubble", "Waste", "Biofilm", "GoldFishTail"];
 skiplist.push("Plant");
 skiplist.push("Zoop");
 skiplist.push("Nitrogen");
+skiplist.push("Plastic");
 
 window.species = Species;
 let pallette_data = pallette();
@@ -74,8 +76,6 @@ const ElementButton = (name, selectedElement, setElement) => {
   );
 };
 
-let sizeMap = [2, 3, 4];
-
 class Index extends React.Component {
   constructor(props) {
     super(props);
@@ -86,6 +86,7 @@ class Index extends React.Component {
       ff: false,
       submitting: false,
       size: 1,
+      tchotchkes: new Set(),
       dataURL: {},
       currentSubmission: null,
       selectedElement: Species.Sand
@@ -171,34 +172,59 @@ class Index extends React.Component {
       console.log("store failed");
     }
 
+    const sprite = new Uint8Array(
+      memory.buffer,
+      universe.sprite(),
+      width * height * 4
+    );
+
+    // fill imgData with data from sprite
+    for (var i = 0; i < width * height * 4; i++) {
+      imgData.data[i] = sprite[i];
+    }
+    // put data to context at (0, 0)
+    context.putImageData(imgData, 0, 0);
+
+    let spriteData = canvas.toDataURL("image/png");
+    let spriteDataString = JSON.stringify(spriteData);
+    console.log(spriteDataString);
+    try {
+      localStorage.setItem("sprite_data", spriteDataString);
+    } catch {
+      console.log("store failed");
+    }
+
     // this.load();
   }
-
+  findTchotchke() {
+    console.log("finding");
+    this.setState(({ tchotchkes }) => {
+      return { tchotchkes: tchotchkes.add(randomIco()) };
+    });
+  }
   load() {
     console.log("loading");
 
+    this.findTchotchke();
+    window.setInterval(() => this.findTchotchke(), 1000 * 20);
+
     var cellData = JSON.parse(localStorage.getItem("cell_data"));
+    var spriteData = JSON.parse(localStorage.getItem("sprite_data"));
 
     if (!cellData) {
       console.log("no save");
-      window.setInterval(this.upload, 1000 * 10);
+      window.setInterval(() => this.upload(), 1000 * 10);
 
       return;
     }
-    if (localStorage.getItem("o2")) {
-      let o2 = parseInt(localStorage.getItem("o2"), 10);
-      universe.set_o2(o2);
-    }
-    // console.log(cellData);
+
     var canvas = document.createElement("canvas");
     canvas.width = width;
     canvas.height = height;
-    // console.log(width, height);
     var ctx = canvas.getContext("2d");
     var img = new Image();
     img.src = cellData;
     img.onload = () => {
-      // debugger;
       ctx.drawImage(img, 0, 0);
       var imgData = ctx.getImageData(0, 0, canvas.width, canvas.height);
 
@@ -213,23 +239,54 @@ class Index extends React.Component {
       for (var i = 0; i < width * height * 4; i++) {
         cellsData[i] = imgData.data[i];
       }
+      if (localStorage.getItem("o2")) {
+        let o2 = parseInt(localStorage.getItem("o2"), 10);
+        universe.set_o2(o2);
+      }
+      window.setInterval(() => this.upload(), 1000 * 10);
     };
-    window.setInterval(this.upload, 1000 * 10);
 
+    var canvas2 = document.createElement("canvas");
+    canvas2.width = width;
+    canvas2.height = height;
+    var ctx2 = canvas2.getContext("2d");
+
+    var img2 = new Image();
+    img2.src = spriteData;
+    img2.onload = () => {
+      ctx2.drawImage(img2, 0, 0);
+      var imgData = ctx2.getImageData(0, 0, canvas2.width, canvas2.height);
+
+      const spriteData = new Uint8Array(
+        memory.buffer,
+        universe.sprite(),
+        width * height * 4
+      );
+
+      for (var i = 0; i < width * height * 4; i++) {
+        spriteData[i] = imgData.data[i];
+      }
+    };
     // universe.flush_undos();
     // universe.push_undo();
     // this.pause();
   }
 
   render() {
-    let { size, paused, ff, selectedElement, currentSubmission } = this.state;
+    let {
+      ff,
+      selectedElement,
+      currentSubmission,
+      selectedTchotchke,
+      tchotchkes
+    } = this.state;
     let hash =
       currentSubmission && currentSubmission.id
         ? `#${currentSubmission.id}`
         : "";
     return (
       <React.Fragment>
-        <OrganicButton
+        {/* <OrganicButton
           onClick={() => this.togglePause()}
           className={paused ? "selected" : ""}
         >
@@ -242,8 +299,8 @@ class Index extends React.Component {
               <polygon id="bar2" points="0,0 110,0 110,300 0,300" />
               <polygon id="bar1" points="190,0 300,0 300,300 190,300" />
             </svg>
-          )}
-        </OrganicButton>
+          )} */}
+        {/* </OrganicButton> */}
 
         <OrganicButton
           onClick={() => this.toggleFF()}
@@ -260,7 +317,7 @@ class Index extends React.Component {
         {/* <button onClick={() => this.load()}>load</button> */}
         <Link
           to={{
-            pathname: "/jar/info/",
+            pathname: "/info/",
             hash
           }}
         >
@@ -268,27 +325,6 @@ class Index extends React.Component {
         </Link>
 
         {/* {paused && <button onClick={() => universe.tick()}>Tick</button>} */}
-        {/* <span className="sizes">
-          {sizeMap.map((v, i) => (
-            <button
-              key={i}
-              className={i == size ? "selected" : ""}
-              onClick={e => this.setSize(e, i)}
-              style={{
-                padding: "0px",
-                borderRadius: [
-                  ["25px", 0, 0, "25px"],
-                  [0, 0, 0, 0],
-                  [0, "25px", "25px", 0]
-                ][i].join(" ")
-              }}
-            >
-              <svg height="23" width="23" id="d" viewBox="0 0 100 100">
-                <circle cx="50" cy="50" r={2 + v * 5} />
-              </svg>
-            </button>
-          ))}
-        </span> */}
         <OrganicButton
           onClick={() => {
             reset();
@@ -305,37 +341,23 @@ class Index extends React.Component {
               this.setState({ selectedElement: id })
             )
           )}
-
-        {this.state.currentSubmission && (
-          <div className="submission-title">
-            <button onClick={() => this.incScore()}>
-              +♡{this.state.currentSubmission.data.score}{" "}
-            </button>
-            {this.state.currentSubmission.data.title}
-          </div>
-        )}
-
-        {this.state.submissionMenuOpen && (
-          <Menu close={() => this.closeMenu()}>
-            <h4>Share your creation with the people!</h4>
-            <img src={this.state.data.dataURL} className="submissionImg" />
-            <div style={{ display: "flex" }}>
-              <input
-                placeholder="title"
-                onChange={e => this.setState({ title: e.target.value })}
-              />
-              <button
-                disabled={this.state.submitting}
-                onClick={() => this.submit()}
-              >
-                Submit
-              </button>
-            </div>
-          </Menu>
+        {tchotchkes.size > 0 && (
+          <span className="tchotchkes">
+            {Array.from(tchotchkes).map(url => (
+              <img
+                onClick={() => {
+                  this.setState({ selectedTchotchke: url });
+                }}
+                className={selectedTchotchke == url ? "selected" : ""}
+                src={url}
+                key={url}
+              ></img>
+            ))}
+          </span>
         )}
       </React.Fragment>
     );
   }
 }
 
-export { sizeMap, Index };
+export { Index };

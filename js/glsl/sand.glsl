@@ -6,6 +6,7 @@ uniform bool isSnapshot;
 uniform sampler2D backBuffer;
 uniform sampler2D dataTexture;
 uniform sampler2D lightTexture;
+uniform sampler2D spriteTexture;
 
 varying vec2 uv;
 
@@ -32,6 +33,7 @@ void main() {
   // vec4 dataSample = texture2D(dataTexture, sampleCoord);
 
   vec4 lightCell = texture2D(lightTexture, textCoord);
+  vec4 spriteValue = texture2D(spriteTexture, textCoord);
 
   float lightValue = lightCell.r;
   float blueLightValue = lightCell.b;
@@ -167,6 +169,10 @@ void main() {
     lightness += 0.8;
     saturation = 0.8;
     saturation -= (fract(age * 1.9 * 255. / 7.) - 0.1) * 0.6;
+  } else if (type == 20) { // plastic
+    hue = 0.1;
+    lightness += 0.5;
+    saturation = 0.1;
   }
 
   // } else if (type == 16) { // oil
@@ -201,4 +207,10 @@ void main() {
   color += vec3(0.25, 0.25, 0.7) * 0.6 * (blueLightValue + lightSampleCell.b);
   a += blueLightValue + lightSampleCell.b;
   gl_FragColor = vec4(color, a);
+  if (spriteValue.a > 0.) {
+    vec4 spriteColor = spriteValue;
+
+    spriteColor.rgb *= ((lightValue * 0.6) + 0.7);
+    gl_FragColor = spriteColor;
+  }
 }

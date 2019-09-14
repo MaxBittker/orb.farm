@@ -40,10 +40,12 @@
   },
   "dependencies": {
     "@babel/plugin-proposal-class-properties": "^7.5.5",
+    "file-loader": "^4.2.0",
     "gh-pages": "^2.1.1",
     "glsl-hsv2rgb": "^1.0.0",
     "glsl-noise": "0.0.0",
     "glsl-random": "0.0.5",
+    "icojs": "^0.13.1",
     "react": "^16.9.0",
     "react-dom": "^16.9.0",
     "react-router-dom": "^5.0.1",

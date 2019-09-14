@@ -7,6 +7,7 @@ import {} from "./paint";
 import {} from "./app";
 import {} from "./setup";
 import { startSky } from "./shaderToy";
+import { getTchotchkes } from "./tchotchkes";
 
 let n = 200;
 let h = n / 2;
@@ -142,8 +143,9 @@ const renderLoop = () => {
 function reset() {
   console.log("reseting");
   localStorage.setItem("cell_data", null);
-  localStorage.setItem("o2", universe.total_gas() / 2);
   universe.reset();
+  localStorage.setItem("o2", universe.total_gas() / 2);
+
   drawBowl();
 }
 window.u = universe;
@@ -151,5 +153,15 @@ window.universe = universe;
 renderLoop();
 
 window.UI.load();
+// getTchotchkes().then(images => {
+//   images.forEach((image, i) => {
+//     // console.log(image);
+//     universe.place_sprite(
+//       10 + Math.random() * 150,
+//       10 + Math.random() * 150,
+//       image.data
+//     );
+//   });
+// });
 // debugger;
 export { canvas, width, height, ratio, universe, reset };

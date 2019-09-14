@@ -12,12 +12,12 @@ module.exports = {
   output: {
     path: dist,
     filename: "[name].[contenthash].js",
-    publicPath: "/jar/"
+    publicPath: "/"
   },
   devServer: {
     contentBase: dist,
     disableHostCheck: true,
-    publicPath: "/jar/",
+    publicPath: "/",
     historyApiFallback: true
   },
 
@@ -29,13 +29,25 @@ module.exports = {
       "index.html",
       "js/styles.css",
       "manifest.json",
-      "assets/*"
+      "assets/*",
+      "assets/tchotchkes/*"
     ]),
     new HtmlWebpackPlugin({ template: "index.html" }),
     new GenerateSW({ navigateFallback: "index.html" })
   ],
   module: {
     rules: [
+      {
+        test: /\.(ico)$/i,
+        use: [
+          {
+            loader: "file-loader",
+            options: {
+              name: "[path][name].[ext]"
+            }
+          }
+        ]
+      },
       {
         test: /\.(glsl|frag|vert)$/,
         use: "raw-loader",

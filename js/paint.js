@@ -1,5 +1,8 @@
 import { height, universe, width, ratio } from "./index.js";
-import { sizeMap } from "./components/ui";
+import { icoToImage } from "./tchotchkes";
+
+import { Species } from "../crate/pkg";
+
 const canvas = document.getElementById("sand-canvas");
 
 const eventDistance = (a, b) => {
@@ -30,9 +33,27 @@ const sub = (a, b) => {
 let painting = false;
 let lastPaint = null;
 let repeat = null;
+function tryPlaceTchotchke(event) {
+  let url = window.UI.state.selectedTchotchke;
+  if (url) {
+    const [x, y] = convertEventCoordinates(event);
 
+    icoToImage(url).then(image => {
+      window.UI.setState(({ tchotchkes }) => {
+        tchotchkes.delete(url);
+        return { tchotchkes, selectedTchotchke: null };
+      });
+      universe.place_sprite(x - 8, y - 8, image.data);
+      window.UI.upload();
+    });
+    return true;
+  } else return false;
+}
 canvas.addEventListener("mousedown", event => {
   event.preventDefault();
+  if (tryPlaceTchotchke(event)) {
+    return;
+  }
   universe.push_undo();
 
   painting = true;
@@ -62,11 +83,15 @@ canvas.addEventListener("mouseleave", event => {
 });
 
 canvas.addEventListener("touchstart", event => {
-  universe.push_undo();
-
   if (event.cancelable) {
     event.preventDefault();
   }
+
+  if (tryPlaceTchotchke(event.touches[0])) {
+    return;
+  }
+  universe.push_undo();
+
   painting = true;
   lastPaint = event;
   handleTouches(event);
@@ -98,13 +123,14 @@ function smoothPaint(event) {
   if (!painting) {
     return;
   }
-  let size = sizeMap[window.UI.state.size];
+  let size = speciesSizes[window.UI.state.selectedElement] || 2;
+
   let i = 0;
   paint(startEvent);
   if (
     lastPaint &&
-    window.UI.state.selectedElement != species.Fish &&
-    window.UI.state.selectedElement != species.GoldFish
+    window.UI.state.selectedElement != Species.Fish &&
+    window.UI.state.selectedElement != Species.GoldFish
   ) {
     while (eventDistance(startEvent, lastPaint) > size / 3) {
       let d = eventDistance(startEvent, lastPaint);
@@ -132,21 +158,19 @@ const handleTouches = event => {
 };
 
 let speciesSizes = {
-  [species.Water]: 13,
-  [species.Sand]: 7,
+  [Species.Water]: 13,
+  [Species.Sand]: 8,
+  [Species.Air]: 7,
 
-  [species.Algae]: 2,
-  [species.Fish]: 2,
-  [species.Daphnia]: 2,
-  [species.Zoop]: 2,
-  [species.Seed]: 2,
-  [species.Bacteria]: 2
+  [Species.Algae]: 2,
+  [Species.Fish]: 2,
+  [Species.GoldFish]: 2,
+  [Species.Daphnia]: 2,
+  [Species.Zoop]: 2,
+  [Species.Seed]: 2,
+  [Species.Bacteria]: 2
 };
-
-const paint = event => {
-  if (!painting) {
-    return;
-  }
+function convertEventCoordinates(event) {
   const boundingRect = canvas.getBoundingClientRect();
 
   const scaleX =
@@ -163,10 +187,15 @@ const paint = event => {
 
   const x = Math.min(Math.floor(canvasLeft), width - 1);
   const y = Math.min(Math.floor(canvasTop), height - 1);
-
+  return [x, y];
+}
+const paint = event => {
+  if (!painting) {
+    return;
+  }
+  const [x, y] = convertEventCoordinates(event);
   if (window.UI.state.selectedElement < 0) return;
 
-  let size = sizeMap[window.UI.state.size];
-  size = speciesSizes[window.UI.state.selectedElement] || size;
+  let size = speciesSizes[window.UI.state.selectedElement] || 3;
   universe.paint(x, y, size, window.UI.state.selectedElement);
 };

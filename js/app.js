@@ -36,7 +36,7 @@ function AppRouter() {
       <Route path="/" component={Index} />
       <Route
         exact
-        path="/jar/info/"
+        path="/info/"
         component={() => (
           <Menu>
             <Info />

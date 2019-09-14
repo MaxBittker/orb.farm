@@ -6,7 +6,7 @@ const Menu = ({ close, children }) => {
     <div className="menu-scrim">
       <div className={"menu"}>
         {children}
-        <Link to="/jar/" className="x" onClick={close}>
+        <Link to="/" className="x" onClick={close}>
           <button> x</button>
         </Link>
       </div>

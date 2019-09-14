@@ -44,6 +44,8 @@ pub enum Species {
     Waste = 10,
     Bubble = 16,
     Biofilm = 17,
+
+    Plastic = 20,
 }
 
 impl Species {
@@ -72,6 +74,7 @@ impl Species {
             Species::Seed => update_seed(cell, api),
             Species::Bubble => update_bubble(cell, api),
             Species::Biofilm => {}
+            Species::Plastic => {}
         }
     }
     pub fn blocked_light(&self) -> f32 {
@@ -87,7 +90,7 @@ impl Species {
                 Species::Seed => 35.0,
                 Species::Biofilm => 3.0,
 
-                Species::Algae => 20.0,
+                Species::Algae => 18.0,
                 Species::Bacteria => 10.0,
                 Species::Waste => 10.0,
                 Species::Nitrogen => 10.0,
@@ -101,6 +104,7 @@ impl Species {
                 Species::Stone => 50.0,
                 Species::Wood => 50.0,
                 Species::Sand => 10.0,
+                Species::Plastic => 5.0,
             })
             / 100.0
     }
@@ -939,7 +943,7 @@ pub fn update_plant(cell: Cell, mut api: SandApi) {
         return;
     }
     let mut newage = age;
-    if age > 0 && once_in(cell.energy as i32) {
+    if age > 0 && once_in(cell.energy as i32) && light > 20 {
         api.use_co2();
         newage = age.saturating_add(1);
     }
