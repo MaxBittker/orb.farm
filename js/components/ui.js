@@ -18,8 +18,8 @@ skiplist.push("Plastic");
 window.species = Species;
 let pallette_data = pallette();
 
-function randomRadius() {
-  return 14 + Math.random() * Math.random() * 24;
+function randomRadius(n = 12) {
+  return n + Math.random() * n * 2;
 }
 function organicRadius() {
   return `
@@ -81,8 +81,8 @@ const ElementButton = (name, selectedElement, setElement) => {
 class Index extends React.Component {
   constructor(props) {
     super(props);
-    let tutorialDone = localStorage.getItem("tutorialDone");
-    console.log(tutorialDone);
+    let tutorialProgress = localStorage.getItem("tutorialProgress") || 0;
+    // console.log(tutorialDone);
     this.state = {
       submissionMenuOpen: false,
       paused: false,
@@ -93,17 +93,16 @@ class Index extends React.Component {
       dataURL: {},
       currentSubmission: null,
       selectedElement: Species.Sand,
-      tutorial: !tutorialDone
+      tutorialProgress
     };
     window.UI = this;
     // this.load();
-    if (!tutorialDone) {
-      window.setTimeout(() => {
-        localStorage.setItem("tutorialDone", true);
-
-        this.setState({ tutorial: false });
-      }, 1000 * 10);
-    }
+    // if (!tutorialDone) {
+    window.setTimeout(() => {
+      // localStorage.setItem("tutorialDone", true);
+      // this.setState({ tutorial: false });
+    }, 1000 * 10);
+    // }
   }
 
   componentDidUpdate(prevProps) {}
@@ -209,7 +208,7 @@ class Index extends React.Component {
   findTchotchke() {
     console.log("finding");
     if (this.state.tchotchkes.size >= 2) {
-      return;
+      // return;
     }
     this.setState(({ tchotchkes }) => {
       return { tchotchkes: tchotchkes.add(randomIco()) };
@@ -219,7 +218,7 @@ class Index extends React.Component {
     console.log("loading");
 
     // this.findTchotchke();
-    window.setInterval(() => this.findTchotchke(), 1000 * 60 * 6);
+    window.setInterval(() => this.findTchotchke(), 1000 * 60 * 5);
 
     var cellData = JSON.parse(localStorage.getItem("cell_data"));
     var spriteData = JSON.parse(localStorage.getItem("sprite_data"));
@@ -292,7 +291,7 @@ class Index extends React.Component {
       currentSubmission,
       selectedTchotchke,
       tchotchkes,
-      tutorial
+      tutorialProgress
     } = this.state;
     let hash =
       currentSubmission && currentSubmission.id
@@ -302,9 +301,9 @@ class Index extends React.Component {
     let activeSpecies = Object.keys(Species).filter(
       name => !skiplist.includes(name)
     );
-    if (tutorial) {
-      activeSpecies = ["Sand", "Water"];
-    }
+    // if (tutorial) {
+    //   activeSpecies = ["Sand", "Water"];
+    // }
     return (
       <div id="HUD" className="fade">
         {/* <OrganicButton
@@ -388,6 +387,38 @@ class Index extends React.Component {
           >
             Discard
           </div>
+        )}
+        {tutorialProgress < 3 && (
+          <React.Fragment>
+            <div className="welcome-scrim"></div>
+            <div id="welcome">
+              <img src="https://www.bio.vu.nl/thb/images/daphnia1b.gif"></img>
+              <div className="welcome-right-column">
+                <div className="welcome-speech">
+                  {
+                    [
+                      <h1>Welcome to Orb.Farm!</h1>,
+                      <h1>This is an aquatic ecosystem simulation!</h1>,
+                      <h1>
+                        Fill your tank with sand, water, and virtual lifeform!
+                      </h1>
+                    ][tutorialProgress]
+                  }
+                </div>
+                <span>
+                  <h4>{tutorialProgress + 1}/3</h4>
+                  <OrganicButton
+                    className="next-button"
+                    onClick={() => {
+                      this.setState({ tutorialProgress: tutorialProgress + 1 });
+                    }}
+                  >
+                    Next 🠚
+                  </OrganicButton>
+                </span>
+              </div>
+            </div>
+          </React.Fragment>
         )}
       </div>
     );
