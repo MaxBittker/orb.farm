@@ -51,6 +51,9 @@ const ElementButton = (name, selectedElement, setElement) => {
   let elementID = Species[name];
 
   let color = pallette_data[elementID];
+  if (elementID == Species.Daphnia) {
+    color = pallette_data[Species.Zoop];
+  }
   let selected = elementID == selectedElement;
 
   let background = "inherit";

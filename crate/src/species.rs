@@ -897,7 +897,7 @@ pub fn update_plant(cell: Cell, mut api: SandApi) {
 
     let light = api.get_light().sun;
 
-    if energy > 35
+    if energy > 50
         && age == 0
         && rand_int(light as i32) > 50
         && (api.get(dx, -1).species == Species::Water

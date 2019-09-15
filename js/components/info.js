@@ -6,6 +6,11 @@ const Info = () => {
       <h1>A sealed ecosystem simulation </h1>
       <hr></hr>
       <p>
+        Welcome to orb.farm! This is a virtual ecosystem where different species
+        of creature can live, grow and die as part of a self-contained food
+        chain. Please play, explore, and observe!
+      </p>
+      <p>
         Created by <a href="https://maxbittker.com">max bittker</a>
       </p>
       <p>
@@ -36,7 +41,8 @@ const Info = () => {
         <hr></hr>
 
         <p>
-          <h3>Stone:</h3> Draw arches and castle.
+          <h3>Stone:</h3> Draw archways and castle. Aquascaping is a noble
+          cause.
         </p>
         <hr></hr>
 
@@ -52,7 +58,8 @@ const Info = () => {
         <hr></hr>
 
         <p>
-          <h3>Algae:</h3> Photosynthesizes to produce nutrients and oxygen.
+          <h3>Algae:</h3> Photosynthesizes sunlight to produce nutrients and
+          oxygen. Life of the party!
         </p>
         <hr></hr>
 
@@ -65,19 +72,20 @@ const Info = () => {
 
         <p>
           <h3>Seed:</h3> Grows into eel grass, which is a source of food and
-          oxygen.
+          oxygen. Needs to pull nutrients from sand in order to grow!
         </p>
         <hr></hr>
 
         <p>
           <h3>Bacteria:</h3> Helps break down waste into fertilizer. Decomposers
-          are very important parts to a functioning ecosystem.
+          are very important parts to a functioning ecosystem. Blows bubbles
+          when happy.
         </p>
         <hr></hr>
 
         <p>
-          <h3>Fish:</h3> I can't tell what they're thinking. They feed mostly on
-          daphnia but will also feed on the biofilm that grows on plants.
+          <h3>Fish:</h3> They feed mostly on daphnia but will also feed on the
+          biofilm that grows on plants. I can't tell what they're thinking.
         </p>
         <hr></hr>
 

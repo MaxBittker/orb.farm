@@ -105,10 +105,14 @@ void main() {
     hue = 0.0;
     lightness += 0.4;
   } else if (type == 8) { // Bacteria
-    hue = 0.14;
+    hue = 0.66;
     saturation += 0.2;
     lightness += 0.2;
     a = 0.5;
+    if (isSnapshot) {
+      // lightness += 0.8;
+      a = 1.0;
+    }
 
   } else if (type == 9) { // ???
     hue = 0.6;

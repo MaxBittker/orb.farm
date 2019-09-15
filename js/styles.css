@@ -81,7 +81,7 @@ canvas,
 #plot-canvas {
   pointer-events: none;
   /* border: dashed 2px black; */
-  z-index: 6;
+  z-index: 3;
   /* width:100%; */
   max-width: 40%;
 }
@@ -91,7 +91,7 @@ canvas,
   display: block;
   pointer-events: none;
   text-align: right;
-  z-index: 6;
+  z-index: 4;
   /* width:100%; */
   max-width: 40%;
 }
@@ -124,7 +124,7 @@ button {
   line-height: 0px;
   cursor: pointer;
   box-shadow: inset 0 0 10px gray;
-  text-shadow: 0px 0px 5px whitesmoke;
+  text-shadow: 0px 0px 4px white;
   margin: 1px;
   /* border-radius: 30px 10px 20px 20px / 30px 20px 10px 15px; */
 }
