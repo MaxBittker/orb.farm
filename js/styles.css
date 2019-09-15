@@ -57,6 +57,7 @@ canvas,
   left: 0px;
   z-index: 1;
   max-width: calc(100%);
+  line-height: 0.6;
   /* width: calc(100% - 0px); */
   /* max-width: ca100%; */
   margin: auto;
@@ -184,7 +185,7 @@ button.selected {
 }
 #fps {
   pointer-events: none;
-
+  line-height: 0.6;
   z-index: 3;
   position: absolute;
   right: 0;

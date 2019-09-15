@@ -15,7 +15,7 @@ const Info = () => {
         </a>
       </p>
       <p>
-        See also: <a href="htts://sandspiel.club">sandspiel.club</a>
+        See also: <a href="https://sandspiel.club">sandspiel.club</a>
       </p>{" "}
       <hr></hr>
       <div className="species-info">
@@ -30,7 +30,8 @@ const Info = () => {
         <hr></hr>
 
         <p>
-          <h3>Sand:</h3> Important nutrient vector for plants.
+          <h3>Sand:</h3> Important nutrient vector for plants. Plant seeds in
+          this.
         </p>
         <hr></hr>
 
@@ -46,7 +47,7 @@ const Info = () => {
         <hr></hr>
 
         <p>
-          <h3>Water:</h3> A classic.
+          <h3>Water:</h3> A classic. Doesn't get better than this.
         </p>
         <hr></hr>
 
@@ -69,12 +70,14 @@ const Info = () => {
         <hr></hr>
 
         <p>
-          <h3>Bacteria:</h3> Helps break down waste into fertilizer.
+          <h3>Bacteria:</h3> Helps break down waste into fertilizer. Decomposers
+          are very important parts to a functioning ecosystem.
         </p>
         <hr></hr>
 
         <p>
-          <h3>Fish:</h3> I can't tell what they're thinking.
+          <h3>Fish:</h3> I can't tell what they're thinking. They feed mostly on
+          daphnia but will also feed on the biofilm that grows on plants.
         </p>
         <hr></hr>
 

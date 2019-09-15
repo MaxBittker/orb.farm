@@ -216,7 +216,7 @@ class Index extends React.Component {
     console.log("loading");
 
     // this.findTchotchke();
-    window.setInterval(() => this.findTchotchke(), 1000 * 60 * 10);
+    window.setInterval(() => this.findTchotchke(), 1000 * 60 * 6);
 
     var cellData = JSON.parse(localStorage.getItem("cell_data"));
     var spriteData = JSON.parse(localStorage.getItem("sprite_data"));
