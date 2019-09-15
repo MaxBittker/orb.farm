@@ -208,7 +208,7 @@ class Index extends React.Component {
   findTchotchke() {
     console.log("finding");
     if (this.state.tchotchkes.size >= 2) {
-      // return;
+      return;
     }
     this.setState(({ tchotchkes }) => {
       return { tchotchkes: tchotchkes.add(randomIco()) };
@@ -413,7 +413,7 @@ class Index extends React.Component {
                       this.setState({ tutorialProgress: tutorialProgress + 1 });
                     }}
                   >
-                    Next 🠚
+                    Next ⇨
                   </OrganicButton>
                 </span>
               </div>

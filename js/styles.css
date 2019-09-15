@@ -69,6 +69,7 @@ canvas,
 #sand-canvas {
   z-index: 2;
   margin: auto;
+  cursor: pointer;
 }
 #sky-canvas {
   z-index: 1;
@@ -237,7 +238,7 @@ button.selected {
   z-index: 10;
   margin: auto;
   max-width: 600px;
-  top: 20%;
+  top: 15%;
   left: 20px;
   /* bottom: 20px; */
   right: 20px;
@@ -274,9 +275,12 @@ button.selected {
   }
 }
 .welcome-right-column {
-  margin-top: 150px;
+  margin-top: 20%;
   float: right;
   width: 45%;
+}
+#welcome h1 {
+  font-size: 1em;
 }
 .welcome-speech {
   border: 3px double black;
@@ -316,6 +320,7 @@ button.selected {
   float: right;
   border-style: double;
   border-color: black;
+  background-color: teal;
 }
 .welcome-right-column h4 {
   /* float: right; */
