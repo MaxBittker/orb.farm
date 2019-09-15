@@ -8,8 +8,9 @@ import { height, universe, width, reset } from "../index.js";
 import { snapshot, pallette } from "../render.js";
 import { icos, randomIco } from "../tchotchkes";
 
-let skiplist = ["FishTail", "Bubble", "Waste", "Biofilm", "GoldFishTail"];
+let skiplist = ["FishTail", "Waste", "Biofilm", "GoldFishTail"];
 
+skiplist.push("Bubble");
 skiplist.push("Plant");
 skiplist.push("Zoop");
 skiplist.push("Nitrogen");

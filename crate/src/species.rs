@@ -1055,6 +1055,7 @@ pub fn update_bubble(cell: Cell, mut api: SandApi) {
     if up_dnbr.species != Species::Wood
         && up_dnbr.species != Species::Glass
         && up_dnbr.species != Species::Plant
+        && up_dnbr.species != Species::Plastic
     {
         api.set(0, 0, up_dnbr);
         api.set(dx, -1, cell);
@@ -1062,6 +1063,7 @@ pub fn update_bubble(cell: Cell, mut api: SandApi) {
     } else if up.species != Species::Wood
         && up.species != Species::Glass
         && up.species != Species::Plant
+        && up.species != Species::Plastic
     {
         api.set(0, 0, up);
         api.set(0, -1, cell);
