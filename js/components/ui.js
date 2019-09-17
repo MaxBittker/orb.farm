@@ -19,7 +19,7 @@ skiplist.push("Plastic");
 window.species = Species;
 let pallette_data = pallette();
 
-function randomRadius(n = 12) {
+function randomRadius(n = 8) {
   return n + Math.random() * n * 2;
 }
 function organicRadius() {
@@ -69,7 +69,7 @@ const ElementButton = (name, selectedElement, setElement) => {
         background,
         backgroundColor: color,
         borderRadius: organicRadius(),
-        filter: selected || `saturate(0.5) `
+        filter: selected || `saturate(0.4) `
       }}
     >
       {"  "}
@@ -355,6 +355,15 @@ class Index extends React.Component {
         >
           ↜
         </OrganicButton> */}
+
+        <OrganicButton
+          onClick={() => {
+            exportGif(universe);
+          }}
+        >
+          Snapshot
+        </OrganicButton>
+
         {activeSpecies.map(n =>
           ElementButton(n, selectedTchotchke || selectedElement, id =>
             this.setState({ selectedElement: id, selectedTchotchke: null })
@@ -414,7 +423,7 @@ class Index extends React.Component {
                       this.setState({ tutorialProgress: tutorialProgress + 1 });
                     }}
                   >
-                    Next ⇨
+                    Next >
                   </OrganicButton>
                 </span>
               </div>

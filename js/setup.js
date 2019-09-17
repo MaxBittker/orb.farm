@@ -6,16 +6,17 @@
 // }
 
 let background = document.getElementById("background");
-
+let fadeTimout = 1000 * 30;
 let timeout = window.setTimeout(() => {
   document.body.classList.add("faded");
-}, 12 * 1000);
+}, fadeTimout);
+
 let handleActivity = e => {
   window.clearTimeout(timeout);
   document.body.classList.remove("faded");
   timeout = window.setTimeout(() => {
     document.body.classList.add("faded");
-  }, 12 * 1000);
+  }, fadeTimout);
 };
 document.body.addEventListener("mousemove", handleActivity);
 document.body.addEventListener("touchstart", handleActivity);

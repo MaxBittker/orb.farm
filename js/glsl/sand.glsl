@@ -111,6 +111,8 @@ void main() {
     a = 0.5;
     if (isSnapshot) {
       // lightness += 0.8;
+      saturation -= 0.2;
+
       a = 1.0;
     }
 

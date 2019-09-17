@@ -5,6 +5,7 @@ const Info = () => {
     <div className="Info">
       <h1>A sealed ecosystem simulation </h1>
       <hr></hr>
+      <hr></hr>
       <p>
         Welcome to orb.farm! This is a virtual ecosystem where different species
         of creature can live, grow and die as part of a self-contained food
@@ -22,6 +23,7 @@ const Info = () => {
       <p>
         See also: <a href="https://sandspiel.club">sandspiel.club</a>
       </p>{" "}
+      <hr></hr>
       <hr></hr>
       <div className="species-info">
         <p>
@@ -95,8 +97,8 @@ const Info = () => {
       </div>
       <hr></hr>
       <p>
-        <img src="https://i.pinimg.com/originals/79/94/0d/79940dd994fb3e901af4265493515d00.jpg" />
         <img src="https://camo.githubusercontent.com/93105325a463894a90f70acf42eb79761f85567e/68747470733a2f2f75706c6f61642e77696b696d656469612e6f72672f77696b6970656469612f636f6d6d6f6e732f7468756d622f642f64642f466f6f6457656253696d706c652e6a70672f37323170782d466f6f6457656253696d706c652e6a7067" />
+        <img src="https://i.pinimg.com/originals/79/94/0d/79940dd994fb3e901af4265493515d00.jpg" />
         <img src=" https://scx1.b-cdn.net/csz/news/800/2017/howmarinealg.jpg" />
       </p>
       <p>

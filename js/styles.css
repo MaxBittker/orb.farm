@@ -1,13 +1,19 @@
+:root {
+  --main-dark-color: black;
+}
 * {
   margin: 0;
   /* font-family: monospace; */
   font-family: "Cute Font", cursive;
+  color: var(--main-dark-color);
 }
 
 html,
 body {
   overscroll-behavior-x: none;
   overscroll-behavior-y: none;
+  overflow-x: hidden;
+  overflow: hidden;
 }
 
 body,
@@ -23,23 +29,8 @@ body,
   height: 100%;
   /* background-color: rgba(00, 00, 00, 0.2); */
   background-color: cornsilk;
-  /* background: rgb(154, 45, 12); */
-  /* filter: saturate(0.5); */
-  /* background-size: 100px 100px; */
+}
 
-  /* background-image: url("http://api.thumbr.it/whitenoise-361x370.png?background=c7c1b9ff&noise=626262&density=45&opacity=15"); */
-}
-#background {
-  /* background-image: url("https://source.unsplash.com/collection/2152825/"); */
-  /* background-image: url("https://i.imgur.com/GJtS1mA.png"); */
-
-  /* filter: blur(1px); */
-  /* z-index: -1; */
-}
-body {
-  /* cursor: url("data:image/x-icon;base64,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"), */
-  /* auto; */
-}
 #scene {
   display: flex;
   width: 100%;
@@ -69,7 +60,7 @@ canvas,
 #sand-canvas {
   z-index: 2;
   margin: auto;
-  cursor: pointer;
+  /* cursor: pointer; */
 }
 #sky-canvas {
   z-index: 1;
@@ -117,15 +108,17 @@ button {
   font-size: 30px;
   padding: 1px 5px;
   background-color: whitesmoke;
-  color: black;
+  color: var(--main-dark-color);
   border: 3px ridge whitesmoke;
-  border-color: gainsboro;
   flex-grow: 1;
   max-width: 100px;
-  fill: black;
+  fill: var(--main-dark-color);
   line-height: 0px;
   cursor: pointer;
-  box-shadow: inset 0 0 10px gray;
+  /* box-shadow: inset 0 0 10px gray; */
+  box-shadow: inset 0 0 3px var(--main-dark-color);
+  user-select: none; /* Standard */
+
   text-shadow: 0px 0px 4px white;
   margin: 1px;
   /* border-radius: 30px 10px 20px 20px / 30px 20px 10px 15px; */
@@ -143,15 +136,12 @@ button:focus {
 }
 
 button.selected {
-  background-color: black;
+  background-color: var(--main-dark-color);
   color: whitesmoke;
-  border-color: grey;
-  border-style: inset;
-  fill: whitesmoke;
-  /* font-weight: bold; */
-  text-shadow: 1.6px 1.5px 0 grey, -1px -1px 0 grey, 1px -1px 0 grey,
-    -1px 1px 0 grey, 1px 1px 0 grey;
-  box-shadow: inset 0 0 10px black;
+  border-style: ridge;
+  text-shadow: 0px 0px 4px black;
+  animation: baby-float 1s ease-in-out infinite;
+  animation-direction: alternate;
 }
 
 .submission-title {
@@ -170,6 +160,7 @@ button.selected {
   flex-wrap: wrap;
 
   z-index: 3;
+  padding: 4px;
 }
 
 .fade {
@@ -214,7 +205,7 @@ button.selected {
 .tchotchkes img.selected {
   /* box-shadow: 0px 0px 3px 3px pink; */
   transform: scale(1.3);
-  filter: drop-shadow(0 0 0.5rem black);
+  filter: drop-shadow(0 0 0.5rem var(--main-dark-color));
 }
 .discard {
   margin: 3px;
@@ -244,11 +235,11 @@ button.selected {
   right: 20px;
   padding: 30px;
   background-color: rgb(211, 200, 252);
-  border: 3px double black;
+  border: 4px double teal;
   border-radius: 5px;
   filter: drop-shadow(0 0 5rem pink);
 
-  box-shadow: inset 0 0 40px teal;
+  box-shadow: inset 0 0 30px rgba(0, 128, 128, 0.733);
 }
 
 #welcome img {
@@ -274,6 +265,20 @@ button.selected {
     transform: translatey(0px);
   }
 }
+@keyframes baby-float {
+  0% {
+    /* box-shadow: 0 5px 15px 0px rgba(0, 0, 0, 0.6); */
+    transform: translatey(-0px);
+  }
+  50% {
+    /* box-shadow: 0 25px 15px 0px rgba(0, 0, 0, 0.2); */
+    transform: translatey(1px);
+  }
+  100% {
+    /* box-shadow: 0 5px 15px 0px rgba(0, 0, 0, 0.6); */
+    transform: translatey(-0px);
+  }
+}
 .welcome-right-column {
   margin-top: 20%;
   float: right;
@@ -281,12 +286,14 @@ button.selected {
 }
 #welcome h1 {
   font-size: 1em;
+  line-height: 0.7em;
 }
 .welcome-speech {
-  border: 3px double black;
+  border: 4px double var(--main-dark-color);
   border-radius: 10px;
   position: relative;
   padding: 5px;
+
   /* border-radius:     / 100px 100px 100px 100xp; */
 }
 .welcome-speech:before {
@@ -294,9 +301,9 @@ button.selected {
   width: 0px;
   height: 0px;
   position: absolute;
-  border-right: 10px solid black;
+  border-right: 10px solid var(--main-dark-color);
   border-left: 10px solid transparent;
-  border-top: 10px solid black;
+  border-top: 10px solid var(--main-dark-color);
   border-bottom: 10px solid transparent;
   left: -20px;
   top: 6px;
@@ -306,12 +313,12 @@ button.selected {
   width: 0px;
   height: 0px;
   position: absolute;
-  border-right: 7px solid rgb(211, 200, 252);
-  border-left: 7px solid transparent;
-  border-top: 7px solid rgb(211, 200, 252);
-  border-bottom: 7px solid transparent;
-  left: -11px;
-  top: 10px;
+  border-right: 9px solid rgb(211, 200, 252);
+  border-left: 9px solid transparent;
+  border-top: 9px solid rgb(211, 200, 252);
+  border-bottom: 9px solid transparent;
+  left: -18px;
+  top: 7px;
 }
 .next-button {
   margin: 10px;
@@ -319,8 +326,8 @@ button.selected {
   max-width: 600px;
   float: right;
   border-style: double;
-  border-color: black;
-  background-color: teal;
+  border-color: var(--main-dark-color);
+  background-color: rgba(0, 128, 128, 0.133);
 }
 .welcome-right-column h4 {
   /* float: right; */
@@ -341,7 +348,7 @@ button.selected {
   left: 10px;
   right: 10px;
   top: 10px;
-  /* bottom: 10px; */
+  bottom: 10px;
   z-index: 5;
   background-color: #f3f3f4;
   border: 1px solid gray;
@@ -349,6 +356,7 @@ button.selected {
   padding: 5px;
   max-width: 900px;
   margin: auto;
+  overflow-y: auto;
 }
 .menu p,
 .menu a {

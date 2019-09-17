@@ -42,6 +42,8 @@
     "@babel/plugin-proposal-class-properties": "^7.5.5",
     "file-loader": "^4.2.0",
     "gh-pages": "^2.1.1",
+    "gif.js": "^0.2.0",
+    "gl-gif": "^3.1.0",
     "glsl-hsv2rgb": "^1.0.0",
     "glsl-noise": "0.0.0",
     "glsl-random": "0.0.5",

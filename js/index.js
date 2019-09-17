@@ -132,8 +132,8 @@ const renderLoop = () => {
       break;
     }
   }
-
-  drawSand();
+  window.t = t;
+  drawSand.draw();
   let skyTime = dayTime / 255;
   sky.frame(skyTime);
   drawPlot();

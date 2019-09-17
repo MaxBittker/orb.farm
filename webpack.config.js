@@ -30,7 +30,8 @@ module.exports = {
       "js/styles.css",
       "manifest.json",
       "assets/*",
-      "assets/tchotchkes/*"
+      "assets/tchotchkes/*",
+      { from: "assets/gif.worker.js", to: "gif.worker.js" }
     ]),
     new HtmlWebpackPlugin({ template: "index.html" }),
     new GenerateSW({ navigateFallback: "index.html" })
