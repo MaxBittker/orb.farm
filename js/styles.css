@@ -105,7 +105,7 @@ h1 {
 button {
   z-index: 3;
   position: relative;
-  height: 35px;
+  height: 45px;
   min-width: 30px;
   font-size: 20px;
   padding: 1px 5px;
@@ -290,7 +290,7 @@ button.selected {
   width: 45%;
 }
 #welcome h1 {
-  font-size: 1em;
+  font-size: 25px;
   /* line-height: 0.9em; */
 }
 .welcome-speech {
@@ -327,18 +327,22 @@ button.selected {
 }
 .next-button {
   margin: 10px;
-  font-size: 40px;
+  font-size: 20px;
   padding: 20px;
   max-width: 600px;
   float: right;
   border-style: double;
+  border-width: 4px;
   border-color: var(--main-dark-color);
-  background-color: rgba(128, 0, 128, 0.333);
+  background-color: rgba(158, 0, 128, 0.333);
 }
 .welcome-right-column h4 {
   /* float: right; */
+  font-size: 0.7em;
+  margin: 10px;
+
   text-align: right;
-  margin-bottom: 0px;
+  margin-bottom: -5px;
 }
 #controls {
   display: flex;

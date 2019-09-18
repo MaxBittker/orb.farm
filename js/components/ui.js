@@ -8,8 +8,8 @@ import { height, universe, width, reset } from "../index.js";
 import { exportGif, pallette } from "../render.js";
 import { icos, randomIco } from "../tchotchkes";
 
-let skiplist = ["FishTail", "Waste", "Biofilm", "GoldFishTail"];
-
+let skiplist = ["FishTail", "Biofilm", "GoldFishTail"];
+// skiplist.push("Waste");
 skiplist.push("Bubble");
 skiplist.push("Plant");
 skiplist.push("Zoop");
@@ -307,6 +307,22 @@ class Index extends React.Component {
     // }
     return (
       <div id="HUD" className="fade">
+        {/* <OrganicButton> */}
+        <iframe
+          style={{
+            border: "3px ridge whitesmoke",
+            width: "370px",
+            height: "40px",
+            borderRadius: organicRadius()
+          }}
+          src="https://bandcamp.com/EmbeddedPlayer/album=4022061967/size=small/bgcol=ffffff/linkcol=7137dc/artwork=none/transparent=true/"
+          seamless
+        >
+          <a href="http://mlesprg.bandcamp.com/album/mount-vision">
+            Mount Vision by Emily A. Sprague
+          </a>
+        </iframe>
+        {/* </OrganicButton> */}
         {/* <OrganicButton
           onClick={() => this.togglePause()}
           className={paused ? "selected" : ""}
