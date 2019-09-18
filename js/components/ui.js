@@ -5,7 +5,7 @@ import { memory } from "../../crate/pkg/sandtable_bg";
 import { Species } from "../../crate/pkg/sandtable";
 
 import { height, universe, width, reset } from "../index.js";
-import { snapshot, pallette } from "../render.js";
+import { exportGif, pallette } from "../render.js";
 import { icos, randomIco } from "../tchotchkes";
 
 let skiplist = ["FishTail", "Waste", "Biofilm", "GoldFishTail"];
@@ -361,7 +361,7 @@ class Index extends React.Component {
             exportGif(universe);
           }}
         >
-          Snapshot
+          📷
         </OrganicButton>
 
         {activeSpecies.map(n =>

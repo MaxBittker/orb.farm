@@ -38,6 +38,7 @@ function tryPlaceTchotchke(event) {
   if (url) {
     window.UI.setState(({ tchotchkes }) => {
       tchotchkes.delete(url);
+      document.documentElement.style.cursor = `default`;
       return { tchotchkes, selectedTchotchke: null };
     });
     const [x, y] = convertEventCoordinates(event);
