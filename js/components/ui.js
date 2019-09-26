@@ -7,6 +7,8 @@ import { Species } from "../../crate/pkg/sandtable";
 import { height, universe, width, reset } from "../index.js";
 import { exportGif, pallette } from "../render.js";
 import { icos, randomIco } from "../tchotchkes";
+import daphniaImg from "../../assets/daphnia.gif";
+console.log(daphniaImg);
 
 let skiplist = ["FishTail", "Biofilm", "GoldFishTail"];
 // skiplist.push("Waste");
@@ -414,25 +416,52 @@ class Index extends React.Component {
             Discard
           </div>
         )}
-        {tutorialProgress < 3 && (
+        {tutorialProgress < 4 && (
           <React.Fragment>
             <div className="welcome-scrim"></div>
             <div id="welcome">
-              <img src="https://www.bio.vu.nl/thb/images/daphnia1b.gif"></img>
+              <OrganicButton
+                className="x"
+                onClick={() => {
+                  this.setState({ tutorialProgress: 3 });
+                }}
+              >
+                x
+              </OrganicButton>
+              <img src={daphniaImg}></img>
               <div className="welcome-right-column">
                 <div className="welcome-speech">
                   {
                     [
-                      <h1>Welcome to Orb.Farm!</h1>,
-                      <h1>This is an aquatic ecosystem simulation!</h1>,
-                      <h1>
-                        Fill your tank with sand, water, and virtual lifeform!
-                      </h1>
+                      <span>
+                        <h1>Welcome to Orb.Farm!</h1>{" "}
+                        <p>
+                          This is your personal aquatic ecosystem to sculpt and
+                          nurture however you choose.
+                        </p>
+                      </span>,
+                      <p>
+                        My advice is that you should start by filling your tank
+                        with
+                        {ElementButton("Sand", null, () => {})} and{" "}
+                        {ElementButton("Water", null, () => {})}.
+                      </p>,
+                      <p>
+                        From there, try to introduce lifeforms such as the
+                        loveable {ElementButton("Daphnia", null, () => {})} —
+                        just please don't forget some tasty green
+                        {ElementButton("Algae", null, () => {})} for us to eat
+                        when we hatch.
+                      </p>,
+                      <p>
+                        Balance the needs of your ecosystem to achieve a stable
+                        orb community. Good luck!
+                      </p>
                     ][tutorialProgress]
                   }
                 </div>
                 <span>
-                  <h4>{tutorialProgress + 1}/3</h4>
+                  <h4>{tutorialProgress + 1}/4</h4>
                   <OrganicButton
                     className="next-button"
                     onClick={() => {

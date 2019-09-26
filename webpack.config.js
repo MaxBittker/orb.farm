@@ -39,7 +39,7 @@ module.exports = {
   module: {
     rules: [
       {
-        test: /\.(ico)$/i,
+        test: /\.(ico|gif)$/i,
         use: [
           {
             loader: "file-loader",
