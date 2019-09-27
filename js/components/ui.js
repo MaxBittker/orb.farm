@@ -7,8 +7,10 @@ import { Species } from "../../crate/pkg/sandtable";
 import { height, universe, width, reset } from "../index.js";
 import { exportGif, pallette } from "../render.js";
 import { icos, randomIco } from "../tchotchkes";
-import daphniaImg from "../../assets/daphnia.gif";
-console.log(daphniaImg);
+import daphniaImg from "../../assets/daphnia2.gif";
+import bubblebig from "../../assets/bubblebig.png";
+import bubblemed from "../../assets/bubblemed.png";
+import bubblesmall from "../../assets/bubblesmall.png";
 
 let skiplist = ["FishTail", "Biofilm", "GoldFishTail"];
 // skiplist.push("Waste");
@@ -310,7 +312,7 @@ class Index extends React.Component {
     return (
       <div id="HUD" className="fade">
         {/* <OrganicButton> */}
-        <iframe
+        {/* <iframe
           style={{
             border: "3px ridge whitesmoke",
             width: "370px",
@@ -323,7 +325,7 @@ class Index extends React.Component {
           <a href="http://mlesprg.bandcamp.com/album/mount-vision">
             Mount Vision by Emily A. Sprague
           </a>
-        </iframe>
+        </iframe> */}
         {/* </OrganicButton> */}
         {/* <OrganicButton
           onClick={() => this.togglePause()}
@@ -420,15 +422,14 @@ class Index extends React.Component {
           <React.Fragment>
             <div className="welcome-scrim"></div>
             <div id="welcome">
-              <OrganicButton
+              {/* <OrganicButton
                 className="x"
                 onClick={() => {
-                  this.setState({ tutorialProgress: 3 });
+                  this.setState({ tutorialProgress: 10 });
                 }}
               >
                 x
-              </OrganicButton>
-              <img src={daphniaImg}></img>
+              </OrganicButton> */}
               <div className="welcome-right-column">
                 <div className="welcome-speech">
                   {
@@ -436,42 +437,46 @@ class Index extends React.Component {
                       <span>
                         <h1>Welcome to Orb.Farm!</h1>{" "}
                         <p>
-                          This is your personal aquatic ecosystem to sculpt and
-                          nurture however you choose.
+                          This is your personal aquatic ecosystem to sculpt,
+                          nurture, and observe.
                         </p>
                       </span>,
                       <p>
-                        My advice is that you should start by filling your tank
-                        with
+                        My advice? Start with the basics. Fill your tank with{" "}
                         {ElementButton("Sand", null, () => {})} and{" "}
-                        {ElementButton("Water", null, () => {})}.
+                        {ElementButton("Water", null, () => {})}. Or vice versa!
                       </p>,
                       <p>
-                        From there, try to introduce lifeforms such as the
-                        loveable {ElementButton("Daphnia", null, () => {})} —
-                        just please don't forget some tasty green
+                        From there, introduce lifeforms such as adorable{" "}
+                        {ElementButton("Daphnia", null, () => {})} — just don't
+                        forget some tasty{" "}
                         {ElementButton("Algae", null, () => {})} for us to eat
                         when we hatch.
                       </p>,
-                      <p>
-                        Balance the needs of your ecosystem to achieve a stable
-                        orb community. Good luck!
-                      </p>
+                      <span>
+                        <p>
+                          Balance the needs of your ecosystem to achieve a
+                          stable Orb community.
+                        </p>
+                        <h1>Have fun!</h1>{" "}
+                      </span>
                     ][tutorialProgress]
                   }
                 </div>
-                <span>
-                  <h4>{tutorialProgress + 1}/4</h4>
-                  <OrganicButton
-                    className="next-button"
-                    onClick={() => {
-                      this.setState({ tutorialProgress: tutorialProgress + 1 });
-                    }}
-                  >
-                    Next >
-                  </OrganicButton>
-                </span>
               </div>
+              <img id="daphnia" src={daphniaImg}></img>
+              <span>
+                <img id="bubblebig" src={bubblebig}></img>
+                <h4>{tutorialProgress + 1}/4</h4>
+                <OrganicButton
+                  className="next-button"
+                  onClick={() => {
+                    this.setState({ tutorialProgress: tutorialProgress + 1 });
+                  }}
+                >
+                  {tutorialProgress < 3 ? "Next >" : "Begin!"}
+                </OrganicButton>
+              </span>
             </div>
           </React.Fragment>
         )}

@@ -1,4 +1,8 @@
 import React from "react";
+// import daphniaImg from "../../assets/daphnia.gif";
+import bubblebig from "../../assets/bubblebig.png";
+import bubblemed from "../../assets/bubblemed.png";
+import bubblesmall from "../../assets/bubblesmall.png";
 
 const Info = () => {
   return (
@@ -26,87 +30,106 @@ const Info = () => {
       <hr></hr>
       <hr></hr>
       <div className="species-info">
-        <p>
-          <h3>Air:</h3> Mostly used to erase things.
-        </p>
+        <span>
+          <h1>Air:</h1>
+          <p>Mostly used to erase things.</p>
+          <hr></hr>
+        </span>
+        <span>
+          <h1>Glass:</h1>
+          <p>Lets in light, seals in flavor.</p>
+          <hr></hr>
+        </span>
+        <span>
+          <h1>Sand:</h1>
+          <p>Important nutrient vector for plants. Plant seeds in this.</p>
+          <hr></hr>
+        </span>
+        <span>
+          <h1>Stone:</h1>
+          <p>Draw archways and castle. Aquascaping is a noble cause.</p>
+          <hr></hr>
+        </span>
+        <span>
+          <h1>Wood:</h1>
+          <p>
+            Driftwood adds natural decorative flare and provides a place for
+            fish to hide.
+          </p>
+        </span>
         <hr></hr>
-
-        <p>
-          <h3>Glass:</h3> Lets in light, seals in flavor.
-        </p>
+        <span>
+          <h1>Water:</h1>
+          <p>A classic. Doesn't get better than this.</p>
+          <hr></hr>
+        </span>
+        <span>
+          <h1>Algae:</h1>
+          <p>
+            Photosynthesizes sunlight to produce nutrients and oxygen. Life of
+            the party!
+          </p>
+        </span>
         <hr></hr>
+        <span>
+          <h1>Daphnia:</h1>
+          <p>
+            Also know as water fleas, these freshwater zooplankton are important
+            parts of the ecosystem. They feed on algae and lay eggs! More active
+            at night.
+          </p>
+          <hr></hr>
+        </span>
 
-        <p>
-          <h3>Sand:</h3> Important nutrient vector for plants. Plant seeds in
-          this.
-        </p>
-        <hr></hr>
+        <span>
+          <h1>Seed:</h1>
+          <p>
+            Grows into eel grass, which is a source of food and oxygen. Needs to
+            pull nutrients from sand in order to grow!
+          </p>
+          <hr></hr>
+        </span>
 
-        <p>
-          <h3>Stone:</h3> Draw archways and castle. Aquascaping is a noble
-          cause.
-        </p>
-        <hr></hr>
+        <span>
+          <h1>Bacteria:</h1>
+          <p>
+            Helps break down waste into fertilizer. Decomposers are very
+            important parts to a functioning ecosystem. Blows bubbles when
+            happy.
+          </p>
+          <hr></hr>
+        </span>
 
-        <p>
-          <h3>Wood:</h3> Driftwood adds natural decorative flare and provides a
-          place for fish to hide.
-        </p>
-        <hr></hr>
+        <span>
+          <h1>Fish:</h1>
+          <p>
+            They feed mostly on daphnia but will also feed on the biofilm that
+            grows on plants. I can't tell what they're thinking.
+          </p>
+          <hr></hr>
+        </span>
 
-        <p>
-          <h3>Water:</h3> A classic. Doesn't get better than this.
-        </p>
-        <hr></hr>
-
-        <p>
-          <h3>Algae:</h3> Photosynthesizes sunlight to produce nutrients and
-          oxygen. Life of the party!
-        </p>
-        <hr></hr>
-
-        <p>
-          <h3>Daphnia:</h3> Also know as water fleas, these freshwater
-          zooplankton are important parts of the ecosystem. They feed on algae
-          and lay eggs! More active at night.
-        </p>
-        <hr></hr>
-
-        <p>
-          <h3>Seed:</h3> Grows into eel grass, which is a source of food and
-          oxygen. Needs to pull nutrients from sand in order to grow!
-        </p>
-        <hr></hr>
-
-        <p>
-          <h3>Bacteria:</h3> Helps break down waste into fertilizer. Decomposers
-          are very important parts to a functioning ecosystem. Blows bubbles
-          when happy.
-        </p>
-        <hr></hr>
-
-        <p>
-          <h3>Fish:</h3> They feed mostly on daphnia but will also feed on the
-          biofilm that grows on plants. I can't tell what they're thinking.
-        </p>
-        <hr></hr>
-
-        <p>
-          <h3>Gold Fish:</h3> Loyal but simple minded.
-        </p>
+        <span>
+          <h1>Gold Fish:</h1>
+          <p>Loyal but simple minded.</p>
+        </span>
       </div>
       <hr></hr>
+      <h1> Credits:</h1>
       <p>
-        <img src="https://camo.githubusercontent.com/93105325a463894a90f70acf42eb79761f85567e/68747470733a2f2f75706c6f61642e77696b696d656469612e6f72672f77696b6970656469612f636f6d6d6f6e732f7468756d622f642f64642f466f6f6457656253696d706c652e6a70672f37323170782d466f6f6457656253696d706c652e6a7067" />
-        <img src="https://i.pinimg.com/originals/79/94/0d/79940dd994fb3e901af4265493515d00.jpg" />
-        <img src=" https://scx1.b-cdn.net/csz/news/800/2017/howmarinealg.jpg" />
+        Daphnia Art:{" "}
+        <a href="https://twitter.com/aconfuseddragon">aconfuseddragon</a>
       </p>
+      <p>Font: PixelMix by Andrew Tyler</p>
       <p>
-        background shader: forked from{" "}
+        Background Art:
         <a href="https://www.shadertoy.com/view/tdSXzD">
           "The sun, the sky and the clouds"
         </a>{" "}
         by stilltravelling
+      </p>
+      <p>
+        <img src="https://camo.githubusercontent.com/93105325a463894a90f70acf42eb79761f85567e/68747470733a2f2f75706c6f61642e77696b696d656469612e6f72672f77696b6970656469612f636f6d6d6f6e732f7468756d622f642f64642f466f6f6457656253696d706c652e6a70672f37323170782d466f6f6457656253696d706c652e6a7067" />
       </p>
     </div>
   );

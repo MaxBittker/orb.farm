@@ -4,12 +4,28 @@
   --zoop-pink: #ea76d9;
   --zoop-dark: #683a7e;
 }
+/* 
+@font-face {
+  font-family: "rainyheartsmedium";
+  src: url("assets/rainyhearts-webfont.woff2") format("woff2"),
+    url("assets/rainyhearts-webfont.woff") format("woff");
+  font-weight: normal;
+  font-style: normal;
+} */
+@font-face {
+  font-family: "pixelmixregular";
+  src: url("assets/pixelmix-webfont.woff2") format("woff2"),
+    url("assets/pixelmix-webfont.woff") format("woff");
+  font-weight: normal;
+  font-style: normal;
+}
+
 * {
   margin: 0;
-  /* font-family: monospace; */
-  /* font-family: "Cute Font", cursive; */
-  font-family: "Bitter", serif;
-
+  /* font-family: "Bitter", serif; */
+  font-family: "pixelmixregular", monospace;
+  font-smooth: never;
+  -webkit-font-smoothing: none;
   color: var(--main-dark-color);
 }
 
@@ -49,6 +65,7 @@ canvas,
 #plot-label {
   position: absolute;
   bottom: 0;
+  font-size: 18px;
   /* top: 0; */
   right: 0px;
   left: 0px;
@@ -109,15 +126,15 @@ h1 {
 button {
   z-index: 3;
   position: relative;
-  height: 45px;
+  height: 30px;
   min-width: 30px;
-  font-size: 20px;
+  font-size: 12px;
   padding: 1px 5px;
   background-color: whitesmoke;
   color: var(--main-dark-color);
   border: 3px ridge whitesmoke;
   flex-grow: 1;
-  max-width: 100px;
+  max-width: 120px;
   fill: var(--main-dark-color);
   line-height: 0px;
   cursor: pointer;
@@ -170,6 +187,9 @@ button.selected {
   z-index: 3;
   padding: 4px;
 }
+#HUD a {
+  line-height: 0;
+}
 
 .fade {
   opacity: 1;
@@ -186,7 +206,7 @@ button.selected {
 }
 #fps {
   pointer-events: none;
-  font-size: 15px;
+  font-size: 18px;
   line-height: 0.9;
   z-index: 3;
   position: absolute;
@@ -238,27 +258,31 @@ button.selected {
   z-index: 10;
   margin: auto;
   max-width: 600px;
-  top: 15%;
-  left: 20px;
-  /* bottom: 20px; */
-  right: 20px;
-  padding: 30px;
+  top: 8px;
+  bottom: 20px;
+  overflow: hidden;
+  left: 5px;
+  right: 5px;
+  padding: 3px;
   background-color: rgb(211, 200, 252);
   border: 4px double rgba(42, 87, 128);
   border-radius: 5px;
   filter: drop-shadow(0 0 2rem rgba(111, 42, 128, 0.5));
 
-  box-shadow: inset 0 0 30px rgba(42, 87, 128);
+  box-shadow: inset 0 0 3px rgba(42, 87, 128);
 }
 
-#welcome img {
+#welcome #daphnia {
   display: inline-block;
-  max-width: 50%;
-  width: 50%;
-  border-radius: 25%;
+  /* max-width: 50%; */
+  width: 100%;
+  /* border-radius: 25%; */
+  margin-right: -20px;
+  margin-top: -10px;
+  margin-bottom: -180px;
   /* transform: ; */
   /* filter: invert(1); */
-  image-rendering: unset;
+  /* image-rendering: unset; */
   animation: float 6s ease-in-out infinite;
   /* filter: drop-shadow(2px 4px 4px grey); */
 }
@@ -290,34 +314,38 @@ button.selected {
     transform: translatey(-0px);
   }
 }
-.welcome-right-column {
-  margin-top: 20%;
-  float: right;
-  width: 50%;
-}
+
 #welcome .welcome-speech p,
 h1 {
-  font-size: 16px;
+  font-size: 18px;
   color: var(--zoop-dark);
 
   line-height: 30px;
 }
 #welcome p button {
-  height: 30px;
+  height: 32px;
+  font-size: 18px;
 }
 
 #welcome .welcome-speech h1 {
   font-size: 18px;
 
   /* text-decoration: wavy var(--zoop-purple) underline; */
-  margin-bottom: 10px;
+  margin-bottom: 5px;
 }
 .welcome-speech {
   border: 4px double var(--zoop-purple);
   background-color: whitesmoke;
   border-radius: 10px;
+  max-width: 500px;
+  top: 10px;
+
+  bottom: -20px;
+  margin: 20px;
+  /* margin: auto; */
   position: relative;
-  padding: 5px;
+  z-index: 10;
+  padding: 10px;
   box-shadow: 0 0 10px rgba(42, 87, 128, 0.3);
 
   /* border-radius:     / 100px 100px 100px 100xp; */
@@ -331,8 +359,8 @@ h1 {
   border-left: 10px solid transparent;
   border-top: 10px solid var(--zoop-purple);
   border-bottom: 10px solid transparent;
-  left: -20px;
-  top: 6px;
+  left: 56px;
+  bottom: -20px;
 }
 .welcome-speech:after {
   content: "";
@@ -343,15 +371,18 @@ h1 {
   border-left: 9px solid transparent;
   border-top: 9px solid whitesmoke;
   border-bottom: 9px solid transparent;
-  left: -18px;
-  top: 7px;
+  left: 57px;
+  bottom: -18px;
 }
 .next-button {
   margin: 10px;
   font-size: 18px;
   padding: 20px;
   max-width: 600px;
-  float: right;
+  position: absolute;
+  right: 10px;
+  bottom: 50px;
+
   border-style: double;
   border-width: 4px;
   border-color: whitesmoke;
@@ -361,10 +392,25 @@ h1 {
   background-color: var(--zoop-purple);
   color: whitesmoke;
 }
-.welcome-right-column h4 {
-  /* float: right; */
-  font-size: 0.7em;
+#bubblebig {
   margin: 10px;
+  position: absolute;
+  bottom: 120px;
+  right: 6px;
+  z-index: 11;
+  width: 70px;
+  height: 70px;
+  text-align: right;
+  margin-bottom: -5px;
+}
+#welcome h4 {
+  font-size: 24px;
+  margin: 10px;
+  position: absolute;
+  bottom: 142px;
+  right: 15px;
+  z-index: 10;
+
   color: var(--zoop-dark);
 
   text-align: right;
@@ -396,12 +442,13 @@ h1 {
 }
 .menu p,
 .menu a {
-  font-family: serif;
+  font-size: 18px;
+  line-height: 24px;
 }
 .species-info {
   column-count: 2;
 }
-.species-info p {
+.species-info span {
   display: inline-block;
 }
 
@@ -434,7 +481,6 @@ input {
   position: relative;
   height: 25px;
   min-width: 30px;
-  font-size: 19px;
   padding: 1px 5px;
   background-color: whitesmoke;
   color: black;
