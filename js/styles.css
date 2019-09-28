@@ -126,9 +126,9 @@ h1 {
 button {
   z-index: 3;
   position: relative;
-  height: 30px;
+  height: 34px;
   min-width: 30px;
-  font-size: 12px;
+  font-size: 18px;
   padding: 1px 5px;
   background-color: whitesmoke;
   color: var(--main-dark-color);
@@ -165,8 +165,10 @@ button.selected {
 
   border-style: ridge;
   text-shadow: 0px 0px 4px black;
-  animation: baby-float 1s ease-in-out infinite;
-  animation-direction: alternate;
+  box-shadow: inset 0 0 3px white;
+  transform: rotate(1.5deg);
+  /* animation: baby-float 1s ease-in-out infinite; */
+  /* animation-direction: alternate; */
 }
 
 .submission-title {
@@ -208,7 +210,7 @@ button.selected {
   pointer-events: none;
   font-size: 18px;
   line-height: 0.9;
-  z-index: 3;
+  z-index: 2;
   position: absolute;
   right: 0;
   bottom: 0;
@@ -258,8 +260,8 @@ button.selected {
   z-index: 10;
   margin: auto;
   max-width: 600px;
-  top: 8px;
-  bottom: 20px;
+  top: 5px;
+  bottom: 5px;
   overflow: hidden;
   left: 5px;
   right: 5px;
@@ -278,7 +280,7 @@ button.selected {
   width: 100%;
   /* border-radius: 25%; */
   margin-right: -20px;
-  margin-top: -10px;
+  margin-top: -30px;
   margin-bottom: -180px;
   /* transform: ; */
   /* filter: invert(1); */
@@ -289,11 +291,11 @@ button.selected {
 @keyframes float {
   0% {
     /* box-shadow: 0 5px 15px 0px rgba(0, 0, 0, 0.6); */
-    transform: translatey(-px);
+    transform: translatey(0);
   }
   50% {
     /* box-shadow: 0 25px 15px 0px rgba(0, 0, 0, 0.2); */
-    transform: translatey(-5px);
+    transform: translatey(-10px);
   }
   100% {
     /* box-shadow: 0 5px 15px 0px rgba(0, 0, 0, 0.6); */
@@ -329,7 +331,6 @@ h1 {
 
 #welcome .welcome-speech h1 {
   font-size: 18px;
-
   /* text-decoration: wavy var(--zoop-purple) underline; */
   margin-bottom: 5px;
 }
@@ -338,10 +339,11 @@ h1 {
   background-color: whitesmoke;
   border-radius: 10px;
   max-width: 500px;
-  top: 10px;
+  top: 00px;
 
   bottom: -20px;
   margin: 20px;
+  margin-top: 10px;
   /* margin: auto; */
   position: relative;
   z-index: 10;
@@ -381,7 +383,7 @@ h1 {
   max-width: 600px;
   position: absolute;
   right: 10px;
-  bottom: 50px;
+  bottom: 20px;
 
   border-style: double;
   border-width: 4px;
@@ -391,23 +393,25 @@ h1 {
 
   background-color: var(--zoop-purple);
   color: whitesmoke;
+  /* animation: float 4s ease-in-out infinite; */
 }
 #bubblebig {
   margin: 10px;
   position: absolute;
-  bottom: 120px;
+  bottom: 90px;
   right: 6px;
   z-index: 11;
   width: 70px;
   height: 70px;
   text-align: right;
   margin-bottom: -5px;
+  animation: float 6s ease-in-out infinite;
 }
 #welcome h4 {
   font-size: 24px;
   margin: 10px;
   position: absolute;
-  bottom: 142px;
+  bottom: 112px;
   right: 15px;
   z-index: 10;
 
@@ -415,6 +419,7 @@ h1 {
 
   text-align: right;
   margin-bottom: -5px;
+  animation: float 6s ease-in-out infinite;
 }
 #controls {
   display: flex;

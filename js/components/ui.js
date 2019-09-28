@@ -135,7 +135,7 @@ class Index extends React.Component {
     });
   }
   reset() {
-    if (window.confirm("Reset?")) {
+    if (window.confirm("Reset your ecosystem?")) {
       this.play();
       this.setState({ currentSubmission: null });
       reset();
@@ -458,7 +458,7 @@ class Index extends React.Component {
                           Balance the needs of your ecosystem to achieve a
                           stable Orb community.
                         </p>
-                        <h1>Have fun!</h1>{" "}
+                        <h1>And have fun!</h1>{" "}
                       </span>
                     ][tutorialProgress]
                   }

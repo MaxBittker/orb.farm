@@ -1,3 +1,19 @@
+release checklist:
+
+- audit tchotchkeys
+- audit intro text / copy
+
+- supress welcome
+- slower tchotchkes
+
+- limit plant growth
+- sand colors?
+
+- gif snapshot menu
+- drag tchotchkes sprite cursor
+
+=====================================================
+
 Sunlight
 
 Nutrients:
@@ -31,10 +47,8 @@ sand
 element images + description
 color grade
 night light?
-intro text / copy
 non-circlular tank
 punnet square recessive genes red shrimp
-record gif
 
 prizes/ tchotchkeys
 
