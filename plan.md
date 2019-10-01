@@ -3,14 +3,15 @@ release checklist:
 - audit tchotchkeys
 - audit intro text / copy
 
-- supress welcome
-- slower tchotchkes
+* limit plant growth
+* sand colors?
+* plot style
+* selected button style
+* drag tchotchkes sprite cursor
 
-- limit plant growth
-- sand colors?
-
-- gif snapshot menu
-- drag tchotchkes sprite cursor
+<!-- * gif snapshot menu -->
+<!-- - slower tchotchkes -->
+<!-- - supress welcome -->
 
 =====================================================
 

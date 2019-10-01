@@ -1,17 +1,28 @@
 const reglBuilder = require("regl");
+const GIF = require("gif.js");
+// const GIF = require("gl-gif");
 import { memory } from "../crate/pkg/sandtable_bg";
 window.memory = memory;
 import { Species } from "../crate/pkg/sandtable";
 import { Universe } from "../crate/pkg";
+import { finished } from "stream";
 
 let fsh = require("./glsl/sand.glsl");
 let vsh = require("./glsl/sandVertex.glsl");
 
-let startWebGL = ({ canvas, universe, isSnapshot = false }) => {
-  const regl = reglBuilder({
-    canvas,
-    attributes: { preserveDrawingBuffer: isSnapshot }
-  });
+let startWebGL = ({ canvas, universe, isSnapshot = false, gl }) => {
+  let regl;
+  if (gl) {
+    regl = reglBuilder({
+      gl,
+      attributes: { preserveDrawingBuffer: isSnapshot }
+    });
+  } else {
+    regl = reglBuilder({
+      canvas,
+      attributes: { preserveDrawingBuffer: isSnapshot }
+    });
+  }
   // const lastFrame = regl.texture();
   const width = universe.width();
   const height = universe.height();
@@ -92,9 +103,12 @@ let startWebGL = ({ canvas, universe, isSnapshot = false }) => {
     count: 3
   });
 
-  return () => {
-    regl.poll();
-    drawSand();
+  return {
+    regl,
+    draw: () => {
+      regl.poll();
+      drawSand();
+    }
   };
 };
 
@@ -106,6 +120,101 @@ let snapshot = universe => {
   render();
 
   return canvas.toDataURL("image/png");
+};
+
+let exportGif = (universe, cb) => {
+  window.paused = true;
+
+  let canvas = document.createElement("canvas");
+  canvas.width = universe.width() * 2;
+  canvas.height = universe.height() * 2;
+  let w = canvas.width;
+  let h = canvas.height;
+  // let gl = canvas.getContext("webgl");
+
+  var gif = new GIF({
+    workers: 2,
+    quality: 10,
+    width: canvas.width,
+    height: canvas.height,
+    transparent: "rgba(0,0,0,0)"
+  });
+  let frames = [];
+
+  const tmpc = document.createElement("canvas");
+  tmpc.width = w;
+  tmpc.height = h;
+  const tctx = tmpc.getContext("2d");
+
+  frames = [];
+  let frameSize = { width: canvas.width, height: canvas.height };
+
+  const numFrames = 20;
+  let t = window.t;
+  for (var i = 0; i < numFrames; i++) {
+    universe.set_time((t / 50) % 255);
+    t += 5;
+    universe.tick();
+    canvas = document.createElement("canvas");
+    canvas.width = universe.width() * 2;
+    canvas.height = universe.height() * 2;
+    let w = canvas.width;
+    let h = canvas.height;
+    let { regl, draw } = startWebGL({ universe, canvas, isSnapshot: false });
+
+    draw();
+    console.log("adding frame " + i);
+    // gif.addFrame(gl, { copy: false });
+
+    // this is faster but the y-axis gets flipped
+    // let data = new ImageData(w, h);
+    // let pixels = new Uint8Array(data.data.buffer);
+    // regl.read(pixels);
+
+    // gl.readPixels(0, 0, w, h, gl.RGBA, gl.UNSIGNED_BYTE, pixels)
+
+    // var bytes = new Uint8Array(100)
+    // regl.read(bytes)
+
+    tctx.clearRect(0, 0, w, h);
+
+    tctx.drawImage(canvas, 0, 0);
+    const data = tctx.getImageData(0, 0, w, h);
+    frames.push(data);
+
+    // // don't lock up the ui
+    // if (i % 4 == 0) {
+    //     await nextTick()
+    // }
+  }
+  // console.log(frames);
+  //boomerang
+  frames = [...frames, ...frames.slice(0).reverse()];
+  for (const frame of frames) {
+    gif.addFrame(frame, { delay: 16 });
+  }
+
+  gif.on("finished", function(blob) {
+    // window.open(URL.createObjectURL(blob));
+    cb(URL.createObjectURL(blob));
+  });
+  gif.render();
+  // const renderFrame = (n = 0) => {
+  //   console.log(n);
+
+  //   if (n == 20) {
+  //     console.log("finished!");
+  //     gif.on("finished", function(blob) {
+  //       window.open(URL.createObjectURL(blob));
+  //     });
+  //     gif.render();
+  //   } else {
+
+  //     renderFrame(n + 1);
+  //   }
+  // };
+  // renderFrame();
+  window.paused = false;
 };
 
 let pallette = () => {
@@ -120,7 +229,7 @@ let pallette = () => {
 
   species.forEach(id => universe.paint(id, 0, 2, id));
   universe.paint(species.Air, 0, 2, species.Air);
-  let render = startWebGL({ universe, canvas, isSnapshot: true });
+  let render = startWebGL({ universe, canvas, isSnapshot: true }).draw;
   render();
   let ctx = canvas.getContext("webgl");
   let data = new Uint8Array(range * 4);
@@ -136,4 +245,4 @@ let pallette = () => {
   return colors;
 };
 
-export { startWebGL, snapshot, pallette };
+export { startWebGL, snapshot, pallette, exportGif };

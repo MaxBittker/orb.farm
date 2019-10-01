@@ -6,6 +6,7 @@ import { Species } from "../../crate/pkg/sandtable";
 
 import { height, universe, width, reset } from "../index.js";
 import { exportGif, pallette } from "../render.js";
+import Menu from "./menu.js";
 import { icos, randomIco } from "../tchotchkes";
 import daphniaImg from "../../assets/daphnia2.gif";
 import bubblebig from "../../assets/bubblebig.png";
@@ -95,7 +96,7 @@ class Index extends React.Component {
       submitting: false,
       size: 1,
       tchotchkes: new Set(),
-      dataURL: {},
+      dataURL: null,
       currentSubmission: null,
       selectedElement: Species.Sand,
       tutorialProgress
@@ -138,17 +139,15 @@ class Index extends React.Component {
     if (window.confirm("Reset your ecosystem?")) {
       this.play();
       this.setState({ currentSubmission: null });
+      localStorage.setItem("last_tchotchke", null);
+
       reset();
     }
-  }
-  menu() {
-    this.pause();
-    this.setState({ submissionMenuOpen: true });
   }
 
   closeMenu() {
     this.play();
-    this.setState({ submissionMenuOpen: false });
+    this.setState({ dataURL: null });
   }
   upload() {
     console.log("saving");
@@ -210,20 +209,26 @@ class Index extends React.Component {
 
     // this.load();
   }
+  currentDateString() {
+    let date = new Date();
+    return `${date.getMonth()}-${date.getDate()}`;
+  }
   findTchotchke() {
-    console.log("finding");
+    if (localStorage.getItem("last_tchotchke") == this.currentDateString()) {
+      return;
+    }
     if (this.state.tchotchkes.size >= 2) {
       return;
     }
     this.setState(({ tchotchkes }) => {
+      localStorage.setItem("last_tchotchke", this.currentDateString());
       return { tchotchkes: tchotchkes.add(randomIco()) };
     });
   }
   load() {
     console.log("loading");
 
-    // this.findTchotchke();
-    window.setInterval(() => this.findTchotchke(), 1000 * 60 * 5);
+    window.setInterval(() => this.findTchotchke(), 1000 * 60 * 4);
 
     var cellData = JSON.parse(localStorage.getItem("cell_data"));
     var spriteData = JSON.parse(localStorage.getItem("sprite_data"));
@@ -378,7 +383,11 @@ class Index extends React.Component {
 
         <OrganicButton
           onClick={() => {
-            exportGif(universe);
+            exportGif(universe, blob => {
+              this.pause();
+
+              this.setState({ dataURL: blob });
+            });
           }}
         >
           📷
@@ -418,6 +427,18 @@ class Index extends React.Component {
             Discard
           </div>
         )}
+
+        {this.state.dataURL && (
+          <Menu close={() => this.closeMenu()}>
+            <h4>~~~Share your Orb!~~~~</h4>
+
+            <img src={this.state.dataURL} className="submissionImg" />
+            <h4>Orb.Farm</h4>
+            <h4>Tell your friends!</h4>
+            <div style={{ display: "flex" }}></div>
+          </Menu>
+        )}
+
         {tutorialProgress < 4 && (
           <React.Fragment>
             <div className="welcome-scrim"></div>
@@ -467,11 +488,14 @@ class Index extends React.Component {
               <img id="daphnia" src={daphniaImg}></img>
               <span>
                 <img id="bubblebig" src={bubblebig}></img>
-                <h4>{tutorialProgress + 1}/4</h4>
+                <h4 id="welcome-progress">{tutorialProgress + 1}/4</h4>
                 <OrganicButton
                   className="next-button"
                   onClick={() => {
                     this.setState({ tutorialProgress: tutorialProgress + 1 });
+                    if (tutorialProgress == 3) {
+                      localStorage.setItem("tutorialProgress", 4);
+                    }
                   }}
                 >
                   {tutorialProgress < 3 ? "Next >" : "Begin!"}

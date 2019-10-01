@@ -83,6 +83,7 @@ canvas,
 #sand-canvas {
   z-index: 2;
   margin: auto;
+  /* filter: drop-shadow(2px 4px 6px gray); */
   /* cursor: pointer; */
 }
 #sky-canvas {
@@ -176,6 +177,11 @@ button.selected {
   position: relative;
   overflow-wrap: break-word;
   overflow: hidden;
+}
+.submissionImg {
+  width: 100%;
+  margin: auto;
+  max-height: 100%;
 }
 #ui {
 }
@@ -410,16 +416,18 @@ h1 {
 #welcome h4 {
   font-size: 24px;
   margin: 10px;
-  position: absolute;
-  bottom: 112px;
-  right: 15px;
-  z-index: 10;
 
   color: var(--zoop-dark);
 
   text-align: right;
   margin-bottom: -5px;
   animation: float 6s ease-in-out infinite;
+}
+#welcome-progress {
+  position: absolute;
+  bottom: 112px;
+  right: 15px;
+  z-index: 10;
 }
 #controls {
   display: flex;
