@@ -182,6 +182,7 @@ class Index extends React.Component {
     try {
       localStorage.setItem("cell_data", dataString);
       localStorage.setItem("o2", universe.o2());
+      localStorage.setItem("time", window.t);
     } catch {
       console.log("store failed");
     }
@@ -265,6 +266,7 @@ class Index extends React.Component {
         let o2 = parseInt(localStorage.getItem("o2"), 10);
         universe.set_o2(o2);
       }
+
       window.setInterval(() => this.upload(), 1000 * 10);
     };
 

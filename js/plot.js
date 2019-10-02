@@ -10,7 +10,7 @@ let label = document.getElementById("plot-label");
 
 let readingsIndex = 0;
 let n_readings = 0;
-let max_readings = 60 * 60;
+let max_readings = 60 * 3;
 let readings = new Uint8Array(max_readings);
 let throttle = 0;
 let startPlotter = ({ canvas, universe }) => {
@@ -27,15 +27,15 @@ let startPlotter = ({ canvas, universe }) => {
   });
   let recordDataPoint = () => {
     if (throttle++ != 0) {
-      throttle = throttle % 20;
+      throttle = throttle % (20 * 4);
       return;
     }
     readings[readingsIndex] = (255 * universe.o2()) / universe.total_gas();
     readingsIndex = (readingsIndex + 1) % max_readings;
     n_readings = Math.max(readingsIndex, n_readings);
     let p = (n_readings * 100) / max_readings;
-    canvas.style = `transform: translateX(${p - 100}%)`;
-    label.style = `transform: translateX(${p - 100}%)`;
+    // canvas.style = `transform: translateX(${p - 100}%)`;
+    // label.style = `transform: translateX(${p - 100}%)`;
   };
   let drawPlot = regl({
     blend: {

@@ -106,7 +106,7 @@ let { drawPlot, recordDataPoint } = startPlotter({
   universe
 });
 
-let t = 0;
+let t = parseInt(localStorage.getItem("time"), 10) || 0;
 const renderLoop = () => {
   const now = performance.now();
 
@@ -145,6 +145,7 @@ function reset() {
   localStorage.setItem("cell_data", null);
   universe.reset();
   localStorage.setItem("o2", universe.total_gas() / 2);
+  localStorage.setItem("time", 0);
 
   drawBowl();
 }
@@ -164,4 +165,5 @@ window.UI.load();
 //   });
 // });
 // debugger;
+
 export { canvas, width, height, ratio, universe, reset };

@@ -104,6 +104,10 @@ canvas,
   z-index: 8;
   margin: 0;
   display: block;
+  left: 2px;
+  bottom: 2px;
+  right: auto;
+  line-height: 1;
   pointer-events: none;
   text-align: right;
   z-index: 4;
