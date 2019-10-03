@@ -101,7 +101,7 @@ canvas,
   max-width: 40%;
 }
 #plot-label {
-  z-index: 8;
+  z-index: 2;
   margin: 0;
   display: block;
   left: 2px;
@@ -147,8 +147,8 @@ button {
   box-shadow: inset 0 0 3px var(--main-dark-color);
   user-select: none; /* Standard */
 
-  text-shadow: 0px 0px 4px white;
-  margin: 1px;
+  /* text-shadow: 1px 1px 3px black; */
+  margin: 2px;
   /* border-radius: 30px 10px 20px 20px / 30px 20px 10px 15px; */
 }
 .active button {
@@ -167,11 +167,13 @@ button.selected {
   background-color: var(--main-dark-color);
   color: whitesmoke;
   fill: whitesmoke;
-
+  /* border-color: coral; */
   border-style: ridge;
   text-shadow: 0px 0px 4px black;
   box-shadow: inset 0 0 3px white;
-  transform: rotate(1.5deg);
+  transform: scale(1.02);
+  filter: drop-shadow(2px 2px 5px black);
+  /* text-decoration: underline wavy; */
   /* animation: baby-float 1s ease-in-out infinite; */
   /* animation-direction: alternate; */
 }

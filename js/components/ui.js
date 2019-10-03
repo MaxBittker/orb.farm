@@ -73,7 +73,9 @@ const ElementButton = (name, selectedElement, setElement) => {
       style={{
         background,
         backgroundColor: color,
+        borderColor: color,
         borderRadius: organicRadius(),
+        color: name == "Air" ? "black" : "white",
         filter: selected || `saturate(0.4) `
       }}
     >

@@ -38,7 +38,7 @@ void main() {
 
   //   vec2 pos+= (i*4.)/max_readings;
   //   lightness = min(lightness, 1.0);
-  gl_FragColor = vec4(1., 1., 1.0, 0.5);
+  gl_FragColor = vec4(0.98, 1., 0.98, 0.5);
 
   //   if (
 
@@ -52,7 +52,7 @@ void main() {
 
   } else if (abs((pos.y - 0.5) * resolution.y) < 2.0 &&
              mod(pos.x * resolution.x, 8.0) > 4.0) {
-    gl_FragColor = vec4(0., 0., 0., 1.0);
+    gl_FragColor = vec4(0., 0.1, 0., 0.4);
   }
 
   //  else {
