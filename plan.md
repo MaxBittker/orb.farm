@@ -6,9 +6,9 @@ release checklist:
 * limit plant growth
 * sand colors?
 * plot style
-* selected button style
 * drag tchotchkes sprite cursor
 
+<!-- * selected button style -->
 <!-- * gif snapshot menu -->
 <!-- - slower tchotchkes -->
 <!-- - supress welcome -->

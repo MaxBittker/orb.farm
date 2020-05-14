@@ -464,6 +464,15 @@ h1 {
   font-size: 18px;
   line-height: 24px;
 }
+.Info {
+  line-height: 1.2;
+  height: 100%;
+  width: 100%;
+  overflow-y: scroll;
+}
+.Info p {
+  font-size: 18px;
+}
 .species-info {
   column-count: 2;
 }
@@ -477,7 +486,7 @@ h1 {
   }
 }
 
-.menu img {
+.Info img {
   max-width: 100%;
 }
 

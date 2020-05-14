@@ -15,6 +15,7 @@ const Info = () => {
         of creature can live, grow and die as part of a self-contained food
         chain. Please play, explore, and observe!
       </p>
+      <hr></hr>
       <p>
         Created by <a href="https://maxbittker.com">max bittker</a>
       </p>
