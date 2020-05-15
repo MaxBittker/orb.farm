@@ -582,6 +582,9 @@ void mainImage(out vec4 fragColor, in vec2 fragCoord) {
   // float env = pow( smoothstep(.5, iResolution.x / iResolution.y,
   // length(uv*0.8)), 0.0);
   fragColor = vec4(pow(color, vec3(1.0 / 2.2)), 1.); // gamma correct
+  fragColor.r *= 1.00;
+  fragColor.g *= 0.9;
+  fragColor.b *= 1.0;
 }
 void main() {
   vec4 color = vec4(0.0);

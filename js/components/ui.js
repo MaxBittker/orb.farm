@@ -8,13 +8,14 @@ import { height, universe, width, reset } from "../index.js";
 import { exportGif, pallette } from "../render.js";
 import Menu from "./menu.js";
 import { icos, randomIco } from "../tchotchkes";
-import daphniaImg from "../../assets/daphnia2.gif";
+import daphniaImg from "../../assets/daphniaAlpha.gif";
 import bubblebig from "../../assets/bubblebig.png";
 import bubblemed from "../../assets/bubblemed.png";
 import bubblesmall from "../../assets/bubblesmall.png";
+import { Gauge } from "../gauge";
 
 let skiplist = ["FishTail", "Biofilm", "GoldFishTail"];
-// skiplist.push("Waste");
+skiplist.push("Waste");
 skiplist.push("Bubble");
 skiplist.push("Plant");
 skiplist.push("Zoop");
@@ -24,29 +25,13 @@ skiplist.push("Plastic");
 window.species = Species;
 let pallette_data = pallette();
 
-function randomRadius(n = 8) {
-  return n + Math.random() * n * 2;
-}
-function organicRadius() {
-  return `
-  ${randomRadius()}px
-  ${randomRadius()}px
-  ${randomRadius()}px
-  ${randomRadius()}px
-  /
-  ${randomRadius()}px
-  ${randomRadius()}px
-  ${randomRadius()}px
-  ${randomRadius()}px
-  `;
-}
-const OrganicButton = ({ onClick, className, children }) => {
+const OrganicButton = ({ onClick, className, style, children }) => {
   return (
     <button
       onClick={onClick}
       className={className}
       style={{
-        borderRadius: organicRadius()
+        ...style
       }}
     >
       {children}
@@ -63,6 +48,11 @@ const ElementButton = (name, selectedElement, setElement) => {
   let selected = elementID == selectedElement;
 
   let background = "inherit";
+
+  let text = name;
+  if (name == "Air") {
+    text = "Clear";
+  }
   return (
     <button
       className={selected ? "selected" : ""}
@@ -74,13 +64,12 @@ const ElementButton = (name, selectedElement, setElement) => {
         background,
         backgroundColor: color,
         borderColor: color,
-        borderRadius: organicRadius(),
         color: name == "Air" ? "black" : "white",
         filter: selected || `saturate(0.4) `
       }}
     >
       {"  "}
-      {name}
+      {text}
       {"  "}
     </button>
   );
@@ -90,6 +79,7 @@ class Index extends React.Component {
   constructor(props) {
     super(props);
     let tutorialProgress = localStorage.getItem("tutorialProgress") || 0;
+    tutorialProgress = 0;
     // console.log(tutorialDone);
     this.state = {
       submissionMenuOpen: false,
@@ -319,135 +309,133 @@ class Index extends React.Component {
     //   activeSpecies = ["Sand", "Water"];
     // }
     return (
-      <div id="HUD" className="fade">
-        {/* <OrganicButton> */}
-        {/* <iframe
-          style={{
-            border: "3px ridge whitesmoke",
-            width: "370px",
-            height: "40px",
-            borderRadius: organicRadius()
-          }}
-          src="https://bandcamp.com/EmbeddedPlayer/album=4022061967/size=small/bgcol=ffffff/linkcol=7137dc/artwork=none/transparent=true/"
-          seamless
-        >
-          <a href="http://mlesprg.bandcamp.com/album/mount-vision">
-            Mount Vision by Emily A. Sprague
-          </a>
-        </iframe> */}
-        {/* </OrganicButton> */}
-        {/* <OrganicButton
-          onClick={() => this.togglePause()}
-          className={paused ? "selected" : ""}
-        >
-          {paused ? (
-            <svg height="20" width="20" id="d" viewBox="0 0 300 300">
-              <polygon id="play" points="0,0 , 300,150 0,300" />
-            </svg>
-          ) : (
-            <svg height="20" width="20" id="d" viewBox="0 0 300 300">
-              <polygon id="bar2" points="0,0 110,0 110,300 0,300" />
-              <polygon id="bar1" points="190,0 300,0 300,300 190,300" />
-            </svg>
-          )} */}
-        {/* </OrganicButton> */}
-
-        <OrganicButton
-          onClick={() => this.toggleFF()}
-          className={ff ? "selected" : ""}
-        >
-          <svg height="20" width="20" id="d" viewBox="0 0 300 300">
-            <polygon id="play" points="0,50 , 150,150 0,250" />
-            <polygon id="play" points="150,50, 300,150 150,250" />
-          </svg>
-        </OrganicButton>
-
-        <OrganicButton onClick={() => this.reset()}>Reset</OrganicButton>
-        {/* <button onClick={() => this.upload()}>upload</button> */}
-        {/* <button onClick={() => this.load()}>load</button> */}
-        <Link
-          to={{
-            pathname: "/info/",
-            hash
-          }}
-        >
-          <OrganicButton>info</OrganicButton>
-        </Link>
-
-        {/* {paused && <button onClick={() => universe.tick()}>Tick</button>} */}
-        {/* <OrganicButton
-          onClick={() => {
-            // reset();
-            universe.pop_undo();
-          }}
-          style={{ fontSize: 35 }}
-        >
-          ↜
-        </OrganicButton> */}
-
-        <OrganicButton
-          onClick={() => {
-            exportGif(universe, blob => {
-              this.pause();
-
-              this.setState({ dataURL: blob });
-            });
-          }}
-        >
-          📷
-        </OrganicButton>
-
-        {activeSpecies.map(n =>
-          ElementButton(n, selectedTchotchke || selectedElement, id =>
-            this.setState({ selectedElement: id, selectedTchotchke: null })
-          )
-        )}
-        {tchotchkes.size > 0 && (
-          <span className="tchotchkes">
-            {Array.from(tchotchkes).map(url => (
-              <img
-                onClick={() => {
-                  document.documentElement.style.cursor = `url("${url}"), default`;
-
-                  this.setState({ selectedTchotchke: url });
-                }}
-                className={selectedTchotchke == url ? "selected" : ""}
-                src={url}
-                key={url}
-              ></img>
-            ))}
-          </span>
-        )}
-        {selectedTchotchke && (
-          <div
-            className="discard"
-            onClick={() => {
-              window.UI.setState(({ tchotchkes }) => {
-                tchotchkes.delete(selectedTchotchke);
-                return { tchotchkes, selectedTchotchke: null };
-              });
-            }}
-          >
-            Discard
+      <div className="window fade" id="HUD">
+        <div className="title-bar">
+          <div className="title-bar-text">Orb.farm</div>
+          <div className="title-bar-controls">
+            <button
+              aria-label="Minimize"
+              onClick={() => {
+                document.body.classList.add("faded");
+              }}
+            ></button>
+            <button aria-label="Maximize"></button>
+            <button
+              aria-label="Close"
+              onClick={() => {
+                document.body.classList.add("faded");
+              }}
+            ></button>
           </div>
-        )}
+        </div>
+        <div className="window-body hud-body">
+          <Gauge></Gauge>
+          <div id="hud-buttons">
+            <OrganicButton
+              onClick={() => this.toggleFF()}
+              className={ff ? "selected" : ""}
+              active={ff}
+            >
+              <svg height="20" width="20" id="d" viewBox="0 0 300 300">
+                <polygon id="play" points="0,50 , 150,150 0,250" />
+                <polygon id="play" points="150,50, 300,150 150,250" />
+              </svg>
+            </OrganicButton>
 
-        {this.state.dataURL && (
-          <Menu close={() => this.closeMenu()}>
-            <h4>~~~Share your Orb!~~~~</h4>
+            <OrganicButton onClick={() => this.reset()}>Reset</OrganicButton>
+            <Link
+              to={{
+                pathname: "/info/",
+                hash
+              }}
+            >
+              <OrganicButton style={{ width: "calc(100% - 4px)" }}>
+                info
+              </OrganicButton>
+            </Link>
 
-            <img src={this.state.dataURL} className="submissionImg" />
-            <h4>Orb.Farm</h4>
-            <h4>Tell your friends!</h4>
-            <div style={{ display: "flex" }}></div>
-          </Menu>
-        )}
+            {/* <OrganicButton
+              onClick={() => {
+                // reset();
+                universe.pop_undo();
+              }}
+              style={{ fontSize: 35 }}
+            >
+              ↜
+            </OrganicButton> */}
+            {/* 
+            <OrganicButton
+              onClick={() => {
+                exportGif(universe, blob => {
+                  this.pause();
 
-        {tutorialProgress < 4 && (
-          <React.Fragment>
-            <div className="welcome-scrim"></div>
-            <div id="welcome">
-              {/* <OrganicButton
+                  this.setState({ dataURL: blob });
+                });
+              }}
+            >
+              📷
+            </OrganicButton> */}
+
+            {activeSpecies.map(n =>
+              ElementButton(n, selectedTchotchke || selectedElement, id =>
+                this.setState({ selectedElement: id, selectedTchotchke: null })
+              )
+            )}
+            {tchotchkes.size > 0 && (
+              <span className="tchotchkes">
+                {Array.from(tchotchkes).map(url => (
+                  <img
+                    onClick={() => {
+                      document.documentElement.style.cursor = `url("${url}"), default`;
+
+                      this.setState({ selectedTchotchke: url });
+                    }}
+                    className={selectedTchotchke == url ? "selected" : ""}
+                    src={url}
+                    key={url}
+                  ></img>
+                ))}
+              </span>
+            )}
+            {selectedTchotchke && (
+              <div
+                className="discard"
+                onClick={() => {
+                  window.UI.setState(({ tchotchkes }) => {
+                    tchotchkes.delete(selectedTchotchke);
+                    return { tchotchkes, selectedTchotchke: null };
+                  });
+                }}
+              >
+                Discard
+              </div>
+            )}
+
+            {this.state.dataURL && (
+              <Menu close={() => this.closeMenu()}>
+                <h4>~~~Share your Orb!~~~~</h4>
+
+                <img src={this.state.dataURL} className="submissionImg" />
+                <h4>Orb.Farm</h4>
+                <h4>Tell your friends!</h4>
+                <div style={{ display: "flex" }}></div>
+              </Menu>
+            )}
+
+            {tutorialProgress < 4 && (
+              <React.Fragment>
+                <div className="welcome-scrim"></div>
+                <div className="window" id="welcome">
+                  <div className="title-bar">
+                    <div className="title-bar-text">Orb.Farm</div>
+                    <div className="title-bar-controls">
+                      <button aria-label="Minimize"></button>
+                      <button aria-label="Maximize"></button>
+                      <button aria-label="Close"></button>
+                    </div>
+                  </div>
+                  <div className="window-body">
+                    {/* <OrganicButton
                 className="x"
                 onClick={() => {
                   this.setState({ tutorialProgress: 10 });
@@ -455,59 +443,65 @@ class Index extends React.Component {
               >
                 x
               </OrganicButton> */}
-              <div className="welcome-right-column">
-                <div className="welcome-speech">
-                  {
-                    [
-                      <span>
-                        <h1>Welcome to Orb.Farm!</h1>{" "}
-                        <p>
-                          This is your personal aquatic ecosystem to sculpt,
-                          nurture, and observe.
-                        </p>
-                      </span>,
-                      <p>
-                        My advice? Start with the basics. Fill your tank with{" "}
-                        {ElementButton("Sand", null, () => {})} and{" "}
-                        {ElementButton("Water", null, () => {})}. Or vice versa!
-                      </p>,
-                      <p>
-                        From there, introduce lifeforms such as adorable{" "}
-                        {ElementButton("Daphnia", null, () => {})} — just don't
-                        forget some tasty{" "}
-                        {ElementButton("Algae", null, () => {})} for us to eat
-                        when we hatch.
-                      </p>,
-                      <span>
-                        <p>
-                          Balance the needs of your ecosystem to achieve a
-                          stable Orb community.
-                        </p>
-                        <h1>And have fun!</h1>{" "}
-                      </span>
-                    ][tutorialProgress]
-                  }
+                    <div className="welcome-right-column">
+                      <div className="field-row-stacked welcome-speech">
+                        {
+                          [
+                            <span>
+                              <h1>Welcome to Orb.Farm!</h1>{" "}
+                              <p>
+                                This is your personal aquatic ecosystem to
+                                sculpt, nurture, and observe.
+                              </p>
+                            </span>,
+                            <p>
+                              My advice? Start with the basics. Fill your tank
+                              with {ElementButton("Sand", null, () => {})} and{" "}
+                              {ElementButton("Water", null, () => {})}. Or vice
+                              versa!
+                            </p>,
+                            <p>
+                              From there, introduce lifeforms such as adorable{" "}
+                              {ElementButton("Daphnia", null, () => {})} — just
+                              don't forget some tasty{" "}
+                              {ElementButton("Algae", null, () => {})} for us to
+                              eat when we hatch.
+                            </p>,
+                            <span>
+                              <p>
+                                Balance the needs of your ecosystem to achieve a
+                                stable Orb community.
+                              </p>
+                              <h1>And have fun!</h1>{" "}
+                            </span>
+                          ][tutorialProgress]
+                        }
+                      </div>
+                    </div>
+                    <img id="daphnia" src={daphniaImg}></img>
+                    <span>
+                      <img id="bubblebig" src={bubblebig}></img>
+                      <h4 id="welcome-progress">{tutorialProgress + 1}/4</h4>
+                      <OrganicButton
+                        className="next-button"
+                        onClick={() => {
+                          this.setState({
+                            tutorialProgress: tutorialProgress + 1
+                          });
+                          if (tutorialProgress == 3) {
+                            localStorage.setItem("tutorialProgress", 4);
+                          }
+                        }}
+                      >
+                        {tutorialProgress < 3 ? "Next >" : "Begin!"}
+                      </OrganicButton>
+                    </span>
+                  </div>
                 </div>
-              </div>
-              <img id="daphnia" src={daphniaImg}></img>
-              <span>
-                <img id="bubblebig" src={bubblebig}></img>
-                <h4 id="welcome-progress">{tutorialProgress + 1}/4</h4>
-                <OrganicButton
-                  className="next-button"
-                  onClick={() => {
-                    this.setState({ tutorialProgress: tutorialProgress + 1 });
-                    if (tutorialProgress == 3) {
-                      localStorage.setItem("tutorialProgress", 4);
-                    }
-                  }}
-                >
-                  {tutorialProgress < 3 ? "Next >" : "Begin!"}
-                </OrganicButton>
-              </span>
-            </div>
-          </React.Fragment>
-        )}
+              </React.Fragment>
+            )}
+          </div>
+        </div>
       </div>
     );
   }

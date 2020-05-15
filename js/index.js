@@ -78,7 +78,6 @@ let resize = () => {
     canvasSize = screen_width;
 
     canvasStyle = `width: ${screen_width}px; `;
-    HUDStyle = "";
   }
   HUD.style = HUDStyle;
   canvas.style = canvasStyle;
@@ -100,11 +99,11 @@ try {
     frame: () => {}
   };
 }
-let plotcanvas = document.getElementById("plot-canvas");
-let { drawPlot, recordDataPoint } = startPlotter({
-  canvas: plotcanvas,
-  universe
-});
+// let plotcanvas = document.getElementById("plot-canvas");
+// let { drawPlot, recordDataPoint } = startPlotter({
+// canvas: plotcanvas,
+// universe
+// });
 
 let t = parseInt(localStorage.getItem("time"), 10) || 0;
 const renderLoop = () => {
@@ -115,7 +114,7 @@ const renderLoop = () => {
     var dayTime = (t / 50) % 255;
 
     if (!window.paused) {
-      fps.render(); // new
+      // fps.render(); // new
 
       universe.tick();
       t += 1;
@@ -125,8 +124,10 @@ const renderLoop = () => {
       }
     }
     universe.set_time(dayTime);
-
-    recordDataPoint();
+    window.gauge.setState({
+      angle: 45 + (270 * universe.o2()) / universe.total_gas()
+    });
+    // recordDataPoint();
     let elapsed_time = performance.now() - now;
     if (elapsed_time > 13) {
       break;
@@ -136,7 +137,7 @@ const renderLoop = () => {
   drawSand.draw();
   let skyTime = dayTime / 255;
   sky.frame(skyTime);
-  drawPlot();
+  // drawPlot();
 
   window.animWebationId = requestAnimationFrame(renderLoop);
 };
