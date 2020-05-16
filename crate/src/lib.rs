@@ -18,7 +18,7 @@ use wasm_bindgen::prelude::*;
 #[derive(Clone, Copy, Debug, PartialEq)]
 pub struct Light {
     sun: u8,
-    g: u8,
+    sparkle: u8,
     b: u8,
     a: u8,
 }
@@ -221,10 +221,25 @@ impl Universe {
                 break;
             }
             let cell = self.get_cell(rx, ry);
+            let blocked_light =
+                (sunlight) * (1.0 - cell.blocked_light()) * ((r / ray_length) as f32) * 5.;
             sunlight = (sunlight) * cell.blocked_light();
+
+            // let brx = rx - (dy * 0.) as i32;
+            let mut brx = rx + rand_dir() * 2;
+            let mut bry = ry + rand_dir() * 2;
+            if brx < 0 || brx > self.width - 1 {
+                brx = rx;
+            }
+            if bry < 0 || bry > self.height - 1 {
+                bry = ry;
+            }
+            let bounce_idx = self.get_index(brx, bry);
+            self.lights[bounce_idx].sparkle += blocked_light as u8;
 
             self.lights[idx].sun = sunlight as u8;
             self.lights[idx].b = self.lights[idx].b.saturating_sub(2);
+            self.lights[idx].sparkle = self.lights[idx].sparkle.saturating_sub(4);
             if brightness < 70. && cell.species == Species::Zoop && cell.age > 4 {
                 self.lights[idx].b = 210 - (brightness * 3.0) as u8;
             }
@@ -392,7 +407,7 @@ impl Universe {
         let lights: Vec<Light> = (0..width * height)
             .map(|_i| Light {
                 sun: 0,
-                g: 0,
+                sparkle: 0,
                 b: 0,
                 a: 0,
             })

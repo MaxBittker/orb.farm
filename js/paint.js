@@ -4,7 +4,16 @@ import { icoToImage } from "./tchotchkes";
 import { Species } from "../crate/pkg";
 
 const canvas = document.getElementById("sand-canvas");
-
+let lastPlacedFish = 0;
+function canPlaceFish() {
+  let diff = Date.now() - lastPlacedFish;
+  if (diff > 1000) {
+    lastPlacedFish = Date.now();
+    return true;
+  } else {
+    return false;
+  }
+}
 const eventDistance = (a, b) => {
   return Math.sqrt(
     Math.pow(a.clientX - b.clientX, 2) + Math.pow(a.clientY - b.clientY, 2),
@@ -168,7 +177,7 @@ let speciesSizes = {
   [Species.GoldFish]: 2,
   [Species.Daphnia]: 2,
   [Species.Zoop]: 2,
-  [Species.Seed]: 2,
+  [Species.Grass]: 2,
   [Species.Bacteria]: 2
 };
 function convertEventCoordinates(event) {
@@ -193,6 +202,14 @@ function convertEventCoordinates(event) {
 const paint = event => {
   if (!painting) {
     return;
+  }
+  if (
+    window.UI.state.selectedElement == Species.Fish ||
+    window.UI.state.selectedElement == Species.GoldFish
+  ) {
+    if (!canPlaceFish()) {
+      return;
+    }
   }
   const [x, y] = convertEventCoordinates(event);
   if (window.UI.state.selectedElement < 0) return;

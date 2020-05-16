@@ -28,7 +28,7 @@ pub enum Species {
     Zoop = 6,
     Daphnia = 14,
 
-    Seed = 11,
+    Grass = 11,
 
     Plant = 5,
 
@@ -71,7 +71,7 @@ impl Species {
             Species::FishTail => update_fishtail(cell, api),
             Species::GoldFishTail => update_fishtail(cell, api),
             Species::Plant => update_plant(cell, api),
-            Species::Seed => update_seed(cell, api),
+            Species::Grass => update_grass(cell, api),
             Species::Bubble => update_bubble(cell, api),
             Species::Biofilm => {}
             Species::Plastic => {}
@@ -87,7 +87,7 @@ impl Species {
                 Species::GoldFishTail => 25.0,
 
                 Species::Plant => 20.0,
-                Species::Seed => 35.0,
+                Species::Grass => 35.0,
                 Species::Biofilm => 3.0,
 
                 Species::Algae => 18.0,
@@ -888,7 +888,7 @@ pub fn update_plant(cell: Cell, mut api: SandApi) {
 
     // if age > 250 {
     //     if once_in(3) {
-    //         api.set(0, 0, Cell::new(Species::Seed));
+    //         api.set(0, 0, Cell::new(Species::Grass));
     //     } else {
     //         api.set(0, 0, Cell::new(Species::Waste));
     //     }
@@ -1009,7 +1009,7 @@ pub fn update_plant(cell: Cell, mut api: SandApi) {
     }
 }
 
-pub fn update_seed(cell: Cell, mut api: SandApi) {
+pub fn update_grass(cell: Cell, mut api: SandApi) {
     // let age = cell.age;
     // let energy = cell.energy;
 

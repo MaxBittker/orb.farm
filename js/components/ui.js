@@ -21,6 +21,7 @@ skiplist.push("Plant");
 skiplist.push("Zoop");
 skiplist.push("Nitrogen");
 skiplist.push("Plastic");
+// skiplist.push("GoldFish");
 
 window.species = Species;
 let pallette_data = pallette();
@@ -79,7 +80,7 @@ class Index extends React.Component {
   constructor(props) {
     super(props);
     let tutorialProgress = localStorage.getItem("tutorialProgress") || 0;
-    tutorialProgress = 0;
+    // tutorialProgress = 0;
     // console.log(tutorialDone);
     this.state = {
       submissionMenuOpen: false,
@@ -210,18 +211,23 @@ class Index extends React.Component {
     if (localStorage.getItem("last_tchotchke") == this.currentDateString()) {
       return;
     }
-    if (this.state.tchotchkes.size >= 2) {
-      return;
-    }
-    this.setState(({ tchotchkes }) => {
-      localStorage.setItem("last_tchotchke", this.currentDateString());
-      return { tchotchkes: tchotchkes.add(randomIco()) };
+    randomIco().then(a => {
+      this.setState(({ tchotchkes }) => {
+        localStorage.setItem("last_tchotchke", this.currentDateString());
+
+        if (this.state.tchotchkes.size >= 2) {
+          tchotchkes.delete(Array.from(tchotchkes)[0]);
+        }
+
+        tchotchkes.add(a.url);
+        return { tchotchkes };
+      });
     });
   }
   load() {
     console.log("loading");
 
-    window.setInterval(() => this.findTchotchke(), 1000 * 60 * 4);
+    window.setInterval(() => this.findTchotchke(), 1000 * 60 * 5);
 
     var cellData = JSON.parse(localStorage.getItem("cell_data"));
     var spriteData = JSON.parse(localStorage.getItem("sprite_data"));
@@ -398,7 +404,7 @@ class Index extends React.Component {
               </span>
             )}
             {selectedTchotchke && (
-              <div
+              <button
                 className="discard"
                 onClick={() => {
                   window.UI.setState(({ tchotchkes }) => {
@@ -408,7 +414,7 @@ class Index extends React.Component {
                 }}
               >
                 Discard
-              </div>
+              </button>
             )}
 
             {this.state.dataURL && (

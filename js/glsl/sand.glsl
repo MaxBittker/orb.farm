@@ -36,12 +36,14 @@ void main() {
   vec4 spriteValue = texture2D(spriteTexture, textCoord);
 
   float lightValue = lightCell.r;
+  float sparkleValue = lightCell.g;
   float blueLightValue = lightCell.b;
 
   vec4 lightSampleCell = texture2D(lightTexture, sampleCoord);
   float sampleLightValue = lightSampleCell.r;
 
   lightValue = 0.5 * lightValue + 0.5 * sampleLightValue;
+  lightValue += sparkleValue * (0.5 + noise * 0.1);
   int type = int((data.r * 255.) + 0.1);
   float energy = data.g;
   float age = data.b;
@@ -72,7 +74,7 @@ void main() {
   } else if (type == 2) { // Sand
     hue = 0.1;
     saturation = 0.4 + (age * 0.3);
-    lightness = 1.3 - energy * 1.2;
+    lightness = 1.0 - energy * 0.5;
 
   } else if (type == 3) { // Water
     hue = 0.58;
@@ -124,7 +126,7 @@ void main() {
     hue = 0.9;
     lightness -= 0.3;
     saturation = 0.4;
-  } else if (type == 11) { // Seed
+  } else if (type == 11) { // Grass
     hue = 0.4;
     saturation = 0.4;
   } else if (type == 12) { // Stone
@@ -167,13 +169,13 @@ void main() {
     }
   } else if (type == 18) { // goldfish
     hue = 0.1;
-    lightness += 0.4;
-    saturation = 0.7;
+    lightness += 0.3;
+    saturation = 0.9;
   } else if (type == 19) { // goldfishtail
     hue = 0.1;
     hue += fract(age * 1.9 * 255. / 9.) * 0.1;
-    lightness += 0.8;
-    saturation = 0.8;
+    lightness += 0.6;
+    saturation = 0.9;
     saturation -= (fract(age * 1.9 * 255. / 7.) - 0.1) * 0.6;
   } else if (type == 20) { // plastic
     hue = 0.1;
@@ -196,7 +198,7 @@ void main() {
 
   //   // (data.g * 0.00);
   //   lightness = 1.5 - (data.g * 0.2);
-  // } else if (type == 19) { // seed/flower
+  // } else if (type == 19) { // Grass/flower
 
   //   hue = fract(fract(data.b * 2.) * 0.5) - 0.3;
   //   saturation = 0.7 * (data.g + 0.4) + data.b * 0.2;

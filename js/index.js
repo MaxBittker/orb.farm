@@ -35,11 +35,11 @@ drawBowl();
 // universe.paint(h, h, 2, Species.Zoop);
 // universe.paint(h + 20, h, 2, Species.Fish);
 // universe.paint(h, h * 1.2, 2, Species.Bacteria);
-// universe.paint(h * 1.5, h * 1.2, 2, Species.Seed);
+// universe.paint(h * 1.5, h * 1.2, 2, Species.Grass);
 
 // universe.paint(h, h, 10, Species.Algae);
 
-// universe.paint(150, 50, 25, Species.Seed);
+// universe.paint(150, 50, 25, Species.Grass);
 let ratio = 2;
 let width = n;
 let height = n;

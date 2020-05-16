@@ -11,7 +11,7 @@ function AppRouter() {
   return (
     <Router>
       <Route path="/" component={Index} />
-      <Route exact path="/info/" component={() => <Info />} />
+      <Route exact path="/info/" component={Info} />
     </Router>
   );
 }

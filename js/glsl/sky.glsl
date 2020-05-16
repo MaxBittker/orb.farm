@@ -411,7 +411,7 @@ float DeltaSawTooth(float t) {
          (1. - sin(t)) * sin(t + cos(t));
 }
 
-vec2 GetDrops(vec2 uv, float seed, float m) {
+vec2 GetDrops(vec2 uv, float Grass, float m) {
 
   float t2 = t + m;
   vec2 o = vec2(0.);
@@ -422,7 +422,7 @@ vec2 GetDrops(vec2 uv, float seed, float m) {
 
   uv *= vec2(10., 2.5) * 2.;
   vec2 id = floor(uv);
-  vec3 n = N31(id.x + (id.y + seed) * 546.3524);
+  vec3 n = N31(id.x + (id.y + Grass) * 546.3524);
   vec2 bd = fract(uv);
 
   vec2 uv2 = bd;

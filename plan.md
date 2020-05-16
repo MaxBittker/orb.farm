@@ -1,11 +1,12 @@
 release checklist:
 
+- light shines when it hits something
+
 - audit tchotchkeys
 - audit intro text / copy
 
 * limit plant growth
 * sand colors?
-* plot style
 * drag tchotchkes sprite cursor
 
 <!-- * selected button style -->

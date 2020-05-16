@@ -1,5 +1,6 @@
 import React from "react";
-// import daphniaImg from "../../assets/daphnia.gif";
+import daphniaImg from "../../assets/daphniaAlpha.gif";
+
 import bubblebig from "../../assets/bubblebig.png";
 import bubblemed from "../../assets/bubblemed.png";
 import bubblesmall from "../../assets/bubblesmall.png";
@@ -20,14 +21,56 @@ const Info = () => {
           </div>
         </div>
         <div className="window-body">
-          <h1>A sealed ecosystem simulation </h1>
+          {/* <h1>A sealed ecosystem simulation </h1> */}
+          <img src={daphniaImg}></img>
+          <ul class="tree-view">
+            <p>
+              Welcome to orb.farm! This is a virtual ecosystem where different
+              species of creature can live, grow and die as part of a
+              self-contained food chain. Please play, explore, and observe!
+            </p>
+            <li>
+              CSS
+              <ul>
+                <li>Selectors</li>
+                <li>Specificity</li>
+                <li>Properties</li>
+              </ul>
+            </li>
+            <li>
+              <details open>
+                <summary>JavaScript</summary>
+                <ul>
+                  <li>Avoid at all costs</li>
+                  <li>
+                    <details>
+                      <summary>Unless</summary>
+                      <ul>
+                        <li>Avoid</li>
+                        <li>
+                          <details>
+                            <summary>At</summary>
+                            <ul>
+                              <li>Avoid</li>
+                              <li>At</li>
+                              <li>All</li>
+                              <li>Cost</li>
+                            </ul>
+                          </details>
+                        </li>
+                        <li>All</li>
+                        <li>Cost</li>
+                      </ul>
+                    </details>
+                  </li>
+                </ul>
+              </details>
+            </li>
+            <li>HTML</li>
+            <li>Special Thanks</li>
+          </ul>
           <hr></hr>
           <hr></hr>
-          <p>
-            Welcome to orb.farm! This is a virtual ecosystem where different
-            species of creature can live, grow and die as part of a
-            self-contained food chain. Please play, explore, and observe!
-          </p>
           <hr></hr>
           <p>
             Created by <a href="https://maxbittker.com">max bittker</a>
@@ -56,7 +99,7 @@ const Info = () => {
             </span>
             <span>
               <h1>Sand:</h1>
-              <p>Important nutrient vector for plants. Plant seeds in this.</p>
+              <p>Important nutrient vector for plants. Plant Grass in this.</p>
               <hr></hr>
             </span>
             <span>
@@ -96,7 +139,7 @@ const Info = () => {
             </span>
 
             <span>
-              <h1>Seed:</h1>
+              <h1>Grass:</h1>
               <p>
                 Grows into eel grass, which is a source of food and oxygen.
                 Needs to pull nutrients from sand in order to grow!
