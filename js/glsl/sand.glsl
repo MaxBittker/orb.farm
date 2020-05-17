@@ -88,6 +88,7 @@ void main() {
     hue = 0.4 - age * 0.3;
     lightness += 0.1;
     saturation = 0.5 - (energy * .1);
+    a = 0.8;
   } else if (type == 5) { // Plant
     hue = 0.4;
     saturation = 0.4;
@@ -110,7 +111,7 @@ void main() {
     hue = 0.66;
     saturation += 0.2;
     lightness += 0.2;
-    a = 0.5;
+    a = 0.4;
     if (isSnapshot) {
       // lightness += 0.8;
       saturation -= 0.2;

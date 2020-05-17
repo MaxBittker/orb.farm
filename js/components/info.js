@@ -20,173 +20,313 @@ const Info = () => {
             </Link>
           </div>
         </div>
-        <div className="window-body">
-          {/* <h1>A sealed ecosystem simulation </h1> */}
-          <img src={daphniaImg}></img>
-          <ul class="tree-view">
-            <p>
-              Welcome to orb.farm! This is a virtual ecosystem where different
-              species of creature can live, grow and die as part of a
-              self-contained food chain. Please play, explore, and observe!
-            </p>
+        <div className="window-body ">
+          {/* <li>A sealed ecosystem simulation </li> */}
+
+          <ul className="tree-view info-body">
             <li>
-              CSS
+              <h4> Welcome to orb.farm!</h4>
               <ul>
-                <li>Selectors</li>
-                <li>Specificity</li>
-                <li>Properties</li>
+                <li>
+                  {" "}
+                  This is a virtual ecosystem where different species of
+                  creature can live, grow and die as part of a self-contained
+                  food chain.
+                </li>
+                <li>
+                  Please:
+                  <ul>
+                    <li>Play</li>
+                    <li>Experiment</li>
+                    <li>& Observe</li>
+                  </ul>
+                </li>
+                <li>
+                  <details>
+                    <summary>Elements</summary>
+                    <ul>
+                      <li>
+                        <details>
+                          <summary>Inert</summary>
+
+                          <ul>
+                            <li>
+                              <li>Clear:</li>
+
+                              <ul>
+                                <li>"Air" element, used to erase things.</li>
+                              </ul>
+                            </li>
+                            <li>
+                              <li>Glass:</li>
+
+                              <ul>
+                                <li>Lets in light, biologically inert.</li>
+                              </ul>
+                            </li>
+                            <li>
+                              <li>Sand:</li>
+
+                              <ul>
+                                <li>
+                                  Important nutrient vector for plants. Grass
+                                  must grow in this.
+                                </li>
+                              </ul>
+                            </li>
+                            <li>
+                              <li>Stone:</li>
+
+                              <ul>
+                                <li>Draw archways and castle. Aquascaping!</li>
+                              </ul>
+                            </li>
+                            <li>
+                              <li>Wood:</li>
+
+                              <ul>
+                                <li>
+                                  Driftwood adds natural decorative flare and
+                                  provides a place for fish to hide. It also
+                                  blocks light.
+                                </li>
+                              </ul>
+                            </li>
+                            <li>
+                              <li>Water:</li>
+
+                              <ul>
+                                <li>
+                                  A classic. Doesn't get better than this.
+                                </li>
+                              </ul>
+                            </li>
+                          </ul>
+                        </details>
+                      </li>
+                      <li>
+                        <details>
+                          <summary>Autotrophs</summary>
+                          <ul>
+                            <li>
+                              <li>Algae:</li>
+
+                              <ul>
+                                <li>
+                                  Photosynthesizes sunlight & carbon dioxide to
+                                  produce nutrients and oxygen. Life of the
+                                  party!
+                                </li>
+                              </ul>
+                            </li>
+
+                            <li>
+                              <li>Grass:</li>
+
+                              <ul>
+                                <li>
+                                  Grows into eel grass, which is a source of
+                                  food and oxygen. Needs to pull nitrogen from
+                                  sand in order to grow.
+                                </li>
+                              </ul>
+                            </li>
+                          </ul>
+                        </details>
+                      </li>
+                      <li>
+                        <details>
+                          <summary>Herbivores</summary>
+
+                          <ul>
+                            <li>
+                              <li>
+                                <li>Daphnia:</li>
+
+                                <ul>
+                                  <li>
+                                    Also know as water fleas, these freshwater
+                                    zooplankton are a key species in the
+                                    ecosystem. They feed on algae, and lay eggs
+                                    which can lay dormant for a long time! More
+                                    active at night.
+                                  </li>
+                                </ul>
+                              </li>
+                            </li>
+                          </ul>
+                        </details>
+                      </li>
+                      <li>
+                        <details>
+                          <summary>Carnivores</summary>
+
+                          <ul>
+                            <li>
+                              <li>Fish:</li>
+
+                              <ul>
+                                <li>
+                                  They feed mostly on daphnia but will also eat
+                                  on the biofilm that grows on plants. I can't
+                                  tell what they're thinking.
+                                </li>
+
+                                <li>
+                                  <li>Goldfish:</li>
+
+                                  <ul>
+                                    <li>
+                                      Loyal but simple minded. Breathes oxygen
+                                    </li>
+                                  </ul>
+                                </li>
+                              </ul>
+                            </li>
+                          </ul>
+                        </details>
+                      </li>
+                      <li>
+                        <details>
+                          <summary>Decomposers</summary>
+
+                          <ul>
+                            <li>
+                              <li>Bacteria:</li>
+
+                              <ul>
+                                <li>
+                                  Aerobically breaks down waste into nitrogen.
+                                  Decomposers are very important parts to a
+                                  functioning ecosystem. Blows bubbles when
+                                  happy.
+                                </li>
+                              </ul>
+                            </li>
+                          </ul>
+                        </details>
+                      </li>
+                    </ul>
+                  </details>
+                </li>
+                <li>
+                  <details>
+                    <summary>Diagram</summary>
+
+                    <img src="https://camo.githubusercontent.com/93105325a463894a90f70acf42eb79761f85567e/68747470733a2f2f75706c6f61642e77696b696d656469612e6f72672f77696b6970656469612f636f6d6d6f6e732f7468756d622f642f64642f466f6f6457656253696d706c652e6a70672f37323170782d466f6f6457656253696d706c652e6a7067" />
+                  </details>
+                </li>
+                <li>
+                  <details open>
+                    <summary>Background</summary>
+                    <ul>
+                      <li>
+                        Created by{" "}
+                        <a href="https://maxbittker.com">max bittker</a>
+                      </li>
+                      <li>
+                        Source code & Bug reports:{" "}
+                        <a href="https://github.com/MaxBittker/orb.farm">
+                          Repo
+                        </a>
+                      </li>
+
+                      <li>
+                        <details open>
+                          <summary>Credits & Appreciations</summary>
+                          <ul>
+                            <li>
+                              Daphnia Pixel Art:
+                              <ul>
+                                <li>
+                                  <a href="https://twitter.com/aconfuseddragon">
+                                    @aconfuseddragon
+                                  </a>
+                                </li>
+                              </ul>
+                            </li>
+                            <li>
+                              Background Art:
+                              <ul>
+                                <li>
+                                  <a href="https://www.shadertoy.com/view/tdSXzD">
+                                    "The sun, the sky and the clouds"
+                                  </a>{" "}
+                                  by stilltravelling
+                                </li>
+                              </ul>
+                            </li>
+
+                            <li>
+                              CSS Framework:
+                              <ul>
+                                <li>
+                                  <a href="https://jdan.github.io/98.css/">
+                                    98.css{" "}
+                                  </a>{" "}
+                                  by{" "}
+                                  <a href="https://jordanscales.com">
+                                    Jordan Scales
+                                  </a>{" "}
+                                  & Contributors
+                                </li>
+                              </ul>
+                            </li>
+                          </ul>
+                        </details>
+                      </li>
+                      <li>
+                        <details>
+                          <summary>See Also</summary>
+                          <ul>
+                            <li>
+                              {" "}
+                              Inspiration:
+                              <ul>
+                                <li>
+                                  <a href="https://www.youtube.com/watch?v=3OG5jyRGhLg">
+                                    Life in Jars
+                                  </a>{" "}
+                                  Youtube Channel
+                                </li>
+                              </ul>
+                            </li>
+                            <li>
+                              {" "}
+                              Sibling Game:
+                              <ul>
+                                <li>
+                                  <a href="https://sandspiel.club">
+                                    sandspiel.club
+                                  </a>
+                                </li>
+                              </ul>
+                            </li>
+                            <li>
+                              Paper I wrote in college 5 years before I built
+                              this:
+                              <ul>
+                                <li>
+                                  <a href="assets/2014.pdf">Jar.pdf</a>
+                                </li>
+                              </ul>
+                            </li>
+                          </ul>
+                        </details>
+                      </li>
+                    </ul>
+                  </details>
+                </li>
               </ul>
             </li>
-            <li>
-              <details open>
-                <summary>JavaScript</summary>
-                <ul>
-                  <li>Avoid at all costs</li>
-                  <li>
-                    <details>
-                      <summary>Unless</summary>
-                      <ul>
-                        <li>Avoid</li>
-                        <li>
-                          <details>
-                            <summary>At</summary>
-                            <ul>
-                              <li>Avoid</li>
-                              <li>At</li>
-                              <li>All</li>
-                              <li>Cost</li>
-                            </ul>
-                          </details>
-                        </li>
-                        <li>All</li>
-                        <li>Cost</li>
-                      </ul>
-                    </details>
-                  </li>
-                </ul>
-              </details>
-            </li>
-            <li>HTML</li>
-            <li>Special Thanks</li>
           </ul>
-          <hr></hr>
-          <hr></hr>
-          <hr></hr>
-          <p>
-            Created by <a href="https://maxbittker.com">max bittker</a>
-          </p>
-          <p>
-            Source code & Bug reports:{" "}
-            <a href="https://github.com/MaxBittker/jar">
-              github.com/maxbittker/jar
-            </a>
-          </p>
-          <p>
-            See also: <a href="https://sandspiel.club">sandspiel.club</a>
-          </p>{" "}
-          <hr></hr>
-          <hr></hr>
-          <div className="species-info">
-            <span>
-              <h1>Air:</h1>
-              <p>Mostly used to erase things.</p>
-              <hr></hr>
-            </span>
-            <span>
-              <h1>Glass:</h1>
-              <p>Lets in light, seals in flavor.</p>
-              <hr></hr>
-            </span>
-            <span>
-              <h1>Sand:</h1>
-              <p>Important nutrient vector for plants. Plant Grass in this.</p>
-              <hr></hr>
-            </span>
-            <span>
-              <h1>Stone:</h1>
-              <p>Draw archways and castle. Aquascaping is a noble cause.</p>
-              <hr></hr>
-            </span>
-            <span>
-              <h1>Wood:</h1>
-              <p>
-                Driftwood adds natural decorative flare and provides a place for
-                fish to hide.
-              </p>
-            </span>
-            <hr></hr>
-            <span>
-              <h1>Water:</h1>
-              <p>A classic. Doesn't get better than this.</p>
-              <hr></hr>
-            </span>
-            <span>
-              <h1>Algae:</h1>
-              <p>
-                Photosynthesizes sunlight to produce nutrients and oxygen. Life
-                of the party!
-              </p>
-            </span>
-            <hr></hr>
-            <span>
-              <h1>Daphnia:</h1>
-              <p>
-                Also know as water fleas, these freshwater zooplankton are
-                important parts of the ecosystem. They feed on algae and lay
-                eggs! More active at night.
-              </p>
-              <hr></hr>
-            </span>
+          <img alt="Daphnia" src={daphniaImg} style={{ height: "150px" }}></img>
 
-            <span>
-              <h1>Grass:</h1>
-              <p>
-                Grows into eel grass, which is a source of food and oxygen.
-                Needs to pull nutrients from sand in order to grow!
-              </p>
-              <hr></hr>
-            </span>
-
-            <span>
-              <h1>Bacteria:</h1>
-              <p>
-                Helps break down waste into fertilizer. Decomposers are very
-                important parts to a functioning ecosystem. Blows bubbles when
-                happy.
-              </p>
-              <hr></hr>
-            </span>
-
-            <span>
-              <h1>Fish:</h1>
-              <p>
-                They feed mostly on daphnia but will also feed on the biofilm
-                that grows on plants. I can't tell what they're thinking.
-              </p>
-              <hr></hr>
-            </span>
-
-            <span>
-              <h1>Gold Fish:</h1>
-              <p>Loyal but simple minded.</p>
-            </span>
-          </div>
-          <hr></hr>
-          <h1> Credits:</h1>
-          <p>
-            Daphnia Art:{" "}
-            <a href="https://twitter.com/aconfuseddragon">aconfuseddragon</a>
-          </p>
-          <p>
-            Background Art:
-            <a href="https://www.shadertoy.com/view/tdSXzD">
-              "The sun, the sky and the clouds"
-            </a>{" "}
-            by stilltravelling
-          </p>
-          <p>
-            <img src="https://camo.githubusercontent.com/93105325a463894a90f70acf42eb79761f85567e/68747470733a2f2f75706c6f61642e77696b696d656469612e6f72672f77696b6970656469612f636f6d6d6f6e732f7468756d622f642f64642f466f6f6457656253696d706c652e6a70672f37323170782d466f6f6457656253696d706c652e6a7067" />
-          </p>
+          <img
+            alt="Daphnia"
+            src={daphniaImg}
+            style={{ height: "150px", float: "right", transform: "scaleX(-1)" }}
+          ></img>
         </div>
       </div>
     </div>

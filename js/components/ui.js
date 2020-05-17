@@ -427,21 +427,42 @@ class Index extends React.Component {
                 <div style={{ display: "flex" }}></div>
               </Menu>
             )}
-
-            {tutorialProgress < 4 && (
-              <React.Fragment>
-                <div className="welcome-scrim"></div>
-                <div className="window" id="welcome">
-                  <div className="title-bar">
-                    <div className="title-bar-text">Orb.Farm</div>
-                    <div className="title-bar-controls">
-                      <button aria-label="Minimize"></button>
-                      <button aria-label="Maximize"></button>
-                      <button aria-label="Close"></button>
-                    </div>
-                  </div>
-                  <div className="window-body">
-                    {/* <OrganicButton
+          </div>
+        </div>
+        {tutorialProgress < 4 && (
+          <React.Fragment>
+            <div className="welcome-scrim"></div>
+            <div className="window" id="welcome">
+              <div className="title-bar">
+                <div className="title-bar-text">Orb.Farm</div>
+                <div className="title-bar-controls">
+                  <button
+                    aria-label="Minimize"
+                    onClick={() => {
+                      this.setState({
+                        tutorialProgress: tutorialProgress + 1
+                      });
+                      if (tutorialProgress == 3) {
+                        localStorage.setItem("tutorialProgress", 4);
+                      }
+                    }}
+                  ></button>
+                  <button aria-label="Maximize"></button>
+                  <button
+                    aria-label="Close"
+                    onClick={() => {
+                      this.setState({
+                        tutorialProgress: tutorialProgress + 1
+                      });
+                      if (tutorialProgress == 3) {
+                        localStorage.setItem("tutorialProgress", 4);
+                      }
+                    }}
+                  ></button>
+                </div>
+              </div>
+              <div className="window-body">
+                {/* <OrganicButton
                 className="x"
                 onClick={() => {
                   this.setState({ tutorialProgress: 10 });
@@ -449,65 +470,63 @@ class Index extends React.Component {
               >
                 x
               </OrganicButton> */}
-                    <div className="welcome-right-column">
-                      <div className="field-row-stacked welcome-speech">
-                        {
-                          [
-                            <span>
-                              <h1>Welcome to Orb.Farm!</h1>{" "}
-                              <p>
-                                This is your personal aquatic ecosystem to
-                                sculpt, nurture, and observe.
-                              </p>
-                            </span>,
-                            <p>
-                              My advice? Start with the basics. Fill your tank
-                              with {ElementButton("Sand", null, () => {})} and{" "}
-                              {ElementButton("Water", null, () => {})}. Or vice
-                              versa!
-                            </p>,
-                            <p>
-                              From there, introduce lifeforms such as adorable{" "}
-                              {ElementButton("Daphnia", null, () => {})} — just
-                              don't forget some tasty{" "}
-                              {ElementButton("Algae", null, () => {})} for us to
-                              eat when we hatch.
-                            </p>,
-                            <span>
-                              <p>
-                                Balance the needs of your ecosystem to achieve a
-                                stable Orb community.
-                              </p>
-                              <h1>And have fun!</h1>{" "}
-                            </span>
-                          ][tutorialProgress]
-                        }
-                      </div>
-                    </div>
-                    <img id="daphnia" src={daphniaImg}></img>
-                    <span>
-                      <img id="bubblebig" src={bubblebig}></img>
-                      <h4 id="welcome-progress">{tutorialProgress + 1}/4</h4>
-                      <OrganicButton
-                        className="next-button"
-                        onClick={() => {
-                          this.setState({
-                            tutorialProgress: tutorialProgress + 1
-                          });
-                          if (tutorialProgress == 3) {
-                            localStorage.setItem("tutorialProgress", 4);
-                          }
-                        }}
-                      >
-                        {tutorialProgress < 3 ? "Next >" : "Begin!"}
-                      </OrganicButton>
-                    </span>
+                <div className="welcome-right-column">
+                  <div className="field-row-stacked welcome-speech">
+                    {
+                      [
+                        <span>
+                          <h1>Welcome to Orb.Farm!</h1>{" "}
+                          <p>
+                            This is your personal aquatic ecosystem to nurture,
+                            sculpt, and observe.
+                          </p>
+                        </span>,
+                        <p>
+                          My advice? Start with the basics. Fill your tank with{" "}
+                          {ElementButton("Sand", null, () => {})} and{" "}
+                          {ElementButton("Water", null, () => {})}. Or vice
+                          versa!
+                        </p>,
+                        <p>
+                          From there, introduce lifeforms such as adorable{" "}
+                          {ElementButton("Daphnia", null, () => {})} — just
+                          don't forget some tasty{" "}
+                          {ElementButton("Algae", null, () => {})} for us to eat
+                          when we hatch.
+                        </p>,
+                        <span>
+                          <p>
+                            Balance the needs of your ecosystem to achieve a
+                            stable Orb community.
+                          </p>
+                          <h1>And have fun!</h1>{" "}
+                        </span>
+                      ][tutorialProgress]
+                    }
                   </div>
                 </div>
-              </React.Fragment>
-            )}
-          </div>
-        </div>
+                <img id="daphnia" src={daphniaImg}></img>
+                <span>
+                  {/* <img id="bubblebig" src={bubblebig}></img> */}
+                  <p id="welcome-progress">{tutorialProgress + 1}/4</p>
+                  <OrganicButton
+                    className="next-button"
+                    onClick={() => {
+                      this.setState({
+                        tutorialProgress: tutorialProgress + 1
+                      });
+                      if (tutorialProgress == 3) {
+                        localStorage.setItem("tutorialProgress", 4);
+                      }
+                    }}
+                  >
+                    {tutorialProgress < 3 ? "Next >" : "Begin!"}
+                  </OrganicButton>
+                </span>
+              </div>
+            </div>
+          </React.Fragment>
+        )}
       </div>
     );
   }

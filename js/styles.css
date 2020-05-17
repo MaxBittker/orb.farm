@@ -229,7 +229,7 @@ button.selected {
   display: flex;
   flex-wrap: wrap;
 }
-.hud-body button {
+#hud-buttons button {
   margin: 2px;
   height: 21px;
 }
@@ -323,10 +323,10 @@ button.selected {
 #welcome #daphnia {
   display: inline-block;
   /* max-width: 50%; */
-  width: 100%;
+  width: 70%;
   /* border-radius: 25%; */
   margin-right: -20px;
-  margin-top: -30px;
+  margin-top: -40px;
   margin-bottom: -180px;
   /* transform: ; */
   /* filter: invert(1); */
@@ -369,10 +369,6 @@ h1 {
   /* color: var(--zoop-dark); */
 
   /* line-height: 30px; */
-}
-#welcome p button {
-  height: 32px;
-  /* font-size: 18px; */
 }
 
 #welcome .welcome-speech h1 {
@@ -429,7 +425,8 @@ h1 {
   /* max-width: 600px; */
   position: absolute;
   right: 10px;
-  bottom: 20px;
+  bottom: 10px;
+  zoom: 2;
 
   /* border-style: double; */
   /* border-width: 4px; */
@@ -465,9 +462,18 @@ h1 {
 }
 #welcome-progress {
   position: absolute;
-  bottom: 112px;
-  right: 15px;
+  bottom: 52px;
+  right: 25px;
+  zoom: 2;
   z-index: 10;
+}
+#welcome {
+  zoom: 1.5;
+}
+@media only screen and (max-width: 600px) {
+  #welcome {
+    zoom: 1.25;
+  }
 }
 #controls {
   display: flex;
@@ -500,11 +506,16 @@ h1 {
 }
 .Info {
   line-height: 1.2;
-  height: 100%;
+  bottom: 0;
   width: calc(100% - 10px);
   max-width: 600px;
   margin: auto;
   margin-top: 5px;
+  overflow-y: scroll;
+  border-bottom: 2px solid var(--window-frame);
+}
+.info-body {
+  height: calc(75vh - 160px);
   overflow-y: scroll;
   zoom: 1.25;
 }
@@ -563,4 +574,8 @@ input {
 
 .title-bar .title-bar-text {
   font-size: 12px !important;
+}
+
+ul.tree-view a {
+  color: blue;
 }
