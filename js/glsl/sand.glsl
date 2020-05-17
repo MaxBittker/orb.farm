@@ -1,5 +1,7 @@
 precision highp float;
 uniform float t;
+uniform float skyTime;
+
 uniform float dpi;
 uniform vec2 resolution;
 uniform bool isSnapshot;
@@ -9,6 +11,7 @@ uniform sampler2D lightTexture;
 uniform sampler2D spriteTexture;
 
 varying vec2 uv;
+const float PI2 = 2. * 3.14159265358979323846;
 
 // clang-format off
 #pragma glslify: hsv2rgb = require('glsl-hsv2rgb')
@@ -125,8 +128,9 @@ void main() {
     lightness = 0.7 + data.g * 0.5;
   } else if (type == 10) { // Waste
     hue = 0.9;
-    lightness -= 0.3;
+    lightness -= 0.2;
     saturation = 0.4;
+    a = 0.8;
   } else if (type == 11) { // Grass
     hue = 0.4;
     saturation = 0.4;
@@ -183,6 +187,7 @@ void main() {
     lightness += 0.5;
     saturation = 0.1;
   }
+  lightness *= 0.85 + cos(skyTime * PI2) * 0.2;
 
   // } else if (type == 16) { // oil
   //   hue = (data.g * 5.0) + t * .008;

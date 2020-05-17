@@ -58,6 +58,7 @@ let startWebGL = ({ canvas, universe, isSnapshot = false, gl }) => {
     frag: fsh,
     uniforms: {
       t: ({ tick }) => tick,
+      skyTime: () => window.skyTime || 0,
       dataTexture: () => {
         cell_pointer = universe.cells();
         cells = new Uint8Array(memory.buffer, cell_pointer, width * height * 4);
@@ -97,7 +98,11 @@ let startWebGL = ({ canvas, universe, isSnapshot = false, gl }) => {
     vert: vsh,
     attributes: {
       // Full screen triangle
-      position: [[-1, 4], [-1, -1], [4, -1]]
+      position: [
+        [-1, 4],
+        [-1, -1],
+        [4, -1]
+      ]
     },
     // Our triangle has 3 vertices
     count: 3

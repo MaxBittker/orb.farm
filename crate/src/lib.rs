@@ -114,7 +114,7 @@ impl<'a> SandApi<'a> {
         self.universe.get_cell(nx, ny)
     }
     pub fn set(&mut self, dx: i32, dy: i32, v: Cell) {
-        if dx > 1 || dx < -1 || dy > 2 || dy < -2 {
+        if dx > 2 || dx < -2 || dy > 2 || dy < -2 {
             panic!("oob set");
         }
         let nx = self.x + dx;
@@ -226,20 +226,20 @@ impl Universe {
             sunlight = (sunlight) * cell.blocked_light();
 
             // let brx = rx - (dy * 0.) as i32;
-            let mut brx = rx + rand_dir() * 2;
-            let mut bry = ry + rand_dir() * 2;
-            if brx < 0 || brx > self.width - 1 {
-                brx = rx;
-            }
-            if bry < 0 || bry > self.height - 1 {
-                bry = ry;
-            }
-            let bounce_idx = self.get_index(brx, bry);
-            self.lights[bounce_idx].sparkle += blocked_light as u8;
+            // let mut brx = rx + rand_dir() * 2;
+            // let mut bry = ry + rand_dir() * 2;
+            // if brx < 0 || brx > self.width - 1 {
+            //     brx = rx;
+            // }
+            // if bry < 0 || bry > self.height - 1 {
+            //     bry = ry;
+            // }
+            // let bounce_idx = self.get_index(brx, bry);
+            // self.lights[bounce_idx].sparkle += blocked_light as u8;
 
             self.lights[idx].sun = sunlight as u8;
             self.lights[idx].b = self.lights[idx].b.saturating_sub(2);
-            self.lights[idx].sparkle = self.lights[idx].sparkle.saturating_sub(4);
+            // self.lights[idx].sparkle = self.lights[idx].sparkle.saturating_sub(4);
             if brightness < 70. && cell.species == Species::Zoop && cell.age > 4 {
                 self.lights[idx].b = 210 - (brightness * 3.0) as u8;
             }

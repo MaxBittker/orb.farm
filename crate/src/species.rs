@@ -356,7 +356,7 @@ pub fn update_sand(cell: Cell, mut api: SandApi) {
     // }
 }
 pub fn update_water(cell: Cell, mut api: SandApi) {
-    let dx = rand_dir();
+    let dx = rand_dir_2();
     let below = api.get(0, 1);
     let dx1 = api.get(dx, 1);
     let dx1r = api.get(-dx, 1);
@@ -385,6 +385,12 @@ pub fn update_water(cell: Cell, mut api: SandApi) {
     } else if dx1r.species == Species::Air {
         api.set(0, 0, dx1r);
         api.set(-dx, 1, cell);
+    } else if api.get(dx * 2, 0).species == Species::Air {
+        api.set(0, 0, EMPTY_CELL);
+        api.set(dx * 2, 0, cell);
+    } else if api.get(dx * -2, 0).species == Species::Air {
+        api.set(0, 0, EMPTY_CELL);
+        api.set(dx * -2, 0, cell);
     }
 }
 

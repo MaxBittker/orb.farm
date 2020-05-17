@@ -13,7 +13,9 @@ const Info = () => {
         <div className="title-bar">
           <div className="title-bar-text">Information</div>
           <div className="title-bar-controls">
-            <button aria-label="Minimize"></button>
+            <Link to="/">
+              <button aria-label="Minimize"></button>
+            </Link>
             <button aria-label="Maximize"></button>
             <Link to="/">
               <button aria-label="Close"> </button>
@@ -51,21 +53,21 @@ const Info = () => {
 
                           <ul>
                             <li>
-                              <li>Clear:</li>
+                              <summary>Clear:</summary>
 
                               <ul>
                                 <li>"Air" element, used to erase things.</li>
                               </ul>
                             </li>
                             <li>
-                              <li>Glass:</li>
+                              <summary>Glass:</summary>
 
                               <ul>
                                 <li>Lets in light, biologically inert.</li>
                               </ul>
                             </li>
                             <li>
-                              <li>Sand:</li>
+                              <summary>Sand:</summary>
 
                               <ul>
                                 <li>
@@ -75,14 +77,14 @@ const Info = () => {
                               </ul>
                             </li>
                             <li>
-                              <li>Stone:</li>
+                              <summary>Stone:</summary>
 
                               <ul>
                                 <li>Draw archways and castle. Aquascaping!</li>
                               </ul>
                             </li>
                             <li>
-                              <li>Wood:</li>
+                              <summary>Wood:</summary>
 
                               <ul>
                                 <li>
@@ -93,7 +95,7 @@ const Info = () => {
                               </ul>
                             </li>
                             <li>
-                              <li>Water:</li>
+                              <summary>Water:</summary>
 
                               <ul>
                                 <li>
@@ -109,7 +111,7 @@ const Info = () => {
                           <summary>Autotrophs</summary>
                           <ul>
                             <li>
-                              <li>Algae:</li>
+                              <summary>Algae:</summary>
 
                               <ul>
                                 <li>
@@ -121,7 +123,7 @@ const Info = () => {
                             </li>
 
                             <li>
-                              <li>Grass:</li>
+                              <summary>Grass:</summary>
 
                               <ul>
                                 <li>
@@ -140,19 +142,17 @@ const Info = () => {
 
                           <ul>
                             <li>
-                              <li>
-                                <li>Daphnia:</li>
+                              <summary>Daphnia:</summary>
 
-                                <ul>
-                                  <li>
-                                    Also know as water fleas, these freshwater
-                                    zooplankton are a key species in the
-                                    ecosystem. They feed on algae, and lay eggs
-                                    which can lay dormant for a long time! More
-                                    active at night.
-                                  </li>
-                                </ul>
-                              </li>
+                              <ul>
+                                <li>
+                                  Also know as water fleas, these freshwater
+                                  zooplankton are a key species in the
+                                  ecosystem. They feed on algae, and lay eggs
+                                  which can lay dormant for a long time! More
+                                  active at night.
+                                </li>
+                              </ul>
                             </li>
                           </ul>
                         </details>
@@ -163,7 +163,7 @@ const Info = () => {
 
                           <ul>
                             <li>
-                              <li>Fish:</li>
+                              <summary>Fish:</summary>
 
                               <ul>
                                 <li>
@@ -173,7 +173,7 @@ const Info = () => {
                                 </li>
 
                                 <li>
-                                  <li>Goldfish:</li>
+                                  <summary>Goldfish:</summary>
 
                                   <ul>
                                     <li>
@@ -307,7 +307,7 @@ const Info = () => {
                               this:
                               <ul>
                                 <li>
-                                  <a href="assets/2014.pdf">Jar.pdf</a>
+                                  <a href="/assets/2014.pdf">Jar.pdf</a>
                                 </li>
                               </ul>
                             </li>

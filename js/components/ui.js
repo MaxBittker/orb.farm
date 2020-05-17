@@ -56,7 +56,7 @@ const ElementButton = (name, selectedElement, setElement) => {
   }
   return (
     <button
-      className={selected ? "selected" : ""}
+      className={selected ? `selected ${name}` : name}
       key={name}
       onClick={() => {
         setElement(elementID);
@@ -462,14 +462,6 @@ class Index extends React.Component {
                 </div>
               </div>
               <div className="window-body">
-                {/* <OrganicButton
-                className="x"
-                onClick={() => {
-                  this.setState({ tutorialProgress: 10 });
-                }}
-              >
-                x
-              </OrganicButton> */}
                 <div className="welcome-right-column">
                   <div className="field-row-stacked welcome-speech">
                     {

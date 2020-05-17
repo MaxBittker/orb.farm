@@ -162,6 +162,7 @@ button {
   /* box-shadow: inset 0 0 3px var(--main-dark-color); */
   user-select: none; /* Standard */
 
+  box-sizing: border-box;
   /* text-shadow: 1px 1px 3px black; */
   /* margin: 2px; */
   /* border-radius: 30px 10px 20px 20px / 30px 20px 10px 15px; */
@@ -213,9 +214,7 @@ button.selected {
   right: 0px;
   max-width: 420px;
   /* display: flex; */
-
   /* flex-wrap: wrap; */
-
   z-index: 3;
   /* padding: 4px; */
   margin: 5px;
@@ -224,6 +223,15 @@ button.selected {
   margin: 1px 0px;
   /* display: flex; */
   /* flex-wrap: wrap; */
+  zoom: 1.5;
+}
+@media only screen and (max-width: 600px) {
+  .hud-body {
+    zoom: 1;
+  }
+  .GoldFish {
+    display: none;
+  }
 }
 #hud-buttons {
   display: flex;
@@ -515,9 +523,15 @@ h1 {
   border-bottom: 2px solid var(--window-frame);
 }
 .info-body {
-  height: calc(75vh - 160px);
+  height: calc(75vh - 250px);
   overflow-y: scroll;
-  zoom: 1.25;
+  zoom: 1.5;
+}
+@media only screen and (max-width: 600px) {
+  .info-body {
+    height: calc(75vh - 100px);
+    zoom: 1.25;
+  }
 }
 .Info p {
   /* font-size: 18px; */
@@ -578,4 +592,7 @@ input {
 
 ul.tree-view a {
   color: blue;
+}
+button:not(:disabled):active {
+  padding: 1px 5px !important;
 }
