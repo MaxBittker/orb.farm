@@ -309,7 +309,7 @@ class Index extends React.Component {
         : "";
 
     let activeSpecies = Object.keys(Species).filter(
-      name => !skiplist.includes(name)
+      name => !skiplist.includes(name) && !Number.isInteger(Number.parseInt(name))
     );
     // if (tutorial) {
     //   activeSpecies = ["Sand", "Water"];
