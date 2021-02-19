@@ -6,7 +6,7 @@
     # Check all status before merge
     checkStatus: true # optional, default is true
     # Comment before merge
-    comment: # optional, default is 
+    comment: @dependabot merge # optional, default is 
     # Seconds between the check
     intervalSeconds: 0.1 # optional, default is 0.1
     # Fail the step if the PR is not found or merged
@@ -14,7 +14,7 @@
     # Comma seperated labes that target pull request should have
     labels: 
     # Comma seperated labes that target pull request should not have
-    ignoreLabels: donotautopush
+    ignoreLabels: 
     # The GitHub repository containing the issue or pr.
     repository: ${{ github.repository }}
     # Number of the pull request
