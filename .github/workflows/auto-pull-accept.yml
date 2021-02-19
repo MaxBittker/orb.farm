@@ -4,26 +4,26 @@
   uses: KeisukeYamashita/auto-dependabot-pull-request-merge@v1
   with:
     # Check all status before merge
-    checkStatus: # optional, default is true
+    checkStatus: true # optional, default is true
     # Comment before merge
     comment: # optional, default is 
     # Seconds between the check
-    intervalSeconds: # optional, default is 0.1
+    intervalSeconds: 0.1 # optional, default is 0.1
     # Fail the step if the PR is not found or merged
-    failStep: # optional, default is true
+    failStep: true
     # Comma seperated labes that target pull request should have
-    labels: # optional, default is 
+    labels: 
     # Comma seperated labes that target pull request should not have
-    ignoreLabels: # optional, default is 
+    ignoreLabels: donotautopush
     # The GitHub repository containing the issue or pr.
-    repository: # optional, default is ${{ github.repository }}
+    repository: ${{ github.repository }}
     # Number of the pull request
-    pullRequestNumber: # optional, default is ${{ github.event.pull_request.number }}
+    pullRequestNumber: ${{ github.event.pull_request.number }}
     # SHA of the pull request commit
-    sha: # optional, default is ${{ github.event.pull_request.head.sha }}
+    sha: ${{ github.event.pull_request.head.sha }}
     # Merge strategy
-    strategy: # optional, default is merge
+    strategy: merge
     # Seconds to timeout
-    timeoutSeconds: # optional, default is 60
+    timeoutSeconds: 60
     # Credential to access to the repo to post the comment
-    token: # optional, default is ${{ github.token }}
+    token: ${{ github.token }}
